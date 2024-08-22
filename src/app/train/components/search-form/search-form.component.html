@@ -1,9 +1,16 @@
 <form class="form" [formGroup]="form" (ngSubmit)="onSearch()">
   <div class="tui-form__row tui-form__row_multi-fields center">
     <div class="tui-form__multi-field tui-space_right-4">
-      <tui-input formControlName="from">
+      <tui-input *tuiLet="itemsFrom$ | async as items" formControlName="from">
         From
         <span class="tui-required"></span>
+        <ng-container *ngIf="items?.length">
+          <tui-data-list *tuiDataList>
+            <button *ngFor="let item of items" tuiOption [value]="item" (click)="form.get('from')?.setValue(item.name)">
+              {{ item.name }}
+            </button>
+          </tui-data-list>
+        </ng-container>
       </tui-input>
     </div>
 
@@ -22,9 +29,16 @@
     </button>
 
     <div class="tui-form__multi-field">
-      <tui-input formControlName="to">
+      <tui-input *tuiLet="itemsTo$ | async as items" formControlName="to">
         To
         <span class="tui-required"></span>
+        <ng-container *ngIf="items?.length">
+          <tui-data-list *tuiDataList>
+            <button *ngFor="let item of items" tuiOption [value]="item" (click)="form.get('to')?.setValue(item.name)">
+              {{ item.name }}
+            </button>
+          </tui-data-list>
+        </ng-container>
       </tui-input>
     </div>
 
