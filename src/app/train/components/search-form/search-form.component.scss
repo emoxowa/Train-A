@@ -1,0 +1,30 @@
+:host {
+  padding: 20px 16px;
+  width: 100%;
+  display: flex;
+  background-color: var(--tui-text-primary);
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.form {
+  width: 100%;
+}
+
+.center {
+  align-items: center;
+}
+
+.tui-icon-button {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background-color: var(--tui-primary);
+    transform: scale(1.1);
+    color: var(--tui-text-on-primary);
+  }
+
+  &:active {
+    transform: scale(1.05);
+  }
+}

@@ -1,0 +1,41 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSearch()">
+  <div class="tui-form__row tui-form__row_multi-fields center">
+    <div class="tui-form__multi-field tui-space_right-4">
+      <tui-input formControlName="from">
+        From
+        <span class="tui-required"></span>
+      </tui-input>
+    </div>
+
+    <button
+      appearance="destructive"
+      iconStart="@tui.fa.solid.right-left"
+      size="s"
+      tuiIconButton
+      class="tui-icon-button"
+      [style.border-radius.%]="100"
+      [style.color]="'var(--tui-text-primary-on-accent-1)'"
+      (click)="swapFromTo()"
+      type="button"
+    >
+      icon
+    </button>
+
+    <div class="tui-form__multi-field">
+      <tui-input formControlName="to">
+        To
+        <span class="tui-required"></span>
+      </tui-input>
+    </div>
+
+    <div class="tui-form__multi-field">
+      <tui-input-date formControlName="date" tuiTextfieldSize="s" [min]="minDate">Date/Time</tui-input-date>
+    </div>
+
+    <div *ngIf="isDateSelected()" class="tui-form__multi-field">
+      <tui-input-time formControlName="time" tuiTextfieldSize="s"> Choose Time (optional) </tui-input-time>
+    </div>
+
+    <button size="l" tuiButton type="submit" class="tui-form__button" [disabled]="!form.valid">Search</button>
+  </div>
+</form>
