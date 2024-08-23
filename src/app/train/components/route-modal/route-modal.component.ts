@@ -19,10 +19,19 @@ export class RouteModalComponent {
     return this.context.data;
   }
 
-  calculateStopDuration(segment: Segment): string {
-    const departureTime = new Date(segment.time[1]).getTime();
+  getSegmentArrivalTime(index: number): string {
+    if (index > 0) {
+      return this.data.route.schedule[0].segments[index - 1].time[1];
+    }
+    return '';
+  }
+
+  calculateStopDuration(segment: Segment, index: number): string {
     const arrivalTime = new Date(segment.time[0]).getTime();
-    const dwellTime = (departureTime - arrivalTime) / (1000 * 60);
+    const departureTime =
+      index > 0 ? new Date(this.data.route.schedule[0].segments[index - 1].time[1]).getTime() : arrivalTime;
+
+    const dwellTime = (arrivalTime - departureTime) / (1000 * 60);
 
     return `${dwellTime} min`;
   }
