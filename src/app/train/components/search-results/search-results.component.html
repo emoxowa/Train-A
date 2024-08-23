@@ -1,8 +1,15 @@
 <div class="routes" *ngIf="searchResponse.routes.length > 0; else noRides">
-  <div class="route" *ngFor="let route of searchResponse.routes">
+  <div
+    class="route"
+    *ngFor="let route of searchResponse.routes"
+    (click)="onCardClick(route)"
+    (keyup.enter)="onCardClick(route)"
+    (keydown.space)="onCardClick(route)"
+    tabindex="0"
+  >
     <div *ngFor="let schedule of route.schedule" class="schedule">
       <div class="info-section">
-        <button tuiButton (click)="showDialog(route)" size="s" appearance="outline">Route</button>
+        <button tuiButton (click)="showDialog(route, $event)" size="s" appearance="outline">Route</button>
 
         <div class="time">
           <div class="start-time tui-text_body-l-2">{{ schedule.time[0] | date: 'shortTime' }}</div>

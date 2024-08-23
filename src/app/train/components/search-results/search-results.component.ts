@@ -7,6 +7,7 @@ import { Route } from '@app/train/models/route.model';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { StationData } from '@app/train/models/station-data.model';
 import { RouteModalComponent } from '@app/train/components/route-modal/route-modal.component';
+import { Router } from '@angular/router';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
 export interface RouteModalData {
@@ -24,11 +25,15 @@ export interface RouteModalData {
 export class SearchResultsComponent {
   private readonly dialogs = inject(TuiDialogService);
 
+  private readonly router = inject(Router);
+
   private readonly injector = inject(INJECTOR);
 
   searchResponse = searchResponse;
 
-  protected showDialog(route: Route): void {
+  protected showDialog(route: Route, event: Event): void {
+    event.stopPropagation();
+
     this.dialogs
       .open(new PolymorpheusComponent(RouteModalComponent, this.injector), {
         size: 'm',
@@ -41,5 +46,17 @@ export class SearchResultsComponent {
         } as RouteModalData,
       })
       .subscribe();
+  }
+
+  protected onCardClick(route: Route): void {
+    const fromStationId = this.searchResponse.from.stationId;
+    const toStationId = this.searchResponse.to.stationId;
+
+    this.router.navigate(['/trip', route.schedule[0].rideId], {
+      queryParams: {
+        from: fromStationId,
+        to: toStationId,
+      },
+    });
   }
 }

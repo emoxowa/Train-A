@@ -5,11 +5,8 @@ export const TrainRoutes: Routes = [
     path: '',
     loadComponent: () => import('./pages/home-page/home-page.component').then((m) => m.HomePageComponent),
   },
-  // {
-  //   path: 'video/:id',
-  //   loadComponent: () =>
-  //     import('./pages/detailed-information-page/detailed-information-page.component').then(
-  //       (m) => m.DetailedInformationPageComponent
-  //     ),
-  // },
+  {
+    path: 'trip/:rideId',
+    loadComponent: () => import('./components/trip-details/trip-details.component').then((m) => m.TripDetailsComponent),
+  },
 ];
