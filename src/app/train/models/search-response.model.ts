@@ -28,7 +28,7 @@ export const searchResponse: SearchResponse = {
           rideId: 101,
           segments: [
             {
-              time: ['2024-08-13T17:30:00Z', '2024-08-13T17:35:00Z'],
+              time: ['2024-08-13T16:30:00Z', '2024-08-13T16:35:00Z'],
               price: { '1st class': 300, '2nd class': 200 },
               occupiedSeats: [1, 2, 3],
             },
@@ -58,12 +58,12 @@ export const searchResponse: SearchResponse = {
           rideId: 102,
           segments: [
             {
-              time: ['2024-08-13T20:05:00Z', '2024-08-13T20:10:00Z'], // 5 минут
+              time: ['2024-08-13T19:05:00Z', '2024-08-13T20:10:00Z'],
               price: { 'Women-only': 586 },
               occupiedSeats: [4],
             },
             {
-              time: ['2024-08-13T23:15:00Z', '2024-08-13T24:00:00Z'], // 1 час 45 минут в пути
+              time: ['2024-08-13T23:15:00Z', '2024-08-13T24:00:00Z'],
               price: { 'Women-only': 600 },
               occupiedSeats: [5],
             },

@@ -1,1 +1,26 @@
-<p>trip-details works!</p>
+<ng-container *ngIf="trip$ | async as trip; else notFound">
+  <div class="header">
+    <button tuiAppBarBack tuiSlot="left" (click)="goBack()" class="button-back">Back</button>
+
+    <div>
+      <div class="tui-text_body-l-1">
+        {{ trip.from.city }} → {{ trip.to.city }}, {{ trip.route.schedule[0].time[0] | date: 'MMM d, h:mm a' }}
+      </div>
+
+      <div class="ride">
+        Ride {{ trip.route.id }}
+        <button tuiButton (click)="showDialog(trip.route, $event)" size="s" appearance="outline">Route</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <tui-segmented>
+      <button *ngFor="let carriage of trip.route.carriages">{{ carriage }}</button>
+    </tui-segmented>
+  </div>
+</ng-container>
+
+<ng-template #notFound>
+  <p>Rout not found.</p>
+</ng-template>

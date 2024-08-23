@@ -6,7 +6,7 @@ export const TrainRoutes: Routes = [
     loadComponent: () => import('./pages/home-page/home-page.component').then((m) => m.HomePageComponent),
   },
   {
-    path: 'trip/:rideId',
+    path: 'trip/:id',
     loadComponent: () => import('./components/trip-details/trip-details.component').then((m) => m.TripDetailsComponent),
   },
 ];
