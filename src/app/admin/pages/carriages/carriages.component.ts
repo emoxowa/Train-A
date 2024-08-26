@@ -1,19 +1,27 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
-import { INewCarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { AdminService } from '@app/admin/service/admin.service';
+import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
+import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
+import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-carriages',
   standalone: true,
-  imports: [TuiButton],
+  imports: [TuiButton, CommonModule],
   templateUrl: './carriages.component.html',
   styleUrl: './carriages.component.scss',
 })
 export class CarriagesComponent {
   private adminService = inject(AdminService);
+
+  private store = inject(Store);
+
+  public carriagesList$ = this.store.select(selectCarriagesArr);
 
   // for developing
   readonly newAdmin: ICreateAdmin = {
@@ -22,6 +30,7 @@ export class CarriagesComponent {
   };
 
   constructor() {
+    this.store.dispatch(CarriageActions.loadCarriagesList());
     // for developing
     this.adminService
       .loginAdmin(this.newAdmin)
@@ -34,8 +43,8 @@ export class CarriagesComponent {
   }
 
   createNewCarriagesType() {
-    const newCarriagesType: INewCarriagesType = {
-      name: 'test',
+    const newCarriagesType: Omit<ICarriagesType, 'code'> = {
+      name: 'test2',
       rows: 20,
       leftSeats: 2,
       rightSeats: 3,

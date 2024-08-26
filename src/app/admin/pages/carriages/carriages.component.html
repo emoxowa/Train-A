@@ -1,3 +1,5 @@
 <p>carriages works!</p>
+@let carriagesList = carriagesList$ | async | json;
+<div>{{ carriagesList }}</div>
 <button size="l" tuiButton (click)="createNewCarriagesType()">Add station</button>
 <button size="l" tuiButton (click)="getCarriagesTypes()">Get types</button>

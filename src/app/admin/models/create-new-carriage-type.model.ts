@@ -1,4 +1,5 @@
-export interface INewCarriagesType {
+export interface ICarriagesType {
+  code: string;
   name: string;
   rows: number;
   leftSeats: number;

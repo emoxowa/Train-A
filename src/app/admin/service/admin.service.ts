@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ICreateStationResponse, IStationList } from '../models/station-list.model';
 import { ICreateStation } from '../models/create-station.model';
 import { IAdminToken, ICreateAdmin } from '../models/create-admin';
-import { INewCarriagesType } from '../models/create-new-carriage-type.model';
+import { ICarriagesType } from '../models/create-new-carriage-type.model';
 
 @Injectable({
   providedIn: 'root',
@@ -34,11 +34,11 @@ export class AdminService {
     });
   }
 
-  getCarriageList() {
-    return this.http.get('/api/carriage');
+  getCarriageList(): Observable<ICarriagesType[]> {
+    return this.http.get<ICarriagesType[]>('/api/carriage');
   }
 
-  createNewCarriageType(newCarriageType: INewCarriagesType) {
+  createNewCarriageType(newCarriageType: Omit<ICarriagesType, 'code'>) {
     return this.http.post('/api/carriage', newCarriageType, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
@@ -46,7 +46,7 @@ export class AdminService {
     });
   }
 
-  updateCarriageType(carriageType: string, updateCarriageType: INewCarriagesType) {
+  updateCarriageType(carriageType: string, updateCarriageType: Omit<ICarriagesType, 'code'>) {
     return this.http.put(`/api/carriage/${carriageType}`, updateCarriageType);
   }
 

@@ -10,6 +10,7 @@ import { routes } from './app.routes';
 import { appReducer } from './core/store/app.reducer';
 import { initialAppState } from './core/store/app-state';
 import { StationEffectService } from './core/store/admin-store/effects/station-effect.service';
+import { CarriageEffectService } from './core/store/admin-store/effects/carriage-effect.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,6 +20,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     NG_EVENT_PLUGINS,
     provideStore(appReducer, { initialState: initialAppState }),
-    provideEffects([StationEffectService]),
+    provideEffects([StationEffectService, CarriageEffectService]),
   ],
 };
