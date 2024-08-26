@@ -1,0 +1,79 @@
+:host {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+}
+
+.tui-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .stations-top-info {
+    display: flex;
+    gap: 50px;
+
+    &__form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 60vw;
+    }
+
+    @media (width <= 900px) {
+      &__form {
+        width: auto;
+      }
+    }
+  }
+
+  .stations-bottom-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &__card {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      padding: 10px;
+
+      border: 1px solid gray;
+      border-radius: 10px;
+    }
+
+    &__card-name {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    &__lat {
+      font-size: 15px;
+    }
+
+    &__lng {
+      font-size: 15px;
+    }
+
+    &__connect-to-header {
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+}
+
+#map {
+  width: 50vw;
+  height: 50vh;
+}
+
+@media (width <= 900px) {
+  .stations-top-info {
+    flex-direction: column;
+  }
+
+  #map {
+    width: auto;
+  }
+}

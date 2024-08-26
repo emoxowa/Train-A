@@ -1,0 +1,65 @@
+<div class="tui-container">
+  <div class="stations-top-info">
+    <div id="map"></div>
+    <form class="stations-top-info__form" [formGroup]="stationForm" (ngSubmit)="createStation()">
+      <tui-input formControlName="city">
+        City
+        <input tuiTextfieldLegacy type="text" />
+      </tui-input>
+      <tui-input formControlName="latitude">
+        Latitude
+        <input tuiTextfieldLegacy placeholder="enter latitude" type="text" (change)="onCoordinatesChange()" />
+      </tui-input>
+      <tui-input formControlName="longitude">
+        Longitude
+        <input tuiTextfieldLegacy placeholder="enter longitude" type="text" (change)="onCoordinatesChange()" />
+      </tui-input>
+      <div class="station__connect-to-container" formArrayName="connections">
+        @for (connectItem of connections.controls; track connectItem; let i = $index) {
+          <tui-select
+            *tuiLet="stationsAndId$ | async as items"
+            [valueContent]="items ? stringify(items) : loading"
+            [formControlName]="i"
+            (ngModelChange)="onSelectChange(i)"
+          >
+            Connect to
+            <ng-template tuiDataList>
+              <tui-data-list *ngIf="items; else loading">
+                <button *ngFor="let item of items" tuiOption [value]="item.id">
+                  {{ item.city }}
+                </button>
+              </tui-data-list>
+            </ng-template>
+            <ng-template #loading>
+              <tui-loader class="tui-space_vertical-3 loader" />
+            </ng-template>
+          </tui-select>
+        }
+      </div>
+      <button size="l" [loading]="stationCreateIndicate$ | async" tuiButton>Add station</button>
+    </form>
+  </div>
+  <div class="stations-bottom-info">
+    @let stations = stations$ | async;
+    @if (stations) {
+      @for (station of stations; track station) {
+        <div class="stations-bottom-info__card">
+          <div class="stations-bottom-info__card-name">{{ station.city }}</div>
+          <div class="stations-bottom-info__lat">latitude: {{ station.latitude }}</div>
+          <div class="stations-bottom-info__lng">longitude: {{ station.longitude }}</div>
+          <div class="stations-bottom-info__connect-to">
+            <span class="stations-bottom-info__connect-to-header">Connect to: </span><br />
+            @for (connectedStation of station.connectedTo; track connectedStation) {
+              @if (connectedStation) {
+                <span>{{ getCityNameById(connectedStation.id) }} </span>
+              }
+            }
+          </div>
+          <button size="s" tuiButton [loading]="loadingStates[$index]" (click)="removeStation(station.id, $index)">
+            Remove station
+          </button>
+        </div>
+      }
+    }
+  </div>
+</div>
