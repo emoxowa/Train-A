@@ -5,4 +5,4 @@ import { appConfig } from '@app/app.config';
 
 startServer()
   .then(() => bootstrapApplication(AppComponent, appConfig))
-  .catch((err: Error) => console.error(err));
+  .catch((err) => console.error(err));
