@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { SearchResponse, searchResponse } from '@app/train/models/search-response.model';
 import { Route } from '@app/train/models/route.model';
-import { StationData } from '../models/station-data.model';
+import { IStation } from '@app/admin/models/station-list.model';
 
 export interface TripDetails {
   route: Route;
-  from: StationData;
-  to: StationData;
+  from: IStation;
+  to: IStation;
 }
 @Injectable({
   providedIn: 'root',

@@ -5,15 +5,15 @@ import { TuiButton, TuiDialogService, TuiIcon } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';
 import { Route } from '@app/train/models/route.model';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { StationData } from '@app/train/models/station-data.model';
 import { RouteModalComponent } from '@app/train/components/route-modal/route-modal.component';
 import { Router } from '@angular/router';
+import { IStation } from '@app/admin/models/station-list.model';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
 export interface RouteModalData {
   route: Route;
-  fromStation: StationData;
-  toStation: StationData;
+  fromStation: IStation;
+  toStation: IStation;
 }
 @Component({
   selector: 'app-search-results',
@@ -49,8 +49,8 @@ export class SearchResultsComponent {
   }
 
   protected onCardClick(route: Route): void {
-    const fromStationId = this.searchResponse.from.stationId;
-    const toStationId = this.searchResponse.to.stationId;
+    const fromStationId = this.searchResponse.from.id;
+    const toStationId = this.searchResponse.to.id;
 
     this.router.navigate(['/trip', route.schedule[0].rideId], {
       queryParams: {
