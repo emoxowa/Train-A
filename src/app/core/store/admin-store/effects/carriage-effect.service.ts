@@ -28,4 +28,13 @@ export class CarriageEffectService {
       )
     )
   );
+
+  createCarriages$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(CarriageActions.createNewCarriageType),
+        switchMap(({ newCarriages }) => this.adminService.createNewCarriageType(newCarriages))
+      ),
+    { dispatch: false }
+  );
 }

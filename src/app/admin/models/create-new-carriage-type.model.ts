@@ -1,5 +1,5 @@
 export interface ICarriagesType {
-  code: string;
+  code?: string;
   name: string;
   rows: number;
   leftSeats: number;

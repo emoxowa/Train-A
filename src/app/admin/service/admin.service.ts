@@ -38,7 +38,7 @@ export class AdminService {
     return this.http.get<ICarriagesType[]>('/api/carriage');
   }
 
-  createNewCarriageType(newCarriageType: Omit<ICarriagesType, 'code'>) {
+  createNewCarriageType(newCarriageType: ICarriagesType): Observable<Pick<ICarriagesType, 'code'>> {
     return this.http.post('/api/carriage', newCarriageType, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
@@ -46,7 +46,7 @@ export class AdminService {
     });
   }
 
-  updateCarriageType(carriageType: string, updateCarriageType: Omit<ICarriagesType, 'code'>) {
+  updateCarriageType(carriageType: string, updateCarriageType: ICarriagesType) {
     return this.http.put(`/api/carriage/${carriageType}`, updateCarriageType);
   }
 

@@ -9,5 +9,11 @@ export const carriageReducer = createReducer(
       ...state,
       carriageList,
     };
+  }),
+  on(CarriageActions.createNewCarriageType, (state, { newCarriages }): ICarriageState => {
+    return {
+      ...state,
+      carriageList: [newCarriages, ...state.carriageList],
+    };
   })
 );

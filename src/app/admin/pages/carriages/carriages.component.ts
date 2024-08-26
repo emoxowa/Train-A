@@ -44,20 +44,13 @@ export class CarriagesComponent {
 
   createNewCarriagesType() {
     const newCarriagesType: Omit<ICarriagesType, 'code'> = {
-      name: 'test2',
+      name: 'boba',
       rows: 20,
       leftSeats: 2,
       rightSeats: 3,
     };
 
-    this.adminService.createNewCarriageType(newCarriagesType).subscribe({
-      next: () => {
-        // console.log('response create', response);
-      },
-      error: (error) => {
-        console.error('Error', error);
-      },
-    });
+    this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: newCarriagesType }));
   }
 
   getCarriagesTypes() {

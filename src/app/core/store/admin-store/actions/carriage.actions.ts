@@ -17,5 +17,8 @@ export const CarriageActions = {
   ),
   updCarriageType: createAction(ECarriageActions.UpdCarriageType),
   updCarriageTypeSuccsess: createAction(ECarriageActions.UpdCarriageTypeSuccsess),
-  createNewCarriageType: createAction(ECarriageActions.CreateNewCarriageType),
+  createNewCarriageType: createAction(
+    ECarriageActions.CreateNewCarriageType,
+    props<{ newCarriages: ICarriagesType }>()
+  ),
 };
