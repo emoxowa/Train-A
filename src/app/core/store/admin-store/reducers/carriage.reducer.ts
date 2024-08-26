@@ -15,5 +15,13 @@ export const carriageReducer = createReducer(
       ...state,
       carriageList: [newCarriages, ...state.carriageList],
     };
+  }),
+  on(CarriageActions.updCarriageType, (state, { code, updatedCarriage }): ICarriageState => {
+    return {
+      ...state,
+      carriageList: state.carriageList.map((carriage) =>
+        carriage.code === code ? { ...carriage, updatedCarriage } : carriage
+      ),
+    };
   })
 );

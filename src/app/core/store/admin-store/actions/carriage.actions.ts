@@ -15,8 +15,14 @@ export const CarriageActions = {
     ECarriageActions.LoadCarriagesListSuccsess,
     props<{ carriageList: ICarriagesType[] }>()
   ),
-  updCarriageType: createAction(ECarriageActions.UpdCarriageType),
-  updCarriageTypeSuccsess: createAction(ECarriageActions.UpdCarriageTypeSuccsess),
+  updCarriageType: createAction(
+    ECarriageActions.UpdCarriageType,
+    props<{ code: string; updatedCarriage: Omit<ICarriagesType, 'code'> }>()
+  ),
+  updCarriageTypeSuccsess: createAction(
+    ECarriageActions.UpdCarriageTypeSuccsess,
+    props<{ code: string; updatedCarriage: Omit<ICarriagesType, 'code'> }>()
+  ),
   createNewCarriageType: createAction(
     ECarriageActions.CreateNewCarriageType,
     props<{ newCarriages: ICarriagesType }>()

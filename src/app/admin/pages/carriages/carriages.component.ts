@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { AdminService } from '@app/admin/service/admin.service';
@@ -7,12 +8,13 @@ import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.ac
 import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
+import { TuiInputModule } from '@taiga-ui/legacy';
 import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-carriages',
   standalone: true,
-  imports: [TuiButton, CommonModule],
+  imports: [TuiButton, CommonModule, ReactiveFormsModule, TuiInputModule],
   templateUrl: './carriages.component.html',
   styleUrl: './carriages.component.scss',
 })
@@ -22,6 +24,15 @@ export class CarriagesComponent {
   private store = inject(Store);
 
   public carriagesList$ = this.store.select(selectCarriagesArr);
+
+  private formBuilder = inject(FormBuilder);
+
+  public editCarriagesForm: FormGroup = this.formBuilder.group({
+    name: '',
+    rows: '',
+    leftSeats: '',
+    rightSeats: '',
+  });
 
   // for developing
   readonly newAdmin: ICreateAdmin = {
@@ -40,6 +51,10 @@ export class CarriagesComponent {
         })
       )
       .subscribe();
+
+    this.editCarriagesForm.valueChanges.subscribe((formValues) => {
+      this.onFieldChange(formValues);
+    });
   }
 
   createNewCarriagesType() {
@@ -59,5 +74,12 @@ export class CarriagesComponent {
         // console.log('carriages', data);
       },
     });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public onFieldChange(formValues: ICarriagesType): void {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const newFieldCangeValue = formValues;
+    // console.log('Dynamic form values', formValues);
   }
 }
