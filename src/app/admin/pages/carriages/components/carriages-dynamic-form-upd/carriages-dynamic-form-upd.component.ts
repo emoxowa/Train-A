@@ -1,7 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
-import { AdminService } from '@app/admin/service/admin.service';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';

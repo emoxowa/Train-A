@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { AdminService } from '@app/admin/service/admin.service';
@@ -16,7 +16,14 @@ import { CarriagesDynamicFromCreateComponent } from './components/carriages-dyna
 @Component({
   selector: 'app-carriages',
   standalone: true,
-  imports: [TuiButton, CommonModule, ReactiveFormsModule, TuiInputModule, CarriagesDynamicFormComponent, CarriagesDynamicFromCreateComponent],
+  imports: [
+    TuiButton,
+    CommonModule,
+    ReactiveFormsModule,
+    TuiInputModule,
+    CarriagesDynamicFormComponent,
+    CarriagesDynamicFromCreateComponent,
+  ],
   templateUrl: './carriages.component.html',
   styleUrl: './carriages.component.scss',
 })
@@ -59,11 +66,11 @@ export class CarriagesComponent {
     this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: newCarriagesType }));
   }
 
-  toggleCreateField(){
-    if(!this.isCreateFieldOpen){
+  toggleCreateField() {
+    if (!this.isCreateFieldOpen) {
       this.isCreateFieldOpen = true;
     } else {
       this.isCreateFieldOpen = false;
-    } 
+    }
   }
 }
