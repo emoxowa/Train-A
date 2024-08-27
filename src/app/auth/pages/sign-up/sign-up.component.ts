@@ -1,25 +1,25 @@
 import { NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CustomErrorComponent } from '@app/auth/components/custom-error/custom-error.component';
+import { AuthService } from '@app/auth/services/auth.service';
 import { EmailValidators } from '@app/auth/validators/emailValidators';
 import { PasswordValidators } from '@app/auth/validators/passwordValidators';
 import { TuiButton } from '@taiga-ui/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [ReactiveFormsModule, TuiButton, FormsModule, NgIf, CustomErrorComponent, RouterLink],
+  imports: [ReactiveFormsModule, TuiButton, NgIf, CustomErrorComponent, RouterLink],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,10 +27,12 @@ import { TuiButton } from '@taiga-ui/core';
 export class SignUpComponent {
   public registerForm!: FormGroup;
   public submitFirstClicked = false;
+  public isSubmitting = false;
+  public subscriber!: Subscription;
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private authService: AuthService,
     private router: Router
   ) {
     this.registerForm = this.fb.group(
@@ -56,21 +58,29 @@ export class SignUpComponent {
   onSubmit() {
     if (this.registerForm.invalid) return;
 
+    this.isSubmitting = true;
+
     if (!this.submitFirstClicked) {
       this.submitFirstClicked = true;
     }
 
     const { email, password } = this.registerForm.value;
 
-    this.http.post('/api/signup', { email, password }).subscribe({
-      next: (response) => {
-        return this.router.navigate(['/signin']);
+    this.subscriber = this.authService.signUp(email, password).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.router.navigate(['/signin']);
       },
       error: (error) => {
         if (error.status === 400 && error.error.reason === 'invalidUniqueKey') {
+          this.isSubmitting = false;
           this.registerForm.get('email')?.setErrors({ invalidUniqueKey: true });
         }
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriber.unsubscribe();
   }
 }

@@ -43,7 +43,7 @@
       <button
         type="button"
         (click)="this.onSubmit()"
-        [disabled]="this.registerForm.invalid"
+        [disabled]="this.registerForm.invalid || this.isSubmitting"
         class="register-btn"
         size="m"
         tuiButton
