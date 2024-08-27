@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-// import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
@@ -52,11 +53,14 @@ export class CarriagesDynamicFromCreateComponent {
 
   // eslint-disable-next-line class-methods-use-this
   createStation() {
-    // const createCarriage: ICarriagesType = {
-    //   name: this.createCarriagesForm.get('name')?.value,
-    //   rows: this.createCarriagesForm.get('rows')?.value,
-    //   leftSeats: this.createCarriagesForm.get('leftSeats')?.value,
-    //   rightSeats: this.createCarriagesForm.get('rightSeats')?.value,
-    // };
+    const createNewCarriage: ICarriagesType = {
+      code: this.createCarriagesForm.get('name')?.value,
+      name: this.createCarriagesForm.get('name')?.value,
+      rows: this.createCarriagesForm.get('rows')?.value,
+      leftSeats: this.createCarriagesForm.get('leftSeats')?.value,
+      rightSeats: this.createCarriagesForm.get('rightSeats')?.value,
+    };
+
+    this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: createNewCarriage }));
   }
 }
