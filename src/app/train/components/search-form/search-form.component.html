@@ -6,7 +6,7 @@
         <span class="tui-required"></span>
         <ng-container *ngIf="items?.length">
           <tui-data-list *tuiDataList>
-            <button *ngFor="let item of items" tuiOption [value]="item" (click)="form.get('from')?.setValue(item.city)">
+            <button *ngFor="let item of items" tuiOption [value]="item" (click)="form.get('from')?.setValue(item)">
               {{ item.city }}
             </button>
           </tui-data-list>
@@ -34,7 +34,7 @@
         <span class="tui-required"></span>
         <ng-container *ngIf="items?.length">
           <tui-data-list *tuiDataList>
-            <button *ngFor="let item of items" tuiOption [value]="item" (click)="form.get('to')?.setValue(item.city)">
+            <button *ngFor="let item of items" tuiOption [value]="item" (click)="form.get('to')?.setValue(item)">
               {{ item.city }}
             </button>
           </tui-data-list>

@@ -1,52 +1,38 @@
-import { IStation } from '@app/admin/models/station-list.model';
 import { Route } from './route.model';
 
+export interface IGeolocation {
+  latitude: number;
+  longitude: number;
+}
+
+export interface IStationResponse {
+  stationId: number;
+  city: string;
+  geolocation: IGeolocation;
+}
+
 export interface SearchResponse {
-  from: IStation;
-  to: IStation;
+  from: IStationResponse;
+  to: IStationResponse;
   routes: Route[];
 }
 
 export const searchResponse: SearchResponse = {
   from: {
-    id: 1,
+    stationId: 1,
     city: 'City45',
-    latitude: 55.7558,
-    longitude: 37.6173,
-    connectedTo: [
-      {
-        id: 2,
-        connectedTo: { id: 2, distance: 150 },
-        latitude: 55.7558,
-        longitude: 37.6173,
-      },
-      {
-        id: 3,
-        connectedTo: { id: 3, distance: 300 },
-        latitude: 55.7558,
-        longitude: 37.6173,
-      },
-    ],
+    geolocation: {
+      latitude: 55.7558,
+      longitude: 37.6173,
+    },
   },
   to: {
-    id: 3,
+    stationId: 3,
     city: 'City102',
-    latitude: 40.7128,
-    longitude: -74.006,
-    connectedTo: [
-      {
-        id: 1,
-        connectedTo: { id: 1, distance: 300 },
-        latitude: 40.7128,
-        longitude: -74.006,
-      },
-      {
-        id: 2,
-        connectedTo: { id: 2, distance: 450 },
-        latitude: 40.7128,
-        longitude: -74.006,
-      },
-    ],
+    geolocation: {
+      latitude: 40.7128,
+      longitude: -74.006,
+    },
   },
   routes: [
     {

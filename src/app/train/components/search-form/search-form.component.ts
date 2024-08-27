@@ -10,6 +10,8 @@ import { selectStationArr } from '@app/core/store/admin-store/selectors/stations
 import { Store } from '@ngrx/store';
 import { StationsActions } from '@app/core/store/admin-store/actions/stations.actions';
 import { IStation } from '@app/admin/models/station-list.model';
+import { SearchRequest } from '@app/train/models/search-request.model';
+import { TrainService } from '@app/train/services/train.service';
 
 @Component({
   selector: 'app-search-form',
@@ -32,6 +34,8 @@ import { IStation } from '@app/admin/models/station-list.model';
 export class SearchFormComponent implements OnInit {
   private store = inject(Store);
 
+  private trainService = inject(TrainService);
+
   protected minDate = TuiDay.currentLocal();
 
   public stations$: Observable<IStation[]> = this.store.select(selectStationArr);
@@ -41,8 +45,8 @@ export class SearchFormComponent implements OnInit {
   }
 
   protected form = new FormGroup({
-    from: new FormControl('', Validators.required),
-    to: new FormControl('', Validators.required),
+    from: new FormControl<IStation | null>(null, Validators.required),
+    to: new FormControl<IStation | null>(null, Validators.required),
     date: new FormControl(this.minDate, Validators.required),
     time: new FormControl(null),
   });
@@ -53,13 +57,42 @@ export class SearchFormComponent implements OnInit {
 
   onSearch(): void {
     if (this.form.valid) {
-      console.log(this.form.value);
+      const searchRequest = this.prepareSearchRequest();
+
+      this.trainService
+        .searchTrips(
+          searchRequest.fromLatitude,
+          searchRequest.fromLongitude,
+          searchRequest.toLatitude,
+          searchRequest.toLongitude,
+          searchRequest.time
+        )
+        .subscribe((response) => {
+          console.log('Search Response:', response);
+        });
     }
   }
 
+  private prepareSearchRequest(): SearchRequest {
+    const fromStation = this.form.get('from')!.value;
+    const toStation = this.form.get('to')!.value;
+    const date = this.form.get('date')!.value as TuiDay;
+    const time = this.form.get('time')!.value;
+
+    const timeInMillis = time ? date.append(time).toUtcNativeDate().getTime() : date.toUtcNativeDate().getTime();
+
+    return {
+      fromLatitude: fromStation!.latitude,
+      fromLongitude: fromStation!.longitude,
+      toLatitude: toStation!.latitude,
+      toLongitude: toStation!.longitude,
+      time: timeInMillis,
+    };
+  }
+
   swapFromTo(): void {
-    const fromValue: string | null = this.form.get('from')?.value ?? null;
-    const toValue: string | null = this.form.get('to')?.value ?? null;
+    const fromValue: IStation | null = this.form.get('from')?.value ?? null;
+    const toValue: IStation | null = this.form.get('to')?.value ?? null;
 
     this.form.get('from')?.setValue(toValue);
     this.form.get('to')?.setValue(fromValue);
@@ -67,19 +100,21 @@ export class SearchFormComponent implements OnInit {
 
   protected readonly itemsFrom$: Observable<IStation[]> = this.form.get('from')!.valueChanges.pipe(
     startWith(''),
-    switchMap((value) =>
-      this.stations$.pipe(
-        map((stations) => stations.filter((station) => TUI_DEFAULT_MATCHER(station.city, value ?? '')))
-      )
-    )
+    switchMap((value) => {
+      const searchValue = typeof value === 'string' ? value : (value?.city ?? '');
+      return this.stations$.pipe(
+        map((stations) => stations.filter((station) => TUI_DEFAULT_MATCHER(station.city, searchValue)))
+      );
+    })
   );
 
   protected readonly itemsTo$: Observable<IStation[]> = this.form.get('to')!.valueChanges.pipe(
     startWith(''),
-    switchMap((value) =>
-      this.stations$.pipe(
-        map((stations) => stations.filter((station) => TUI_DEFAULT_MATCHER(station.city, value ?? '')))
-      )
-    )
+    switchMap((value) => {
+      const searchValue = typeof value === 'string' ? value : (value?.city ?? '');
+      return this.stations$.pipe(
+        map((stations) => stations.filter((station) => TUI_DEFAULT_MATCHER(station.city, searchValue)))
+      );
+    })
   );
 }

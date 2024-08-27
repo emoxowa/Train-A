@@ -51,8 +51,8 @@ export class TripDetailsComponent {
             dismissible: true,
             data: {
               route,
-              fromStation: trip.from,
-              toStation: trip.to,
+              from: trip.from,
+              to: trip.to,
             } as RouteModalData,
           })
           .subscribe();
