@@ -1,0 +1,56 @@
+<div class="container">
+  <h1 class="title">Sign Up</h1>
+
+  <form class="form" [formGroup]="this.registerForm">
+    <div class="field">
+      <label class="label" for="email">Email</label>
+      <input class="input" formControlName="email" type="email" id="email" />
+      <div>
+        <app-custom-error
+          *ngIf="submitFirstClicked && registerForm.get('email')?.invalid"
+          controlName="email"
+          [customErrors]="{
+            required: 'Required',
+            validEmail: 'Incorrect email',
+          }"
+        ></app-custom-error>
+        <div class="error" *ngIf="registerForm.get('email')?.hasError('invalidUniqueKey')">
+          Account with this email already exists,
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="password">Password</label>
+      <input class="input" formControlName="password" type="password" id="password" />
+      <app-custom-error
+        *ngIf="submitFirstClicked && registerForm.get('password')?.invalid"
+        controlName="password"
+        [customErrors]="{
+          required: 'Required',
+          validPassword: 'Password must be at least 8 characters long',
+        }"
+      ></app-custom-error>
+    </div>
+
+    <div class="field">
+      <label class="label" for="repeat-password">Repeat Password</label>
+      <input class="input" formControlName="repeatPassword" type="password" id="repeat-password" />
+      <div class="error" *ngIf="registerForm.hasError('validRepeatPassword')">Passwords do not match</div>
+    </div>
+
+    <div class="buttons">
+      <button
+        type="button"
+        (click)="this.onSubmit()"
+        [disabled]="this.registerForm.invalid"
+        class="register-btn"
+        size="m"
+        tuiButton
+      >
+        Register
+      </button>
+      <button routerLink="/signin" size="m" appearance="flat" tuiButton>Sign In</button>
+    </div>
+  </form>
+</div>
