@@ -66,6 +66,7 @@ export class CarriagesDynamicFormComponent implements OnInit {
 
   updStation() {
     const updCarriage: ICarriagesType = {
+      code: this.editCarriagesForm.get('name')?.value,
       name: this.editCarriagesForm.get('name')?.value,
       rows: this.editCarriagesForm.get('rows')?.value,
       leftSeats: this.editCarriagesForm.get('leftSeats')?.value,
