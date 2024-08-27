@@ -12,7 +12,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
   standalone: true,
   imports: [TuiButton, ReactiveFormsModule, TuiInputModule],
   template: `
-    <form class="carriages__edit-form" [formGroup]="editCarriagesForm">
+    <form class="carriages__edit-form" [formGroup]="editCarriagesForm" (ngSubmit)="updStation()">
       <tui-input placeholder="enter new name" formControlName="name">
         name
         <input tuiTextfieldLegacy placeholder="enter new name" type="text" />
@@ -64,6 +64,21 @@ export class CarriagesDynamicFormComponent implements OnInit {
           );
         }
       });
+    }
+  }
+
+  updStation() {
+    const updCarriage: ICarriagesType = {
+      name: this.editCarriagesForm.get('name')?.value,
+      rows: this.editCarriagesForm.get('rows')?.value,
+      leftSeats: this.editCarriagesForm.get('leftSeats')?.value,
+      rightSeats: this.editCarriagesForm.get('rightSeats')?.value,
+    };
+
+    if (this.carriagesData.code) {
+      this.store.dispatch(
+        CarriageActions.updCarriageTypeSuccsess({ code: this.carriagesData.code, updatedCarriage: updCarriage })
+      );
     }
   }
 }

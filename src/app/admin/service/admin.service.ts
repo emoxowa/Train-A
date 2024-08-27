@@ -50,7 +50,11 @@ export class AdminService {
     carriageType: string,
     updateCarriageType: ICarriagesType
   ): Observable<Omit<ICarriagesType, 'code'>> {
-    return this.http.put<Omit<ICarriagesType, 'code'>>(`/api/carriage/${carriageType}`, updateCarriageType);
+    return this.http.put<Omit<ICarriagesType, 'code'>>(`/api/carriage/${carriageType}`, updateCarriageType, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    });
   }
 
   // it's for developing

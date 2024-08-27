@@ -37,4 +37,13 @@ export class CarriageEffectService {
       ),
     { dispatch: false }
   );
+
+  updCarriages$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(CarriageActions.updCarriageTypeSuccsess),
+        switchMap(({ code, updatedCarriage }) => this.adminService.updateCarriageType(code, updatedCarriage))
+      ),
+    { dispatch: false }
+  );
 }
