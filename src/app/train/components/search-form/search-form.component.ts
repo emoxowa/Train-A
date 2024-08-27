@@ -129,6 +129,8 @@ export class SearchFormComponent implements OnInit {
   onDateSelected(date: TuiDay): void {
     this.selectedDate = date;
     this.form.get('date')?.setValue(date);
+
+    this.onSearch();
   }
 
   addFutureDates(): void {
