@@ -1,24 +1,12 @@
 <p>carriages works!</p>
-@let carriagesList = carriagesList$ | async | json;
-<div>{{ carriagesList }}</div>
-<button size="l" tuiButton (click)="createNewCarriagesType()">Add station</button>
-<button size="l" tuiButton (click)="getCarriagesTypes()">Get types</button>
-<form class="carriages__edit-form" [formGroup]="editCarriagesForm">
-  <tui-input placeholder="enter new name" formControlName="name">
-    name
-    <input tuiTextfieldLegacy placeholder="enter new name" type="text" />
-  </tui-input>
-  <tui-input formControlName="rows">
-    rows
-    <input tuiTextfieldLegacy placeholder="enter new rows" type="number" />
-  </tui-input>
-  <tui-input formControlName="leftSeats">
-    left seats
-    <input tuiTextfieldLegacy placeholder="enter new left seats" type="number" />
-  </tui-input>
-  <tui-input formControlName="rightSeats">
-    right seats
-    <input tuiTextfieldLegacy placeholder="enter new right seats" type="number" />
-  </tui-input>
-  <button size="l" tuiButton>Add station</button>
-</form>
+@let carriagesList = carriagesList$ | async;
+@for (carriage of carriagesList; track carriage) {
+  <div>code: {{ carriage.code }}</div>
+  <div>name: {{ carriage.name }}</div>
+  <div>rows: {{ carriage.rows }}</div>
+  <div>leftSeats: {{ carriage.leftSeats }}</div>
+  <div>rightSeats: {{ carriage.rightSeats }}</div>
+  <app-carriages-dynamic-form [carriagesData]="carriage"></app-carriages-dynamic-form>
+}
+<!-- <button size="l" tuiButton (click)="createNewCarriagesType()">Add station</button>
+<button size="l" tuiButton (click)="getCarriagesTypes()">Get types</button> -->

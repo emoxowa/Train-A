@@ -10,11 +10,12 @@ import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { tap } from 'rxjs';
+import { CarriagesDynamicFormComponent } from './components/carriages-dynamic-form-upd/carriages-dynamic-form-upd.component';
 
 @Component({
   selector: 'app-carriages',
   standalone: true,
-  imports: [TuiButton, CommonModule, ReactiveFormsModule, TuiInputModule],
+  imports: [TuiButton, CommonModule, ReactiveFormsModule, TuiInputModule, CarriagesDynamicFormComponent],
   templateUrl: './carriages.component.html',
   styleUrl: './carriages.component.scss',
 })
