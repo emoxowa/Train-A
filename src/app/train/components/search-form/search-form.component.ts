@@ -12,6 +12,7 @@ import { StationsActions } from '@app/core/store/admin-store/actions/stations.ac
 import { IStation } from '@app/admin/models/station-list.model';
 import { SearchRequest } from '@app/train/models/search-request.model';
 import { TrainService } from '@app/train/services/train.service';
+import { DateFilterComponent } from '../date-filter/date-filter.component';
 
 @Component({
   selector: 'app-search-form',
@@ -27,6 +28,7 @@ import { TrainService } from '@app/train/services/train.service';
     TuiInputTimeModule,
     TuiLet,
     TuiDataList,
+    DateFilterComponent,
   ],
   templateUrl: './search-form.component.html',
   styleUrl: './search-form.component.scss',
@@ -40,8 +42,12 @@ export class SearchFormComponent implements OnInit {
 
   public stations$: Observable<IStation[]> = this.store.select(selectStationArr);
 
+  public selectedDate: TuiDay | null = null;
+
   ngOnInit(): void {
     this.store.dispatch(StationsActions.loadStationList());
+    const initialDate = this.form.get('date')?.value || null;
+    this.selectedDate = initialDate;
   }
 
   protected form = new FormGroup({
@@ -117,4 +123,15 @@ export class SearchFormComponent implements OnInit {
       );
     })
   );
+
+  public availableDates: TuiDay[] = this.generateDates(this.minDate, 4);
+
+  onDateSelected(date: TuiDay): void {
+    this.selectedDate = date;
+    this.form.get('date')?.setValue(date);
+  }
+
+  private generateDates(startDate: TuiDay, numberOfDays: number): TuiDay[] {
+    return Array.from({ length: numberOfDays }, (_, index) => startDate.append({ day: index }));
+  }
 }

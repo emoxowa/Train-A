@@ -7,6 +7,13 @@
   margin: 20px 0;
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
 .form {
   width: 100%;
 }

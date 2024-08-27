@@ -1,0 +1,37 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.selected {
+  border-bottom: 2px solid var(--tui-chart-categorical-02);
+}
+
+.button {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  height: 50px;
+}
+
+.date {
+  font-size: 12px;
+  color: white;
+  margin: 0;
+}
+
+.day {
+  font-size: 10px;
+  color: white;
+  margin: 0;
+}
+
+.selected-date {
+  color: var(--tui-chart-categorical-02);
+}
