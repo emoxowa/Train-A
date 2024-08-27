@@ -1,6 +1,6 @@
 <p>carriages works!</p>
 @let carriagesList = carriagesList$ | async;
-@for (carriage of carriagesList; track carriage) {
+@for (carriage of carriagesList; track carriage.code) {
   <div>code: {{ carriage.code }}</div>
   <div>name: {{ carriage.name }}</div>
   <div>rows: {{ carriage.rows }}</div>
@@ -8,5 +8,3 @@
   <div>rightSeats: {{ carriage.rightSeats }}</div>
   <app-carriages-dynamic-form [carriagesData]="carriage"></app-carriages-dynamic-form>
 }
-<!-- <button size="l" tuiButton (click)="createNewCarriagesType()">Add station</button>
-<button size="l" tuiButton (click)="getCarriagesTypes()">Get types</button> -->

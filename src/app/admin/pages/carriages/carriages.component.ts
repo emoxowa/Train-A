@@ -52,10 +52,6 @@ export class CarriagesComponent {
         })
       )
       .subscribe();
-
-    this.editCarriagesForm.valueChanges.subscribe((formValues) => {
-      this.onFieldChange(formValues);
-    });
   }
 
   createNewCarriagesType() {
@@ -67,20 +63,5 @@ export class CarriagesComponent {
     };
 
     this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: newCarriagesType }));
-  }
-
-  getCarriagesTypes() {
-    this.adminService.getCarriageList().subscribe({
-      next: () => {
-        // console.log('carriages', data);
-      },
-    });
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  public onFieldChange(formValues: ICarriagesType): void {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const newFieldCangeValue = formValues;
-    // console.log('Dynamic form values', formValues);
   }
 }

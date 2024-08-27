@@ -20,7 +20,7 @@ export const carriageReducer = createReducer(
     return {
       ...state,
       carriageList: state.carriageList.map((carriage) =>
-        carriage.code === code ? { ...carriage, updatedCarriage } : carriage
+        carriage.code === code ? { ...carriage, ...updatedCarriage } : carriage
       ),
     };
   })

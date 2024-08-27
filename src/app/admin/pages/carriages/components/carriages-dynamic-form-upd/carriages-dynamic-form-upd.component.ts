@@ -1,7 +1,8 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { AdminService } from '@app/admin/service/admin.service';
+import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
@@ -28,12 +29,12 @@ import { TuiInputModule } from '@taiga-ui/legacy';
         right seats
         <input tuiTextfieldLegacy placeholder="enter new right seats" type="number" />
       </tui-input>
-      <button size="l" tuiButton>Add station</button>
+      <button size="s" tuiButton>Update station</button>
     </form>
   `,
   styleUrl: './carriages-dynamic-form-upd.component.scss',
 })
-export class CarriagesDynamicFormComponent {
+export class CarriagesDynamicFormComponent implements OnInit {
   @Input() carriagesData!: ICarriagesType;
 
   private formBuilder = inject(FormBuilder);
@@ -49,30 +50,20 @@ export class CarriagesDynamicFormComponent {
     rightSeats: [''],
   });
 
-  constructor() {
-    this.setKeysToForm();
+  ngOnInit(): void {
+    if (this.carriagesData) {
+      this.editCarriagesForm.patchValue(this.carriagesData);
 
-    // this.editCarriagesForm.valueChanges.subscribe(value => {
-    //   console.log('Форма изменена:', value);
-    // });
+      this.editCarriagesForm.valueChanges.subscribe((value) => {
+        if (this.carriagesData?.code) {
+          this.store.dispatch(
+            CarriageActions.updCarriageType({
+              code: this.carriagesData.code,
+              updatedCarriage: value as ICarriagesType,
+            })
+          );
+        }
+      });
+    }
   }
-
-  setKeysToForm() {
-    this.editCarriagesForm.patchValue(this.carriagesData);
-  }
-  // public onFieldChange(fieldName: keyof ICarriagesType, event: Event): void {
-  //   const input = event.target as HTMLInputElement;
-  //   const value = input.value;
-
-  //   this.editCarriagesForm.patchValue({
-  //     [fieldName]: value
-  //   });
-
-  //   if (this.carriagesData?.code) {
-  //     this.store.dispatch(CarriageActions.updCarriageType({
-  //       code: this.carriagesData.code,
-  //       updatedCarriage: this.editCarriagesForm.value as ICarriagesType
-  //     }));
-  //   }
-  // }
 }
