@@ -131,6 +131,12 @@ export class SearchFormComponent implements OnInit {
     this.form.get('date')?.setValue(date);
   }
 
+  addFutureDates(): void {
+    const lastDate = this.availableDates[this.availableDates.length - 1];
+    const newDate = lastDate.append({ day: 1 });
+    this.availableDates = [...this.availableDates, newDate];
+  }
+
   private generateDates(startDate: TuiDay, numberOfDays: number): TuiDay[] {
     return Array.from({ length: numberOfDays }, (_, index) => startDate.append({ day: index }));
   }

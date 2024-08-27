@@ -18,11 +18,30 @@ export class DateFilterComponent {
 
   @Output() dateSelected = new EventEmitter<TuiDay>();
 
+  @Output() addMoreDates = new EventEmitter<void>();
+
+  carouselIndex = 0;
+
   onDateClick(date: TuiDay): void {
     this.dateSelected.emit(date);
   }
 
   isDateSelected(date: TuiDay): boolean {
     return this.selectedDate ? this.selectedDate.daySame(date) : false;
+  }
+
+  prev(): void {
+    if (this.carouselIndex > 0) {
+      this.carouselIndex -= 1;
+    }
+  }
+
+  next(): void {
+    this.carouselIndex += 1;
+    this.addMoreDates.emit();
+  }
+
+  get visibleDates(): TuiDay[] {
+    return this.dates.slice(this.carouselIndex, this.carouselIndex + 4);
   }
 }

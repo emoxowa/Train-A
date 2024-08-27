@@ -58,5 +58,6 @@
     [dates]="availableDates"
     [selectedDate]="form.get('date')?.value ?? null"
     (dateSelected)="onDateSelected($event)"
+    (addMoreDates)="addFutureDates()"
   ></app-date-filter>
 </div>
