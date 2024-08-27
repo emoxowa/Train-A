@@ -29,7 +29,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
         right seats
         <input tuiTextfieldLegacy placeholder="enter new right seats" type="number" />
       </tui-input>
-      <button size="s" tuiButton>Update station</button>
+      <button size="s" tuiButton>Update carriage</button>
     </form>
   `,
   styleUrl: './carriages-dynamic-form-upd.component.scss',
@@ -38,8 +38,6 @@ export class CarriagesDynamicFormComponent implements OnInit {
   @Input() carriagesData!: ICarriagesType;
 
   private formBuilder = inject(FormBuilder);
-
-  private adminService = inject(AdminService);
 
   private store = inject(Store);
 

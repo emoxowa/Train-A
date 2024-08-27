@@ -1,4 +1,13 @@
-<p>carriages works!</p>
+@if(isCreateFieldOpen){
+  <app-carriages-dynamic-from-create></app-carriages-dynamic-from-create>  
+}
+<button size="l" tuiButton (click)="toggleCreateField()">
+  @if(isCreateFieldOpen){
+    Close create carriage  
+  } @else {
+    Create carriage
+  }
+</button>
 @let carriagesList = carriagesList$ | async;
 @for (carriage of carriagesList; track carriage.code) {
   <div>code: {{ carriage.code }}</div>

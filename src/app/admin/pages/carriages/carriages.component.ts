@@ -11,11 +11,12 @@ import { TuiButton } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { tap } from 'rxjs';
 import { CarriagesDynamicFormComponent } from './components/carriages-dynamic-form-upd/carriages-dynamic-form-upd.component';
+import { CarriagesDynamicFromCreateComponent } from './components/carriages-dynamic-from-create/carriages-dynamic-from-create.component';
 
 @Component({
   selector: 'app-carriages',
   standalone: true,
-  imports: [TuiButton, CommonModule, ReactiveFormsModule, TuiInputModule, CarriagesDynamicFormComponent],
+  imports: [TuiButton, CommonModule, ReactiveFormsModule, TuiInputModule, CarriagesDynamicFormComponent, CarriagesDynamicFromCreateComponent],
   templateUrl: './carriages.component.html',
   styleUrl: './carriages.component.scss',
 })
@@ -26,14 +27,7 @@ export class CarriagesComponent {
 
   public carriagesList$ = this.store.select(selectCarriagesArr);
 
-  private formBuilder = inject(FormBuilder);
-
-  public editCarriagesForm: FormGroup = this.formBuilder.group({
-    name: '',
-    rows: '',
-    leftSeats: '',
-    rightSeats: '',
-  });
+  isCreateFieldOpen: boolean = false;
 
   // for developing
   readonly newAdmin: ICreateAdmin = {
@@ -63,5 +57,13 @@ export class CarriagesComponent {
     };
 
     this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: newCarriagesType }));
+  }
+
+  toggleCreateField(){
+    if(!this.isCreateFieldOpen){
+      this.isCreateFieldOpen = true;
+    } else {
+      this.isCreateFieldOpen = false;
+    } 
   }
 }
