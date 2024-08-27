@@ -16,7 +16,7 @@ import { TuiContext, tuiPure, TuiStringHandler } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList, TuiLoader } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit/components/data-list-wrapper';
 import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
-import { IStationList } from '@app/admin/models/station-list.model';
+import { IStation } from '@app/admin/models/station-list.model';
 import { TuiButtonLoading } from '@taiga-ui/kit';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { tap } from 'rxjs';
@@ -59,7 +59,7 @@ export class StationComponent implements AfterViewInit, OnInit {
 
   public stationsAndId$ = this.store.select(selectStationIdAndCity);
 
-  public stationsAndId!: Pick<IStationList, 'id' | 'city'>[];
+  public stationsAndId!: Pick<IStation, 'id' | 'city'>[];
 
   public stationDeleteIndicate$ = this.store.select(selectDeletingIndicate);
 
