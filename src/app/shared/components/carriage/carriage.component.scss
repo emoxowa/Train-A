@@ -10,6 +10,8 @@
   border: 1px solid gray;
   border-radius: 5px;
 
+  width: auto;
+
   &__header {
     display: flex;
     justify-content: space-between;
@@ -17,9 +19,10 @@
   }
 
   &__body {
+    width: 50vw;
     display: flex;
-    flex-direction: row; /* Горизонтальное размещение рядов */
-    gap: 20px; /* Пространство между рядами */
+    flex-direction: row;
+    gap: 20px;
   }
 
   &__row {
@@ -31,7 +34,7 @@
 
   &__right-seats {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 5px;
   }
 
@@ -42,8 +45,15 @@
   }
 
   &__seat {
-    padding: 5px 10px;
-    background-color: #e0e0e0;
-    border-radius: 3px;
+    flex: 1 1 10px; /* Ширина и высота ячейки */
+  min-width: 10px; /* Минимальная ширина ячейки */
+  min-height: 10px; /* Минимальная высота ячейки */
+  padding: 5px 10px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   }
 }

@@ -15,20 +15,22 @@ import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model
         @for (row of getRows(carriagesData.rows); track row; let rowIndex = $index) {
           <div class="carriage__row">
             <div class="carriage__left-seats">
-              @for (seat of getSeats(carriagesData.leftSeats, rowIndex); track seat; let seatIndexLeft = $index) {
+              @for (seat of getSeats(carriagesData.leftSeats); track seat; let seatIndexLeft = $index) {
                 <div class="carriage__seat">
-                  L{{ row }}-{{ seatIndexLeft + rowIndex * (carriagesData.leftSeats + carriagesData.rightSeats) + 1 }}
+                  {{
+                    seat +
+                      (getSeats(carriagesData.leftSeats).length + getSeats(carriagesData.rightSeats).length) * rowIndex
+                  }}
                 </div>
               }
             </div>
             <div class="carriage__right-seats">
-              @for (seat of getSeats(carriagesData.rightSeats, rowIndex); track seat; let seatIndexRight = $index) {
+              @for (seat of getSeats(carriagesData.rightSeats); track seat; let seatIndexRight = $index) {
                 <div class="carriage__seat">
-                  R{{ row }}-{{
-                    seatIndexRight +
-                      carriagesData.leftSeats +
-                      rowIndex * (carriagesData.leftSeats + carriagesData.rightSeats) +
-                      1
+                  {{
+                    getSeats(carriagesData.leftSeats).length +
+                      seat +
+                      (getSeats(carriagesData.rightSeats).length + getSeats(carriagesData.leftSeats).length) * rowIndex
                   }}
                 </div>
               }
@@ -45,11 +47,13 @@ export class CarriageComponent {
 
   // eslint-disable-next-line class-methods-use-this
   getRows(count: number): number[] {
-    return Array.from({ length: count }, (_, index) => index + 1);
+    const rows = Array.from({ length: count }, (_, index) => index + 1);
+    return rows;
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getSeats(count: number, rowIndex: number): number[] {
-    return Array.from({ length: count }, (_, index) => index + rowIndex * count);
+  getSeats(count: number): number[] {
+    const seats = Array.from({ length: count }, (_, index) => index + 1);
+    return seats;
   }
 }
