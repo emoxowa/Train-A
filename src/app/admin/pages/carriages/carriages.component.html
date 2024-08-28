@@ -1,6 +1,6 @@
 @if (isCreateFieldOpen) {
   <h2>New carriage</h2>
-  <app-carriages-dynamic-from-create></app-carriages-dynamic-from-create>
+  <app-carriages-dynamic-from-create (formClosed)="closeCreateField()"></app-carriages-dynamic-from-create>
 }
 <button size="l" tuiButton (click)="toggleCreateField()">
   @if (isCreateFieldOpen) {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
@@ -38,6 +38,8 @@ import { TuiInputModule } from '@taiga-ui/legacy';
   styleUrl: './carriages-dynamic-from-create.component.scss',
 })
 export class CarriagesDynamicFromCreateComponent {
+  @Output() formClosed = new EventEmitter<void>();
+
   private formBuilder = inject(FormBuilder);
 
   private store = inject(Store);
@@ -63,5 +65,10 @@ export class CarriagesDynamicFromCreateComponent {
   createStation() {
     const createNewCarriage: ICarriagesType = this.carriagesData;
     this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: createNewCarriage }));
+    this.closeForm();
+  }
+
+  closeForm(){
+    this.formClosed.emit();
   }
 }

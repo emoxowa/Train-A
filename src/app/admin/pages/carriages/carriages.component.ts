@@ -74,4 +74,8 @@ export class CarriagesComponent {
   clearCurrentCarriage() {
     this.currentCarriageToUpdate = undefined;
   }
+
+  closeCreateField(){
+    this.isCreateFieldOpen = false;
+  }
 }
