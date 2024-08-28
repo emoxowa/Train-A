@@ -8,17 +8,17 @@ import { TuiAppBar } from '@taiga-ui/layout';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { map, Observable } from 'rxjs';
 import { TuiSegmented } from '@taiga-ui/kit';
-import { RouteModalComponent } from '../route-modal/route-modal.component';
-import { RouteModalData } from '../search-results/search-results.component';
+import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
+import { RouteModalData } from '../../components/search-results/search-results.component';
 
 @Component({
-  selector: 'app-trip-details',
+  selector: 'app-trip-details-page',
   standalone: true,
   imports: [CommonModule, TuiAppBar, TuiSegmented, TuiButton],
-  templateUrl: './trip-details.component.html',
-  styleUrls: ['./trip-details.component.scss'],
+  templateUrl: './trip-details-page.component.html',
+  styleUrls: ['./trip-details-page.component.scss'],
 })
-export class TripDetailsComponent {
+export class TripDetailsPageComponent {
   protected trip$: Observable<TripDetails | undefined>;
 
   private readonly dialogs = inject(TuiDialogService);
