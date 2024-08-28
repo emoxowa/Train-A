@@ -1,0 +1,19 @@
+<div tuiCardLarge tuiSurface="elevated" class="profile">
+  <h1 class="profile__title" tuiTitle="l">Profile</h1>
+  <div class="profile__role" *ngIf="(userRole$ | async) === 'manager'">manager</div>
+  <button tuiButton appearance="primary" size="m" (click)="showChangePasswordForm()">Change Password</button>
+  <app-profile-field type="name" [value]="(userName$ | async) || ''" />
+  <app-profile-field type="email" [value]="(userEmail$ | async) || ''" />
+  <button tuiButton size="m" appearance="destructive" (click)="onLogout()">Logout</button>
+</div>
+
+<ng-template [(tuiDialog)]="isPasswordFormOpen">
+  <form class="password-form" [formGroup]="changePasswordForm" (ngSubmit)="onChangePasswordFormSubmit()">
+    <h2 tuiTitle="m">Change Password</h2>
+    <tui-textfield class="field__input">
+      <label for="password" tuiLabel>New Password</label>
+      <input tuiTextfield type="password" formControlName="password" id="password" tuiAutoFocus />
+    </tui-textfield>
+    <button tuiButton type="submit" [disabled]="changePasswordForm.invalid">Save</button>
+  </form>
+</ng-template>
