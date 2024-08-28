@@ -8,8 +8,8 @@ import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model
   template: `
     <div class="carriage">
       <div class="carriage__header">
-        <span>Code: {{ carriagesData.code }}</span>
-        <span>Name: {{ carriagesData.name }}</span>
+        <span>Name: {{ carriagesData.code }}</span>
+        <span>Sits: {{ (carriagesData.leftSeats + carriagesData.rightSeats) * carriagesData.rows }}</span>
       </div>
       <div class="carriage__body">
         @for (row of getRows(carriagesData.rows); track row; let rowIndex = $index) {
