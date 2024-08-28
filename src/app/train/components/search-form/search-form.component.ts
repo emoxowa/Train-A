@@ -5,7 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TuiAlertService, TuiButton, TuiDataList, TuiIcon, TuiIconPipe, TuiNotification } from '@taiga-ui/core';
 import { TuiInputModule, TuiInputDateModule, TuiInputTimeModule } from '@taiga-ui/legacy';
 import { TUI_DEFAULT_MATCHER, TuiDay, TuiLet } from '@taiga-ui/cdk';
-import { map, Observable, startWith, switchMap } from 'rxjs';
+import { map, Observable, startWith, switchMap, take } from 'rxjs';
 import { selectStationArr } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { Store } from '@ngrx/store';
 import { StationsActions } from '@app/core/store/admin-store/actions/stations.actions';
@@ -54,8 +54,8 @@ export class SearchFormComponent implements OnInit {
   }
 
   protected form = new FormGroup({
-    from: new FormControl<IStation | null>(null, Validators.required),
-    to: new FormControl<IStation | null>(null, Validators.required),
+    from: new FormControl<string | null>(null, Validators.required),
+    to: new FormControl<string | null>(null, Validators.required),
     date: new FormControl(this.minDate, Validators.required),
     time: new FormControl(null),
   });
@@ -66,19 +66,21 @@ export class SearchFormComponent implements OnInit {
 
   protected onSearch(): void {
     if (this.form.valid) {
-      const searchRequest = this.prepareSearchRequest();
-
-      this.trainService.searchTrips(searchRequest).subscribe({
-        next: (response) => {
-          console.log('Search Response:', response);
-        },
-        error: (error) => {
-          if (error.error?.reason === 'stationNotFound') {
-            this.showNotification(error.error.message, 'Error');
-          } else {
-            this.showNotification('An unexpected error occurred.', 'Error');
-          }
-        },
+      this.prepareSearchRequest().subscribe((searchRequest) => {
+        if (searchRequest) {
+          this.trainService.searchTrips(searchRequest).subscribe({
+            next: (response) => {
+              console.log('Search Response:', response);
+            },
+            error: (error) => {
+              if (error.error?.reason === 'stationNotFound') {
+                this.showNotification(error.error.message, 'Error');
+              } else {
+                this.showNotification('An unexpected error occurred.', 'Error');
+              }
+            },
+          });
+        }
       });
     }
   }
@@ -87,47 +89,66 @@ export class SearchFormComponent implements OnInit {
     this.alertService.open(message, { label }).subscribe();
   }
 
-  private prepareSearchRequest(): ISearchRoutesRequest {
-    const fromStation = this.form.get('from')!.value;
-    const toStation = this.form.get('to')!.value;
-    const date = this.form.get('date')!.value as TuiDay;
-    const time = this.form.get('time')!.value;
+  private prepareSearchRequest(): Observable<ISearchRoutesRequest | null> {
+    return this.stations$.pipe(
+      take(1),
+      map((stations) => {
+        const fromStationCity = this.form.get('from')!.value;
+        const toStationCity = this.form.get('to')!.value;
 
-    const timeInMillis = time ? date.append(time).toUtcNativeDate().getTime() : date.toUtcNativeDate().getTime();
+        if (!fromStationCity || !toStationCity) {
+          return null;
+        }
 
-    return {
-      fromLatitude: fromStation!.latitude,
-      fromLongitude: fromStation!.longitude,
-      toLatitude: toStation!.latitude,
-      toLongitude: toStation!.longitude,
-      time: timeInMillis,
-    };
+        const fromFullStation = stations.find((i) => i.city === fromStationCity);
+        const toFullStation = stations.find((i) => i.city === toStationCity);
+
+        if (!fromFullStation || !toFullStation) {
+          return null;
+        }
+
+        const date = this.form.get('date')!.value as TuiDay;
+        const time = this.form.get('time')!.value;
+
+        const timeInMillis = time ? date.append(time).toUtcNativeDate().getTime() : date.toUtcNativeDate().getTime();
+
+        return {
+          fromLatitude: fromFullStation.latitude,
+          fromLongitude: fromFullStation.longitude,
+          toLatitude: toFullStation.latitude,
+          toLongitude: toFullStation.longitude,
+          time: timeInMillis,
+        };
+      })
+    );
   }
 
   protected swapFromTo(): void {
-    const fromValue: IStation | null = this.form.get('from')?.value ?? null;
-    const toValue: IStation | null = this.form.get('to')?.value ?? null;
+    const fromValue: string | null = this.form.get('from')?.value ?? null;
+    const toValue: string | null = this.form.get('to')?.value ?? null;
 
     this.form.get('from')?.setValue(toValue);
     this.form.get('to')?.setValue(fromValue);
   }
 
-  protected readonly itemsFrom$: Observable<IStation[]> = this.form.get('from')!.valueChanges.pipe(
+  protected readonly itemsFrom$: Observable<string[] | null> = this.form.get('from')!.valueChanges.pipe(
     startWith(''),
     switchMap((value) => {
-      const searchValue = typeof value === 'string' ? value : (value?.city ?? '');
       return this.stations$.pipe(
-        map((stations) => stations.filter((station) => TUI_DEFAULT_MATCHER(station.city, searchValue)))
+        map((stations) =>
+          stations.map((station) => station.city).filter((city) => TUI_DEFAULT_MATCHER(city, value as string))
+        )
       );
     })
   );
 
-  protected readonly itemsTo$: Observable<IStation[]> = this.form.get('to')!.valueChanges.pipe(
+  protected readonly itemsTo$: Observable<string[] | null> = this.form.get('to')!.valueChanges.pipe(
     startWith(''),
     switchMap((value) => {
-      const searchValue = typeof value === 'string' ? value : (value?.city ?? '');
       return this.stations$.pipe(
-        map((stations) => stations.filter((station) => TUI_DEFAULT_MATCHER(station.city, searchValue)))
+        map((stations) =>
+          stations.map((station) => station.city).filter((city) => TUI_DEFAULT_MATCHER(city, value as string))
+        )
       );
     })
   );
