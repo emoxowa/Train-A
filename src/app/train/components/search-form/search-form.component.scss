@@ -1,10 +1,12 @@
 :host {
   padding: 20px 16px;
   width: 100%;
+  max-width: 1200px;
   display: flex;
   background-color: var(--tui-text-primary);
   border-radius: 10px;
   margin: 20px 0;
+  box-sizing: border-box;
 }
 
 .wrapper {
@@ -23,7 +25,11 @@
 }
 
 .tui-icon-button {
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-left: 20px;
+
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
 
   &:hover {
     background-color: var(--tui-primary);
@@ -33,5 +39,50 @@
 
   &:active {
     transform: scale(1.05);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  :host {
+    max-width: 740px;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 767px) {
+  :host {
+    max-width: 500px;
+  }
+
+  .center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tui-icon-button {
+    margin-top: 10px;
+  }
+
+  .tui-form__button {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 424px) {
+  :host {
+    max-width: 300px;
+  }
+
+  .tui-icon-button {
+    margin-top: 10px;
+  }
+
+  .center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tui-form__button {
+    width: 100%;
   }
 }

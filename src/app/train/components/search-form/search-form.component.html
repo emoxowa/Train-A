@@ -1,7 +1,7 @@
 <div class="wrapper">
   <form class="form" [formGroup]="form" (ngSubmit)="onSearch()">
     <div class="tui-form__row tui-form__row_multi-fields center">
-      <div class="tui-form__multi-field tui-space_right-4">
+      <div class="tui-form__multi-field">
         <tui-input *tuiLet="itemsFrom$ | async as items" formControlName="from">
           From
           <span class="tui-required"></span>

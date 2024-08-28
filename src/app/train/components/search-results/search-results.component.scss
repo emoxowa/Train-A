@@ -6,6 +6,8 @@
   margin: 20px 0;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  max-width: 1200px;
 }
 
 .routes {
@@ -115,4 +117,22 @@
 
 tui-loader {
   margin-top: 200px;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  :host {
+    max-width: 740px;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 767px) {
+  :host {
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 424px) {
+  :host {
+    max-width: 300px;
+  }
 }
