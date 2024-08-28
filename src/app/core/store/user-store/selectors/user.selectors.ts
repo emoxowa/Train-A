@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { IUser } from '@app/auth/models/user.model';
+import { IUser } from '@app/train/models/user.model';
 import { IUserState } from '@core/store/user-store/state/user-state';
 import { AppState } from '../../app-state';
 

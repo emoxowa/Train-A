@@ -1,4 +1,4 @@
-import { IUser, IUserInformation } from '@app/auth/models/user.model';
+import { IUser, IUserInformation } from '@app/train/models/user.model';
 import { createAction, props } from '@ngrx/store';
 
 export enum EUserActions {

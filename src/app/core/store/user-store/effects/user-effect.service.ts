@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, of, switchMap } from 'rxjs';
-import { IUser, IUserResponse } from '@app/auth/models/user.model';
-import { ProfileService } from '@app/auth/services/profile.service';
+import { IUser, IUserResponse } from '@app/train/models/user.model';
+import { ProfileService } from '@app/train/services/profile.service';
 import { AuthService } from '@app/auth/services/auth.service';
 import { UserActions } from '../actions/user.actions';
 

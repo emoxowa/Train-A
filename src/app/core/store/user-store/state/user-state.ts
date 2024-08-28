@@ -1,4 +1,4 @@
-import { IUser } from '@app/auth/models/user.model';
+import { IUser } from '@app/train/models/user.model';
 
 export interface IUserState {
   user: IUser | undefined;

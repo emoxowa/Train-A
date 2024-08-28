@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { AsyncPipe, NgIf } from '@angular/common';
-import { ProfileFieldComponent } from '@app/auth/components/profile-field/profile-field.component';
+import { ProfileFieldComponent } from '@app/train/components/profile-field/profile-field.component';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import {
   TuiButton,
@@ -12,7 +12,7 @@ import {
   TuiTextfieldOptionsDirective,
   TuiTitle,
 } from '@taiga-ui/core';
-import { ProfileService } from '@app/auth/services/profile.service';
+import { ProfileService } from '@app/train/services/profile.service';
 import { Store } from '@ngrx/store';
 import { selectUserEmail, selectUserName, selectUserRole } from '@core/store/user-store/selectors/user.selectors';
 import { UserActions } from '@core/store/user-store/actions/user.actions';
