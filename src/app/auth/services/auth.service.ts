@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { SignInResponse } from '../models/sign-in.interface';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { SignInResponse } from '../models/sign-in.interface';
 })
 export class AuthService {
   private readonly signInUrl = '/api/signin';
+
   private readonly signUpUrl = '/api/signup';
 
   constructor(
