@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { IStationResponse, SearchResponse } from '@app/train/models/search-response.model';
-import { Route } from '@app/train/models/route.model';
+import { IStationResponse, ISearchRoutesResponse } from '@app/train/models/search-response.model';
+import { IRoute } from '@app/train/models/route.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 export interface TripDetails {
-  route: Route;
+  route: IRoute;
   from: IStationResponse;
   to: IStationResponse;
 }
@@ -18,7 +18,7 @@ export class TrainService {
 
   private apiUrl = '/api/search';
 
-  private searchResponseSubject = new BehaviorSubject<SearchResponse | null>(null);
+  private searchResponseSubject = new BehaviorSubject<ISearchRoutesResponse | null>(null);
 
   public searchResponse$ = this.searchResponseSubject.asObservable();
 
@@ -32,7 +32,7 @@ export class TrainService {
     toLatitude: number,
     toLongitude: number,
     time?: number
-  ): Observable<SearchResponse> {
+  ): Observable<ISearchRoutesResponse> {
     this.loadingSubject.next(true);
 
     let params = new HttpParams()
@@ -45,7 +45,7 @@ export class TrainService {
       params = params.set('time', time);
     }
 
-    return this.http.get<SearchResponse>(this.apiUrl, { params }).pipe(
+    return this.http.get<ISearchRoutesResponse>(this.apiUrl, { params }).pipe(
       tap({
         next: (response) => {
           this.searchResponseSubject.next(response);
@@ -58,7 +58,7 @@ export class TrainService {
     );
   }
 
-  public getCurrentSearchResponse(): SearchResponse | null {
+  public getCurrentSearchResponse(): ISearchRoutesResponse | null {
     return this.searchResponseSubject.value;
   }
 
@@ -69,7 +69,7 @@ export class TrainService {
       return undefined;
     }
 
-    const foundRoute = searchResponse.routes.find((route: Route) =>
+    const foundRoute = searchResponse.routes.find((route: IRoute) =>
       route.schedule.some((schedule) => schedule.rideId === rideId)
     );
 

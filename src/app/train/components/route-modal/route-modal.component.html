@@ -11,7 +11,7 @@
       <td class="tui-table__td tui-table__td_first">
         {{ data.route.schedule[0].time[0] | date: 'MMM d, h:mm a' }}
       </td>
-      <td class="tui-table__td">{{ data.fromStation.city }}</td>
+      <td class="tui-table__td">{{ data.from.city }}</td>
       <td class="tui-table__td tui-table__td_last">first station</td>
     </tr>
 
@@ -37,7 +37,7 @@
       <td class="tui-table__td tui-table__td_first">
         {{ data.route.schedule[0].time[1] | date: 'MMM d, h:mm a' }}
       </td>
-      <td class="tui-table__td">{{ data.toStation.city }}</td>
+      <td class="tui-table__td">{{ data.to.city }}</td>
       <td class="tui-table__td tui-table__td_last">last station</td>
     </tr>
   </tbody>

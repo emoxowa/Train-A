@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, INJECTOR } from '@angular/core';
-import { IStationResponse, SearchResponse } from '@app/train/models/search-response.model';
+import { IStationResponse, ISearchRoutesResponse } from '@app/train/models/search-response.model';
 import { TuiButton, TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';
-import { Route } from '@app/train/models/route.model';
+import { IRoute } from '@app/train/models/route.model';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { RouteModalComponent } from '@app/train/components/route-modal/route-modal.component';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { map, Observable } from 'rxjs';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
 export interface RouteModalData {
-  route: Route;
+  route: IRoute;
   from: IStationResponse;
   to: IStationResponse;
 }
@@ -37,7 +37,7 @@ export class SearchResultsComponent {
 
   private readonly injector = inject(INJECTOR);
 
-  searchResponse$: Observable<SearchResponse | null> = this.trainService.searchResponse$;
+  searchResponse$: Observable<ISearchRoutesResponse | null> = this.trainService.searchResponse$;
 
   loading$: Observable<boolean> = this.trainService.loading$;
 
@@ -46,7 +46,7 @@ export class SearchResultsComponent {
     private dialogs: TuiDialogService
   ) {}
 
-  protected showDialog(route: Route, event: Event): void {
+  protected showDialog(route: IRoute, event: Event): void {
     event.stopPropagation();
 
     this.searchResponse$
@@ -73,7 +73,7 @@ export class SearchResultsComponent {
       .subscribe();
   }
 
-  protected onCardClick(route: Route): void {
+  protected onCardClick(route: IRoute): void {
     this.searchResponse$
       .pipe(
         map((searchResponse) => {

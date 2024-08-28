@@ -1,8 +1,8 @@
-import { Schedule } from './schedule.model';
+import { ISchedule } from './schedule.model';
 
-export interface Route {
+export interface IRoute {
   id: number;
   path: number[];
   carriages: string[];
-  schedule: Schedule[];
+  schedule: ISchedule[];
 }

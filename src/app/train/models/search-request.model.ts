@@ -1,4 +1,4 @@
-export interface SearchRequest {
+export interface ISearchRoutesRequest {
   fromLatitude: number;
   fromLongitude: number;
   toLatitude: number;

@@ -10,7 +10,7 @@ import { selectStationArr } from '@app/core/store/admin-store/selectors/stations
 import { Store } from '@ngrx/store';
 import { StationsActions } from '@app/core/store/admin-store/actions/stations.actions';
 import { IStation } from '@app/admin/models/station-list.model';
-import { SearchRequest } from '@app/train/models/search-request.model';
+import { ISearchRoutesRequest } from '@app/train/models/search-request.model';
 import { TrainService } from '@app/train/services/train.service';
 import { DateFilterComponent } from '../date-filter/date-filter.component';
 
@@ -79,7 +79,7 @@ export class SearchFormComponent implements OnInit {
     }
   }
 
-  private prepareSearchRequest(): SearchRequest {
+  private prepareSearchRequest(): ISearchRoutesRequest {
     const fromStation = this.form.get('from')!.value;
     const toStation = this.form.get('to')!.value;
     const date = this.form.get('date')!.value as TuiDay;

@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, INJECTOR } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Route } from '@app/train/models/route.model';
+import { IRoute } from '@app/train/models/route.model';
 import { TrainService, TripDetails } from '@app/train/services/train.service';
 import { TuiButton, TuiDialogService } from '@taiga-ui/core';
 import { TuiAppBar } from '@taiga-ui/layout';
@@ -39,7 +39,7 @@ export class TripDetailsComponent {
     );
   }
 
-  protected showDialog(route: Route, event: Event): void {
+  protected showDialog(route: IRoute, event: Event): void {
     event.stopPropagation();
 
     this.trip$.subscribe((trip) => {

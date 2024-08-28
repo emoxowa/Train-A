@@ -1,4 +1,4 @@
-import { Route } from './route.model';
+import { IRoute } from './route.model';
 
 export interface IGeolocation {
   latitude: number;
@@ -11,13 +11,13 @@ export interface IStationResponse {
   geolocation: IGeolocation;
 }
 
-export interface SearchResponse {
+export interface ISearchRoutesResponse {
   from: IStationResponse;
   to: IStationResponse;
-  routes: Route[];
+  routes: IRoute[];
 }
 
-export const searchResponse: SearchResponse = {
+export const searchResponse: ISearchRoutesResponse = {
   from: {
     stationId: 1,
     city: 'City45',

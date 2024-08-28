@@ -1,8 +1,8 @@
-import { Segment } from './segment.model';
+import { ISegment } from './segment.model';
 
-export interface Schedule {
+export interface ISchedule {
   rideId: number;
-  segments: Segment[];
+  segments: ISegment[];
   time: [string, string];
   price: { [key: string]: number };
   occupiedSeats: number[];

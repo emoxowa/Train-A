@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { Segment } from '@app/train/models/segment.model';
+import { ISegment } from '@app/train/models/segment.model';
 import { TuiButton, TuiDialog, TuiDialogContext, TuiScrollbar } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { RouteModalData } from '../search-results/search-results.component';
@@ -26,7 +26,7 @@ export class RouteModalComponent {
     return '';
   }
 
-  calculateStopDuration(segment: Segment, index: number): string {
+  calculateStopDuration(segment: ISegment, index: number): string {
     const arrivalTime = new Date(segment.time[0]).getTime();
     const departureTime =
       index > 0 ? new Date(this.data.route.schedule[0].segments[index - 1].time[1]).getTime() : arrivalTime;
