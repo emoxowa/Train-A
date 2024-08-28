@@ -10,9 +10,9 @@ import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { tap } from 'rxjs';
+import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
 import { CarriagesDynamicFormComponent } from './components/carriages-dynamic-form-upd/carriages-dynamic-form-upd.component';
 import { CarriagesDynamicFromCreateComponent } from './components/carriages-dynamic-from-create/carriages-dynamic-from-create.component';
-import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
 
 @Component({
   selector: 'app-carriages',
