@@ -4,13 +4,12 @@
   gap: 10px;
   align-items: center;
 
+  width: auto;
   margin: 10px;
   padding: 10px;
 
   border: 1px solid gray;
   border-radius: 5px;
-
-  width: auto;
 
   &__header {
     display: flex;
@@ -23,23 +22,12 @@
     flex-direction: row;
     gap: 20px;
   }
-  @media (width <= 1300px) {
-    &__body {
-        gap: 5px;
-    }
-  }
 
   &__row {
     display: flex;
     flex-direction: column;
     gap: 50px;
     align-items: center;
-  }
-
-  @media (width <= 1300px) {
-    &__row {
-        gap: 25px;
-    }
   }
 
   &__right-seats {
@@ -55,25 +43,42 @@
   }
 
   &__seat {
+    display: flex;
     flex: 1 1 10px;
-  min-width: 10px;
-  min-height: 10px;
-  padding: 5px 10px;
-  background-color: #e0e0e0;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 10px;
+    min-height: 10px;
+    padding: 5px 10px;
+
+    text-align: center;
+
+    background-color: #e0e0e0;
+    border-radius: 3px;
+  }
+
+  @media (width <= 1300px) {
+    &__body {
+      gap: 5px;
+    }
+  }
+
+  @media (width <= 1300px) {
+    &__row {
+      gap: 25px;
+    }
   }
 
   @media (width <= 1300px) {
     &__seat {
-        flex: 1 1 5px;
-        min-width: 5px;
-        min-height: 5x;
-        padding: 2.5px 5px;
-        font-size: 10px;
+      flex: 1 1 5px;
+
+      min-width: 5px;
+      min-height: 5px;
+      padding: 2.5px 5px;
+
+      font-size: 10px;
     }
   }
 }

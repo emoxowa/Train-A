@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { AdminService } from '@app/admin/service/admin.service';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
 import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
@@ -11,6 +10,7 @@ import { TuiButton } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { tap } from 'rxjs';
 import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
+import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriagesDynamicFormComponent } from './components/carriages-dynamic-form-upd/carriages-dynamic-form-upd.component';
 import { CarriagesDynamicFromCreateComponent } from './components/carriages-dynamic-from-create/carriages-dynamic-from-create.component';
 
@@ -38,6 +38,8 @@ export class CarriagesComponent {
 
   isCreateFieldOpen: boolean = false;
 
+  currentCarriageToUpdate: string | undefined;
+
   // for developing
   readonly newAdmin: ICreateAdmin = {
     email: 'admin@admin.com',
@@ -57,22 +59,19 @@ export class CarriagesComponent {
       .subscribe();
   }
 
-  createNewCarriagesType() {
-    const newCarriagesType: Omit<ICarriagesType, 'code'> = {
-      name: 'boba',
-      rows: 20,
-      leftSeats: 2,
-      rightSeats: 3,
-    };
-
-    this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: newCarriagesType }));
-  }
-
   toggleCreateField() {
     if (!this.isCreateFieldOpen) {
       this.isCreateFieldOpen = true;
     } else {
       this.isCreateFieldOpen = false;
     }
+  }
+
+  toggleUpdForm(carriage: ICarriagesType) {
+    this.currentCarriageToUpdate = carriage.code;
+  }
+
+  clearCurrentCarriage() {
+    this.currentCarriageToUpdate = undefined;
   }
 }

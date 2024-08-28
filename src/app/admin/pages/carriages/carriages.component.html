@@ -1,4 +1,5 @@
 @if (isCreateFieldOpen) {
+  <h2>New carriage</h2>
   <app-carriages-dynamic-from-create></app-carriages-dynamic-from-create>
 }
 <button size="l" tuiButton (click)="toggleCreateField()">
@@ -8,8 +9,16 @@
     Create carriage
   }
 </button>
+<h2>Carriages</h2>
 @let carriagesList = carriagesList$ | async;
 @for (carriage of carriagesList; track carriage.code) {
   <app-carriage [carriagesData]="carriage"></app-carriage>
-  <app-carriages-dynamic-form [carriagesData]="carriage"></app-carriages-dynamic-form>
+  @if (currentCarriageToUpdate === carriage.code) {
+    <app-carriages-dynamic-form
+      [carriagesData]="carriage"
+      (formClosed)="clearCurrentCarriage()"
+    ></app-carriages-dynamic-form>
+  } @else {
+    <button size="s" tuiButton (click)="toggleUpdForm(carriage)">Update carriage</button>
+  }
 }

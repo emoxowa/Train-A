@@ -13,11 +13,6 @@ import { TuiInputModule } from '@taiga-ui/legacy';
   imports: [TuiButton, ReactiveFormsModule, TuiInputModule, CarriageComponent],
   template: `
     <div>
-      <!-- <p>Name: {{ createCarriagesForm.get('name')?.value }}</p>
-      <p>Rows: {{ createCarriagesForm.get('rows')?.value }}</p>
-      <p>Left Seats: {{ createCarriagesForm.get('leftSeats')?.value }}</p>
-      <p>Right Seats: {{ createCarriagesForm.get('rightSeats')?.value }}</p>
-    </div> -->
       <app-carriage [carriagesData]="carriagesData"></app-carriage>
       <form class="carriages__edit-form" [formGroup]="createCarriagesForm" (ngSubmit)="createStation()">
         <tui-input placeholder="enter new name" formControlName="name">

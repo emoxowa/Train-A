@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
@@ -11,7 +11,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
   standalone: true,
   imports: [TuiButton, ReactiveFormsModule, TuiInputModule],
   template: `
-    <form class="carriages__edit-form" [formGroup]="editCarriagesForm" (ngSubmit)="updStation()">
+    <form class="carriages__upd-form" [formGroup]="editCarriagesForm" (ngSubmit)="updStation()">
       <tui-input placeholder="enter new name" formControlName="name">
         name
         <input tuiTextfieldLegacy placeholder="enter new name" type="text" />
@@ -30,15 +30,20 @@ import { TuiInputModule } from '@taiga-ui/legacy';
       </tui-input>
       <button size="s" tuiButton>Update carriage</button>
     </form>
+    <button size="s" tuiButton (click)="closeForm()">Close update form</button>
   `,
   styleUrl: './carriages-dynamic-form-upd.component.scss',
 })
 export class CarriagesDynamicFormComponent implements OnInit {
   @Input() carriagesData!: ICarriagesType;
 
+  @Output() formClosed = new EventEmitter<void>();
+
   private formBuilder = inject(FormBuilder);
 
   private store = inject(Store);
+
+  private initialFormValues!: ICarriagesType;
 
   public editCarriagesForm: FormGroup = this.formBuilder.group({
     name: [''],
@@ -50,6 +55,8 @@ export class CarriagesDynamicFormComponent implements OnInit {
   ngOnInit(): void {
     if (this.carriagesData) {
       this.editCarriagesForm.patchValue(this.carriagesData);
+
+      this.initialFormValues = { ...this.carriagesData };
 
       this.editCarriagesForm.valueChanges.subscribe((value) => {
         if (this.carriagesData?.code) {
@@ -77,6 +84,18 @@ export class CarriagesDynamicFormComponent implements OnInit {
       this.store.dispatch(
         CarriageActions.updCarriageTypeSuccsess({ code: this.carriagesData.code, updatedCarriage: updCarriage })
       );
+      this.formClosed.emit();
     }
+  }
+
+  resetForm() {
+    if (this.initialFormValues) {
+      this.editCarriagesForm.patchValue(this.initialFormValues);
+    }
+  }
+
+  closeForm() {
+    this.resetForm();
+    this.formClosed.emit();
   }
 }
