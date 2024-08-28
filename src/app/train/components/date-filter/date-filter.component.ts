@@ -22,21 +22,21 @@ export class DateFilterComponent {
 
   carouselIndex = 0;
 
-  onDateClick(date: TuiDay): void {
+  protected onDateClick(date: TuiDay): void {
     this.dateSelected.emit(date);
   }
 
-  isDateSelected(date: TuiDay): boolean {
+  protected isDateSelected(date: TuiDay): boolean {
     return this.selectedDate ? this.selectedDate.daySame(date) : false;
   }
 
-  prev(): void {
+  protected prev(): void {
     if (this.carouselIndex > 0) {
       this.carouselIndex -= 1;
     }
   }
 
-  next(): void {
+  protected next(): void {
     this.carouselIndex += 1;
     this.addMoreDates.emit();
   }

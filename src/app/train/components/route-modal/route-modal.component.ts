@@ -19,14 +19,14 @@ export class RouteModalComponent {
     return this.context.data;
   }
 
-  getSegmentArrivalTime(index: number): string {
+  protected getSegmentArrivalTime(index: number): string {
     if (index > 0) {
       return this.data.route.schedule[0].segments[index - 1].time[1];
     }
     return '';
   }
 
-  calculateStopDuration(segment: ISegment, index: number): string {
+  protected calculateStopDuration(segment: ISegment, index: number): string {
     const arrivalTime = new Date(segment.time[0]).getTime();
     const departureTime =
       index > 0 ? new Date(this.data.route.schedule[0].segments[index - 1].time[1]).getTime() : arrivalTime;

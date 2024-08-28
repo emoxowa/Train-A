@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiButton, TuiDataList, TuiIcon, TuiIconPipe } from '@taiga-ui/core';
+import { TuiAlertService, TuiButton, TuiDataList, TuiIcon, TuiIconPipe, TuiNotification } from '@taiga-ui/core';
 import { TuiInputModule, TuiInputDateModule, TuiInputTimeModule } from '@taiga-ui/legacy';
 import { TUI_DEFAULT_MATCHER, TuiDay, TuiLet } from '@taiga-ui/cdk';
 import { map, Observable, startWith, switchMap } from 'rxjs';
@@ -29,6 +29,7 @@ import { DateFilterComponent } from '../date-filter/date-filter.component';
     TuiLet,
     TuiDataList,
     DateFilterComponent,
+    TuiNotification,
   ],
   templateUrl: './search-form.component.html',
   styleUrl: './search-form.component.scss',
@@ -37,6 +38,8 @@ export class SearchFormComponent implements OnInit {
   private store = inject(Store);
 
   private trainService = inject(TrainService);
+
+  private alertService = inject(TuiAlertService);
 
   protected minDate = TuiDay.currentLocal();
 
@@ -57,26 +60,31 @@ export class SearchFormComponent implements OnInit {
     time: new FormControl(null),
   });
 
-  isDateSelected(): boolean {
+  protected isDateSelected(): boolean {
     return this.form.get('date')?.valid ?? false;
   }
 
-  onSearch(): void {
+  protected onSearch(): void {
     if (this.form.valid) {
       const searchRequest = this.prepareSearchRequest();
 
-      this.trainService
-        .searchTrips(
-          searchRequest.fromLatitude,
-          searchRequest.fromLongitude,
-          searchRequest.toLatitude,
-          searchRequest.toLongitude,
-          searchRequest.time
-        )
-        .subscribe((response) => {
+      this.trainService.searchTrips(searchRequest).subscribe({
+        next: (response) => {
           console.log('Search Response:', response);
-        });
+        },
+        error: (error) => {
+          if (error.error?.reason === 'stationNotFound') {
+            this.showNotification(error.error.message, 'Error');
+          } else {
+            this.showNotification('An unexpected error occurred.', 'Error');
+          }
+        },
+      });
     }
+  }
+
+  private showNotification(message: string, label: string): void {
+    this.alertService.open(message, { label }).subscribe();
   }
 
   private prepareSearchRequest(): ISearchRoutesRequest {
@@ -96,7 +104,7 @@ export class SearchFormComponent implements OnInit {
     };
   }
 
-  swapFromTo(): void {
+  protected swapFromTo(): void {
     const fromValue: IStation | null = this.form.get('from')?.value ?? null;
     const toValue: IStation | null = this.form.get('to')?.value ?? null;
 
@@ -124,22 +132,22 @@ export class SearchFormComponent implements OnInit {
     })
   );
 
-  public availableDates: TuiDay[] = this.generateDates(this.minDate, 4);
+  public availableDates: TuiDay[] = SearchFormComponent.generateDates(this.minDate, 4);
 
-  onDateSelected(date: TuiDay): void {
+  protected onDateSelected(date: TuiDay): void {
     this.selectedDate = date;
     this.form.get('date')?.setValue(date);
 
     this.onSearch();
   }
 
-  addFutureDates(): void {
+  protected addFutureDates(): void {
     const lastDate = this.availableDates[this.availableDates.length - 1];
     const newDate = lastDate.append({ day: 1 });
     this.availableDates = [...this.availableDates, newDate];
   }
 
-  private generateDates(startDate: TuiDay, numberOfDays: number): TuiDay[] {
+  public static generateDates(startDate: TuiDay, numberOfDays: number): TuiDay[] {
     return Array.from({ length: numberOfDays }, (_, index) => startDate.append({ day: index }));
   }
 }

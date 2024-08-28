@@ -37,9 +37,9 @@ export class SearchResultsComponent {
 
   private readonly injector = inject(INJECTOR);
 
-  searchResponse$: Observable<ISearchRoutesResponse | null> = this.trainService.searchResponse$;
+  protected searchResponse$: Observable<ISearchRoutesResponse | null> = this.trainService.searchResponse$;
 
-  loading$: Observable<boolean> = this.trainService.loading$;
+  protected loading$: Observable<boolean> = this.trainService.loading$;
 
   constructor(
     private router: Router,

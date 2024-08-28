@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { IStationResponse, ISearchRoutesResponse } from '@app/train/models/search-response.model';
+import { ISearchRoutesRequest } from '@app/train/models/search-request.model';
 import { IRoute } from '@app/train/models/route.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 
 export interface TripDetails {
   route: IRoute;
@@ -26,61 +27,28 @@ export class TrainService {
 
   public loading$ = this.loadingSubject.asObservable();
 
-  public searchTrips(
-    fromLatitude: number,
-    fromLongitude: number,
-    toLatitude: number,
-    toLongitude: number,
-    time?: number
-  ): Observable<ISearchRoutesResponse> {
+  public searchTrips(searchRequest: ISearchRoutesRequest): Observable<ISearchRoutesResponse> {
     this.loadingSubject.next(true);
 
     let params = new HttpParams()
-      .set('fromLatitude', fromLatitude)
-      .set('fromLongitude', fromLongitude)
-      .set('toLatitude', toLatitude)
-      .set('toLongitude', toLongitude);
+      .set('fromLatitude', searchRequest.fromLatitude)
+      .set('fromLongitude', searchRequest.fromLongitude)
+      .set('toLatitude', searchRequest.toLatitude)
+      .set('toLongitude', searchRequest.toLongitude);
 
-    if (time) {
-      params = params.set('time', time);
+    if (searchRequest.time) {
+      params = params.set('time', searchRequest.time);
     }
 
     return this.http.get<ISearchRoutesResponse>(this.apiUrl, { params }).pipe(
-      tap({
-        next: (response) => {
-          this.searchResponseSubject.next(response);
-          this.loadingSubject.next(false);
-        },
-        error: () => {
-          this.loadingSubject.next(false);
-        },
+      tap((response) => {
+        this.searchResponseSubject.next(response);
+        this.loadingSubject.next(false);
+      }),
+      catchError((error) => {
+        this.loadingSubject.next(false);
+        return throwError(() => error);
       })
     );
-  }
-
-  public getCurrentSearchResponse(): ISearchRoutesResponse | null {
-    return this.searchResponseSubject.value;
-  }
-
-  public getTripById(rideId: number): TripDetails | undefined {
-    const searchResponse = this.getCurrentSearchResponse();
-
-    if (!searchResponse) {
-      return undefined;
-    }
-
-    const foundRoute = searchResponse.routes.find((route: IRoute) =>
-      route.schedule.some((schedule) => schedule.rideId === rideId)
-    );
-
-    if (foundRoute) {
-      return {
-        route: foundRoute,
-        from: searchResponse.from,
-        to: searchResponse.to,
-      };
-    }
-
-    return undefined;
   }
 }
