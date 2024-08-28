@@ -1,0 +1,50 @@
+<div class="container">
+  <h1 class="title">Sign In</h1>
+
+  <form class="form" [formGroup]="this.loginForm" (ngSubmit)="this.onSubmit()">
+    <div class="field">
+      <label class="label" for="email">Email</label>
+      <input class="input" formControlName="email" type="email" id="email" />
+      <div>
+        <app-custom-error
+          *ngIf="submitFirstClicked && loginForm.get('email')?.invalid"
+          controlName="email"
+          [customErrors]="{
+            required: 'Required',
+            validEmail: 'Incorrect email',
+          }"
+        ></app-custom-error>
+        <div class="error" *ngIf="loginForm.hasError('invalidEmailPassword')">Incorrect email or password</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="password">Password</label>
+      <input class="input" formControlName="password" type="password" id="password" />
+      <div>
+        <app-custom-error
+          *ngIf="submitFirstClicked && loginForm.get('password')?.invalid"
+          controlName="password"
+          [customErrors]="{
+            required: 'Required',
+          }"
+        ></app-custom-error>
+        <div class="error" *ngIf="loginForm.hasError('invalidEmailPassword')">Incorrect email or password</div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button
+        type="submit"
+        (submit)="this.onSubmit()"
+        [disabled]="this.loginForm.invalid || this.isSubmitting"
+        class="login-btn"
+        size="m"
+        tuiButton
+      >
+        Sign In
+      </button>
+      <button routerLink="/signup" size="m" appearance="flat" tuiButton>Sign Up</button>
+    </div>
+  </form>
+</div>
