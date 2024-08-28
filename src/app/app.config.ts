@@ -19,6 +19,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(),
     provideRouter(routes),
+    provideHttpClient(),
     NG_EVENT_PLUGINS,
     provideStore(appReducer, { initialState: initialAppState }),
     provideEffects([StationEffectService]),
