@@ -14,12 +14,8 @@ import {
 } from '@taiga-ui/core';
 import { ProfileService } from '@app/auth/services/profile.service';
 import { Store } from '@ngrx/store';
-import {
-  selectUserEmail,
-  selectUserName,
-  selectUserRole,
-} from '@core/services/store/user-store/selectors/user.selectors';
-import { UserActions } from '@core/services/store/user-store/actions/user.actions';
+import { selectUserEmail, selectUserName, selectUserRole } from '@core/store/user-store/selectors/user.selectors';
+import { UserActions } from '@core/store/user-store/actions/user.actions';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiAutoFocus } from '@taiga-ui/cdk';

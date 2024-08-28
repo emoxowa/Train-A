@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 import { IUser, IUserResponse } from '@app/auth/models/user.model';
 import { ProfileService } from '@app/auth/services/profile.service';
 import { UserActions } from '../actions/user.actions';
@@ -18,11 +18,12 @@ export class UserEffectService {
       ofType(UserActions.loadUser),
       switchMap(() =>
         this.profileService.getUserInformation().pipe(
-          map((user: IUserResponse) =>
+          map((response: IUserResponse) =>
             UserActions.loadUserSuccess({
-              user: { information: { name: user.name, email: user.email }, role: user.role },
+              user: { information: { name: response.name, email: response.email }, role: response.role },
             })
-          )
+          ),
+          catchError(() => of(UserActions.loadUserFailure()))
         )
       )
     )
@@ -32,9 +33,10 @@ export class UserEffectService {
     this.actions$.pipe(
       ofType(UserActions.updateUserInformation),
       switchMap(({ updates }) =>
-        this.profileService
-          .updateUserInformation(updates)
-          .pipe(map((user: IUser) => UserActions.updateUserInformationSuccess({ userInformation: user.information })))
+        this.profileService.updateUserInformation(updates).pipe(
+          map((user: IUser) => UserActions.updateUserInformationSuccess({ userInformation: user.information })),
+          catchError(() => of(UserActions.updateUserInformationFailure()))
+        )
       )
     )
   );
@@ -43,7 +45,10 @@ export class UserEffectService {
     this.actions$.pipe(
       ofType(UserActions.updatePassword),
       switchMap(({ password }) =>
-        this.profileService.updatePassword(password).pipe(map(() => UserActions.updatePasswordSuccess()))
+        this.profileService.updatePassword(password).pipe(
+          map(() => UserActions.updatePasswordSuccess()),
+          catchError(() => of(UserActions.updatePasswordFailure()))
+        )
       )
     )
   );
@@ -51,7 +56,12 @@ export class UserEffectService {
   private logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.logout),
-      switchMap(() => this.profileService.logout().pipe(map(() => UserActions.logoutSuccess())))
+      switchMap(() =>
+        this.profileService.logout().pipe(
+          map(() => UserActions.logoutSuccess()),
+          catchError(() => of(UserActions.logoutFailure()))
+        )
+      )
     )
   );
 }

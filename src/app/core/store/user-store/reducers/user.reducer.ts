@@ -17,6 +17,12 @@ export const userReducer = createReducer(
       isLoading: false,
     };
   }),
+  on(UserActions.loadUserFailure, (state): IUserState => {
+    return {
+      ...state,
+      isLoading: false,
+    };
+  }),
   on(UserActions.updateUserInformation, (state, { updates }): IUserState => {
     if (!state.user) return state;
 

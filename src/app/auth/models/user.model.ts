@@ -1,3 +1,5 @@
+type Role = 'manager' | 'user';
+
 export interface IUserResponse {
   name: string;
   email: string;
@@ -13,5 +15,3 @@ export interface IUserInformation {
   name: string;
   email: string;
 }
-
-type Role = 'manager' | 'user';

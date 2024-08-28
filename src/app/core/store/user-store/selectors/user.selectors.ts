@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 import { IUser } from '@app/auth/models/user.model';
-import { IUserState } from '@core/services/store/user-store/state/user-state';
+import { IUserState } from '@core/store/user-store/state/user-state';
 import { AppState } from '../../app-state';
 
 export const selectUserState = (state: AppState) => state.userState;

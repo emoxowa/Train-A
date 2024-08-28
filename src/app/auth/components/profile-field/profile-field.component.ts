@@ -3,7 +3,7 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { TuiButton, TuiGroup, TuiIcon, TuiTitle, TuiTextfield } from '@taiga-ui/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { UserActions } from '@core/services/store/user-store/actions/user.actions';
+import { UserActions } from '@core/store/user-store/actions/user.actions';
 
 @Component({
   selector: 'app-profile-field',
