@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StationComponent } from './pages/stations/stations.component';
+
 @Component({
   selector: 'app-admin',
   standalone: true,

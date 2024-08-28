@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -24,10 +24,13 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './sign-up.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnDestroy {
   public registerForm!: FormGroup;
+
   public submitFirstClicked = false;
+
   public isSubmitting = false;
+
   public subscriber$ = new Subject<void>();
 
   constructor(

@@ -13,10 +13,13 @@ import { BehaviorSubject, distinctUntilChanged, merge, Subscription } from 'rxjs
 })
 export class CustomErrorComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
+
   private formGroupDirective = inject(FormGroupDirective);
+
   public message$ = new BehaviorSubject('');
 
   @Input({ required: true }) controlName!: string;
+
   @Input({ required: true }) customErrors!: ValidationErrors;
 
   ngOnInit(): void {
