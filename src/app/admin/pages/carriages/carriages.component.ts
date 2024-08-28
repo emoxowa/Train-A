@@ -12,6 +12,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
 import { tap } from 'rxjs';
 import { CarriagesDynamicFormComponent } from './components/carriages-dynamic-form-upd/carriages-dynamic-form-upd.component';
 import { CarriagesDynamicFromCreateComponent } from './components/carriages-dynamic-from-create/carriages-dynamic-from-create.component';
+import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
 
 @Component({
   selector: 'app-carriages',
@@ -23,6 +24,7 @@ import { CarriagesDynamicFromCreateComponent } from './components/carriages-dyna
     TuiInputModule,
     CarriagesDynamicFormComponent,
     CarriagesDynamicFromCreateComponent,
+    CarriageComponent,
   ],
   templateUrl: './carriages.component.html',
   styleUrl: './carriages.component.scss',

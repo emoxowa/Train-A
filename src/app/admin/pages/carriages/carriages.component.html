@@ -10,10 +10,11 @@
 </button>
 @let carriagesList = carriagesList$ | async;
 @for (carriage of carriagesList; track carriage.code) {
-  <div>code: {{ carriage.code }}</div>
+  <!-- <div>code: {{ carriage.code }}</div>
   <div>name: {{ carriage.name }}</div>
   <div>rows: {{ carriage.rows }}</div>
   <div>leftSeats: {{ carriage.leftSeats }}</div>
-  <div>rightSeats: {{ carriage.rightSeats }}</div>
+  <div>rightSeats: {{ carriage.rightSeats }}</div> -->
+  <app-carriage [carriagesData]="carriage"></app-carriage>
   <app-carriages-dynamic-form [carriagesData]="carriage"></app-carriages-dynamic-form>
 }
