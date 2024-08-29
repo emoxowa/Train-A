@@ -63,7 +63,7 @@ export class AdminService {
   }
 
   createRoute(newRoute: IRoutes): Observable<IRoutes> {
-    return this.http.post<IRoutes>('api/route', newRoute, {
+    return this.http.post<IRoutes>('/api/route', newRoute, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
       },
@@ -79,7 +79,11 @@ export class AdminService {
   }
 
   deleteRoute(IdRoute: number): Observable<void> {
-    return this.http.delete<void>(`/api/route/${IdRoute}`);
+    return this.http.delete<void>(`/api/route/${IdRoute}`, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    });
   }
 
   // it's for developing

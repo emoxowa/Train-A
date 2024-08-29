@@ -16,6 +16,6 @@ export const AdminRoutes: Routes = [
   },
   {
     path: 'routes',
-    loadComponent: () => import('./pages/routes/routes.component').then((m) => m.RoutesComponent)
-  }
+    loadComponent: () => import('./pages/routes/routes.component').then((m) => m.RoutesComponent),
+  },
 ];
