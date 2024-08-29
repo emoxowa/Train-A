@@ -7,7 +7,7 @@ import { AuthService } from '@app/auth/services/auth.service';
 import { EmailValidators } from '@app/auth/validators/emailValidators';
 import { PasswordValidators } from '@app/auth/validators/passwordValidators';
 import { TuiButton } from '@taiga-ui/core';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-sign-in',
@@ -21,7 +21,7 @@ export class SignInComponent implements OnDestroy {
   public loginForm!: FormGroup;
   public submitFirstClicked = false;
   public isSubmitting = false;
-  public subscriber!: Subscription;
+  public subscriber$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -45,21 +45,25 @@ export class SignInComponent implements OnDestroy {
 
     const { email, password } = this.loginForm.value;
 
-    this.subscriber = this.authService.signIn(email, password).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.router.navigate(['/']);
-      },
-      error: (error) => {
-        if (error.status === 400) {
+    this.authService
+      .signIn(email, password)
+      .pipe(takeUntil(this.subscriber$))
+      .subscribe({
+        next: () => {
           this.isSubmitting = false;
-          this.loginForm.setErrors({ invalidEmailPassword: true });
-        }
-      },
-    });
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          if (error.status === 400) {
+            this.isSubmitting = false;
+            this.loginForm.setErrors({ invalidEmailPassword: true });
+          }
+        },
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscriber.unsubscribe();
+    this.subscriber$.next();
+    this.subscriber$.complete();
   }
 }
