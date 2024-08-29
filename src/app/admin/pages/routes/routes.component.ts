@@ -1,7 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { IRoutes } from '@app/admin/models/routes.model';
 import { AdminService } from '@app/admin/service/admin.service';
+import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
+import { selectRoutesArr } from '@app/core/store/admin-store/selectors/routes.selector';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { tap } from 'rxjs';
@@ -9,7 +12,7 @@ import { tap } from 'rxjs';
 @Component({
   selector: 'app-routes',
   standalone: true,
-  imports: [TuiButton],
+  imports: [TuiButton, CommonModule],
   template: `
     <button size="l" tuiButton (click)="getRoutes()">get routes</button>
 
@@ -18,6 +21,14 @@ import { tap } from 'rxjs';
     <button size="l" tuiButton (click)="updRoute()">upd route</button>
 
     <button size="l" tuiButton (click)="deleteRoute()">delete route</button>
+
+    @let routes = routesList$ | async;
+
+    @for (route of routes; track route.id) {
+      <div>id: {{ route.id }}</div>
+      <div>carriages: {{ route.carriages }}</div>
+      <div>path: {{ route.path }}</div>
+    }
   `,
   styleUrl: './routes.component.scss',
 })
@@ -26,6 +37,8 @@ export class RoutesComponent {
 
   private store = inject(Store);
 
+  routesList$ = this.store.select(selectRoutesArr);
+
   // for developing
   readonly newAdmin: ICreateAdmin = {
     email: 'admin@admin.com',
@@ -33,6 +46,7 @@ export class RoutesComponent {
   };
 
   constructor() {
+    this.store.dispatch(RoutesActions.loadRoutesList());
     // for developing
     this.adminService
       .loginAdmin(this.newAdmin)

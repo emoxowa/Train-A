@@ -58,8 +58,8 @@ export class AdminService {
     });
   }
 
-  getRoutes(): Observable<IRoutes> {
-    return this.http.get<IRoutes>('/api/route');
+  getRoutes(): Observable<IRoutes[]> {
+    return this.http.get<IRoutes[]>('/api/route');
   }
 
   createRoute(newRoute: IRoutes): Observable<IRoutes> {
