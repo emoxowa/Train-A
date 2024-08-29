@@ -60,11 +60,7 @@ export class CarriagesComponent {
   }
 
   toggleCreateField() {
-    if (!this.isCreateFieldOpen) {
-      this.isCreateFieldOpen = true;
-    } else {
-      this.isCreateFieldOpen = false;
-    }
+    this.isCreateFieldOpen = !this.isCreateFieldOpen
   }
 
   toggleUpdForm(carriage: ICarriagesType) {
