@@ -2,6 +2,7 @@ import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
+import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
@@ -51,6 +52,8 @@ export class CarriagesDynamicFromCreateComponent {
     rightSeats: ['', Validators.required],
   });
 
+  private carriagesList: ICarriagesType[] = [];
+
   get carriagesData(): ICarriagesType {
     return {
       code: this.createCarriagesForm.get('name')?.value,
@@ -59,6 +62,12 @@ export class CarriagesDynamicFromCreateComponent {
       leftSeats: this.createCarriagesForm.get('leftSeats')?.value,
       rightSeats: this.createCarriagesForm.get('rightSeats')?.value,
     };
+  }
+
+  ngOnInit() {
+    this.store.select(selectCarriagesArr).subscribe((carriages) => {
+      this.carriagesList = carriages;
+    });
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -70,6 +79,17 @@ export class CarriagesDynamicFromCreateComponent {
     }
 
     const createNewCarriage: ICarriagesType = this.carriagesData;
+
+    const isInStorage = this.carriagesList.some(
+      (carriage) => carriage.name === createNewCarriage.name
+    );
+
+    if (isInStorage) {
+      alert('Carriage with this name already exists.');
+      return;
+    }
+
+
     this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: createNewCarriage }));
     this.closeForm();
   }
