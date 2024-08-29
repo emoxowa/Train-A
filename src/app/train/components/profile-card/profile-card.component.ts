@@ -12,7 +12,6 @@ import {
   TuiTextfieldOptionsDirective,
   TuiTitle,
 } from '@taiga-ui/core';
-import { ProfileService } from '@app/train/services/profile.service';
 import { Store } from '@ngrx/store';
 import { selectUserEmail, selectUserName, selectUserRole } from '@core/store/user-store/selectors/user.selectors';
 import { UserActions } from '@core/store/user-store/actions/user.actions';
@@ -43,8 +42,6 @@ import { TuiAutoFocus } from '@taiga-ui/cdk';
   styleUrl: './profile-card.component.scss',
 })
 export class ProfileCardComponent {
-  private readonly profileService = inject(ProfileService);
-
   protected readonly store = inject(Store);
 
   protected readonly router = inject(Router);
