@@ -11,12 +11,18 @@ import { selectStationArr } from '@app/core/store/admin-store/selectors/stations
 import { StationsActions } from '@app/core/store/admin-store/actions/stations.actions';
 import { IStation } from '@app/admin/models/station-list.model';
 import { RouteCardComponent } from './components/route-card/route-card.component';
+import { CreateRouteFormComponent } from './components/create-route-form/create-route-form.component';
 
 @Component({
   selector: 'app-routes',
   standalone: true,
-  imports: [TuiButton, CommonModule, RouteCardComponent],
+  imports: [TuiButton, CommonModule, RouteCardComponent, CreateRouteFormComponent],
   template: `
+    @if (isRoutesCreateFormOpen) {
+      <app-create-route-form (formClosed)="closeRoutesCreateForm()"></app-create-route-form>
+    } @else {
+      <button size="s" tuiButton (click)="openRoutesCreateForm()">Create</button>
+    }
     @let routes = routesList$ | async;
     @for (route of routes; track route.id) {
       <app-route-card [routeData]="route" [stationData]="localStationArr"></app-route-card>
@@ -34,6 +40,8 @@ export class RoutesComponent implements OnInit {
   stationArr$ = this.store.select(selectStationArr);
 
   localStationArr: IStation[] = [];
+
+  isRoutesCreateFormOpen: boolean = false;
 
   // for developing
   readonly newAdmin: ICreateAdmin = {
@@ -61,5 +69,13 @@ export class RoutesComponent implements OnInit {
         this.localStationArr = stations;
       },
     });
+  }
+
+  openRoutesCreateForm() {
+    this.isRoutesCreateFormOpen = true;
+  }
+
+  closeRoutesCreateForm() {
+    this.isRoutesCreateFormOpen = false;
   }
 }

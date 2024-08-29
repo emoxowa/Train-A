@@ -1,12 +1,11 @@
 .route-card {
   display: flex;
   flex-direction: column;
+  gap: 5px;
   justify-content: center;
 
   width: 60vw;
   padding: 20px;
-
-  gap: 5px;
 
   border: 1px solid gray;
   border-radius: 10px;
