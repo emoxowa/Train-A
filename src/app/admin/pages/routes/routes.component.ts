@@ -8,11 +8,12 @@ import { selectRoutesArr } from '@app/core/store/admin-store/selectors/routes.se
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { tap } from 'rxjs';
+import { RouteCardComponent } from './components/route-card/route-card.component';
 
 @Component({
   selector: 'app-routes',
   standalone: true,
-  imports: [TuiButton, CommonModule],
+  imports: [TuiButton, CommonModule, RouteCardComponent],
   template: `
     <button size="l" tuiButton (click)="getRoutes()">get routes</button>
 
@@ -25,9 +26,7 @@ import { tap } from 'rxjs';
     @let routes = routesList$ | async;
 
     @for (route of routes; track route.id) {
-      <div>id: {{ route.id }}</div>
-      <div>carriages: {{ route.carriages }}</div>
-      <div>path: {{ route.path }}</div>
+      <app-route-card [routeData]="route"></app-route-card>
     }
   `,
   styleUrl: './routes.component.scss',
