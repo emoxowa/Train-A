@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { IRoutes } from '@app/admin/models/routes.model';
 import { IStation } from '@app/admin/models/station-list.model';
+import { TuiButton } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-route-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TuiButton],
   template: `
     <div class="route-card">
       <h2>Route {{ routeData.id }}</h2>
@@ -27,6 +28,9 @@ import { IStation } from '@app/admin/models/station-list.model';
           }
         }
       </div>
+      <button size="s" tuiButton>Update</button>
+      <button size="s" tuiButton>Asign ride</button>
+      <button size="s" tuiButton>Delete</button>
     </div>
   `,
   styleUrl: './route-card.component.scss',
