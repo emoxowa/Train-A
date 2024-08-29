@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
 import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
@@ -45,10 +45,10 @@ export class CarriagesDynamicFromCreateComponent {
   private store = inject(Store);
 
   public createCarriagesForm: FormGroup = this.formBuilder.group({
-    name: [''],
-    rows: [''],
-    leftSeats: [''],
-    rightSeats: [''],
+    name: ['', Validators.required],
+    rows: ['', Validators.required],
+    leftSeats: ['', Validators.required],
+    rightSeats: ['', Validators.required],
   });
 
   get carriagesData(): ICarriagesType {
@@ -63,6 +63,12 @@ export class CarriagesDynamicFromCreateComponent {
 
   // eslint-disable-next-line class-methods-use-this
   createStation() {
+    if (this.createCarriagesForm.invalid) {
+      // eslint-disable-next-line no-alert
+      alert('Please fill in all fields before updating.');
+      return;
+    }
+
     const createNewCarriage: ICarriagesType = this.carriagesData;
     this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: createNewCarriage }));
     this.closeForm();
