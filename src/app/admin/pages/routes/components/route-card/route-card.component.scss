@@ -1,0 +1,17 @@
+.route-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 60vw;
+  padding: 20px;
+
+  border: 1px solid gray;
+  border-radius: 10px;
+
+  &__carriage-arr,
+  &__station-arr {
+    display: flex;
+    flex-flow: row wrap;
+  }
+}

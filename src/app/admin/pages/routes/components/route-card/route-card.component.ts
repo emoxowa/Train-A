@@ -8,15 +8,25 @@ import { IStation } from '@app/admin/models/station-list.model';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div>id: {{ routeData.id }}</div>
-    <div>carriages: {{ routeData.carriages }}</div>
-    <div>
-      @for (stationId of routeData.path; track $index) {
-        @let station = getCityById(stationId);
-        @if (station) {
-          <span>{{ station.city }} - </span>
+    <div class="route-card">
+      <h2>Route {{ routeData.id }}</h2>
+      <div>
+        <h3>Carriages:</h3>
+        <div class="route-card__carriage-arr">
+          @for (carriage of routeData.carriages; track $index) {
+            <div>{{ carriage }}</div>
+          }
+        </div>
+      </div>
+      <h3>Citys:</h3>
+      <div class="route-card__station-arr">
+        @for (stationId of routeData.path; track $index) {
+          @let station = getCityById(stationId);
+          @if (station) {
+            <div>{{ station.city }} -</div>
+          }
         }
-      }
+      </div>
     </div>
   `,
   styleUrl: './route-card.component.scss',
