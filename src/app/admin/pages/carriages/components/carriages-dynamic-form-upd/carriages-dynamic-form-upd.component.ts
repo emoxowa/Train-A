@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
 import { Store } from '@ngrx/store';
@@ -46,10 +46,10 @@ export class CarriagesDynamicFormComponent implements OnInit {
   private initialFormValues!: ICarriagesType;
 
   public editCarriagesForm: FormGroup = this.formBuilder.group({
-    name: [''],
-    rows: [''],
-    leftSeats: [''],
-    rightSeats: [''],
+    name: ['', Validators.required],
+    rows: ['', Validators.required],
+    leftSeats: ['', Validators.required],
+    rightSeats: ['', Validators.required],
   });
 
   ngOnInit(): void {
@@ -72,6 +72,12 @@ export class CarriagesDynamicFormComponent implements OnInit {
   }
 
   updStation() {
+    if (this.editCarriagesForm.invalid) {
+      // eslint-disable-next-line no-alert
+      alert('Please fill in all fields before updating.');
+      return;
+    }
+
     const updCarriage: ICarriagesType = {
       code: this.editCarriagesForm.get('name')?.value,
       name: this.editCarriagesForm.get('name')?.value,
