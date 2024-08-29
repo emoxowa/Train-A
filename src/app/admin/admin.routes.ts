@@ -14,4 +14,8 @@ export const AdminRoutes: Routes = [
     path: 'carriages',
     loadComponent: () => import('./pages/carriages/carriages.component').then((m) => m.CarriagesComponent),
   },
+  {
+    path: 'routes',
+    loadComponent: () => import('./pages/routes/routes.component').then((m) => m.RoutesComponent)
+  }
 ];
