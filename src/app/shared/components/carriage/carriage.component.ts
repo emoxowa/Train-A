@@ -8,7 +8,7 @@ import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model
   template: `
     <div class="carriage">
       <div class="carriage__header">
-        <span>Name: {{ carriagesData.code }}</span>
+        <span>Name: {{ carriagesData.name }}</span>
         <span>Sits: {{ (carriagesData.leftSeats + carriagesData.rightSeats) * carriagesData.rows }}</span>
       </div>
       <div class="carriage__body">
@@ -17,7 +17,7 @@ import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model
             <div class="carriage__left-seats">
               @for (seat of getSeats(carriagesData.leftSeats); track seat; let seatIndexLeft = $index) {
                 <div class="carriage__seat">
-                  {{
+                  L-{{
                     seat +
                       (getSeats(carriagesData.leftSeats).length + getSeats(carriagesData.rightSeats).length) * rowIndex
                   }}
@@ -27,7 +27,7 @@ import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model
             <div class="carriage__right-seats">
               @for (seat of getSeats(carriagesData.rightSeats); track seat; let seatIndexRight = $index) {
                 <div class="carriage__seat">
-                  {{
+                  R-{{
                     getSeats(carriagesData.leftSeats).length +
                       seat +
                       (getSeats(carriagesData.rightSeats).length + getSeats(carriagesData.leftSeats).length) * rowIndex

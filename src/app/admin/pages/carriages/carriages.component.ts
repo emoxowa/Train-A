@@ -75,7 +75,7 @@ export class CarriagesComponent {
     this.currentCarriageToUpdate = undefined;
   }
 
-  closeCreateField(){
+  closeCreateField() {
     this.isCreateFieldOpen = false;
   }
 }

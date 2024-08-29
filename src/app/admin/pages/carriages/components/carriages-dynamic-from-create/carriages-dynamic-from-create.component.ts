@@ -68,7 +68,7 @@ export class CarriagesDynamicFromCreateComponent {
     this.closeForm();
   }
 
-  closeForm(){
+  closeForm() {
     this.formClosed.emit();
   }
 }
