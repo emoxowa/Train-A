@@ -1,7 +1,7 @@
 <header tuiNavigationHeader class="header">
-  <a class="logo" href="/">
+  <a class="logo" [routerLink]="(userRole$ | async) === 'manager' ? '/admin' : '/'">
     <span tuiNavigationLogo>
-      <tui-icon icon="@tui.fa.solid.train" [style.color]="'var(--tui-text-primary-on-accent-1)'" />
+      <tui-icon icon="@tui.fa.solid.train" />
     </span>
     <div class="logo-wrapper">
       <h1>ChoozTrain</h1>
@@ -9,24 +9,43 @@
     </div>
   </a>
   <nav class="navigation">
-    <ul class="navigation-list" *ngIf="authService.isAuthenticated(); else guestLinks">
-      <li [ngClass]="{ 'active-link': isActive('/profile') }">
-        <a class="link" routerLink="/profile">Profile</a>
+    <!-- Если пользователь неавторизован -->
+    <ul class="navigation-list" *ngIf="!authService.isAuthenticated(); else authorizedLinks">
+      <li [ngClass]="{ 'active-link': isActive('/signin') }">
+        <a class="link" routerLink="/signin">Sign In</a>
       </li>
-      <li [ngClass]="{ 'active-link': isActive('/orders') }">
-        <a class="link" routerLink="/orders">My Orders</a>
+      <li [ngClass]="{ 'active-link': isActive('/signup') }">
+        <a class="link" routerLink="/signup">Sign Up</a>
       </li>
     </ul>
 
-    <ng-template #guestLinks>
-      <ul class="navigation-list">
-        <li [ngClass]="{ 'active-link': isActive('/signin') }">
-          <a class="link" routerLink="/signin">Sign In</a>
+    <!-- Если пользователь авторизован -->
+    <ng-template #authorizedLinks>
+      <!-- Для менеджера -->
+      <ul class="navigation-list" *ngIf="(userRole$ | async) === 'manager'; else userLinks">
+        <li [ngClass]="{ 'active-link': isActive('/admin') }">
+          <a class="link" routerLink="/admin">Admin</a>
         </li>
-        <li [ngClass]="{ 'active-link': isActive('/signup') }">
-          <a class="link" routerLink="/signup">Sign Up</a>
+        <li [ngClass]="{ 'active-link': isActive('/admin/profile') }">
+          <a class="link" routerLink="/admin/profile">Profile</a>
+        </li>
+        <li [ngClass]="{ 'active-link': isActive('/admin/orders') }">
+          <a class="link" routerLink="/admin/orders">Orders</a>
         </li>
       </ul>
+
+      <!-- Для пользователя -->
+      <ng-template #userLinks>
+        <ul class="navigation-list">
+          <div>{{ userRole$ | async }}</div>
+          <li [ngClass]="{ 'active-link': isActive('/profile') }">
+            <a class="link" routerLink="/profile">Profile</a>
+          </li>
+          <li [ngClass]="{ 'active-link': isActive('/orders') }">
+            <a class="link" routerLink="/orders">My Orders</a>
+          </li>
+        </ul>
+      </ng-template>
     </ng-template>
   </nav>
 </header>

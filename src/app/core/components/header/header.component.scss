@@ -27,6 +27,22 @@
   align-items: center;
   color: white;
   text-decoration: none;
+  transition: color 0.3s ease;
+
+  tui-icon {
+    color: var(--tui-text-primary-on-accent-1);
+  }
+
+  &:hover {
+    color: var(--tui-chart-categorical-13);
+
+    tui-icon {
+      transition: color 0.3s ease;
+      transition: transform 0.3s ease;
+      transform: scale(1.1);
+      color: var(--tui-chart-categorical-13);
+    }
+  }
 }
 
 .logo-wrapper {
@@ -38,6 +54,14 @@
 .link {
   color: white;
   text-decoration: none;
+  transition:
+    color 0.3s ease,
+    border-bottom 0.3s ease;
+}
+
+.link:hover {
+  color: var(--tui-chart-categorical-13);
+  border-bottom: 2px solid var(--tui-chart-categorical-13);
 }
 
 .navigation-list {
@@ -51,7 +75,6 @@
   font-weight: bold;
   padding-bottom: 2px;
   font-size: var(--tui-font-heading-4);
-
 }
 
 @media (min-width: 320px) and (max-width: 424px) {

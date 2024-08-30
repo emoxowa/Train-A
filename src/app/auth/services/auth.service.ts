@@ -10,7 +10,6 @@ import { SignInResponse } from '../models/sign-in.interface';
 export class AuthService {
   private readonly signInUrl = '/api/signin';
 
-
   private readonly signUpUrl = '/api/signup';
 
   private readonly logoutUrl = '/api/logout';
