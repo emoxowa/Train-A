@@ -1,0 +1,61 @@
+<ng-container *ngIf="loading$ | async as loading; else content">
+  <ng-container *ngIf="loading">
+    <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
+  </ng-container>
+</ng-container>
+
+<ng-template #content>
+  <ng-container *ngIf="searchResponse$ | async as searchResponse">
+    <div *ngIf="searchResponse.routes.length > 0; else noRides" class="routes">
+      <div
+        class="route"
+        *ngFor="let route of searchResponse.routes"
+        (click)="onCardClick(route)"
+        (keyup.enter)="onCardClick(route)"
+        (keydown.space)="onCardClick(route)"
+        tabindex="0"
+      >
+        <div *ngFor="let schedule of route.schedule" class="schedule">
+          <div class="info-section">
+            <button tuiButton (click)="showDialog(route, $event)" size="s" appearance="outline">Route</button>
+
+            <div class="time">
+              <div class="start-time tui-text_body-l-2">
+                {{ schedule.time[0] | date: 'shortTime' }}
+              </div>
+              <div class="duration">
+                {{ schedule.time[0] | formatDuration: schedule.time[1] }}
+              </div>
+              <div class="end-time tui-text_body-l-2">
+                {{ schedule.time[1] | date: 'shortTime' }}
+              </div>
+            </div>
+
+            <div class="date">
+              <div>{{ schedule.time[0] | date: 'MMMM d' }}</div>
+              <div>{{ schedule.time[1] | date: 'MMMM d' }}</div>
+            </div>
+
+            <div class="city tui-text_body-l-1">
+              <div>{{ searchResponse.from.city }}</div>
+              <div>{{ searchResponse.to.city }}</div>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div *ngFor="let carriageType of route.carriages" class="carriage">
+              <div class="tui-text_body-m">{{ carriageType }}</div>
+              <div>
+                {{ schedule.price[carriageType] | currency: 'USD' : 'symbol' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noRides>
+      <app-no-rides-available></app-no-rides-available>
+    </ng-template>
+  </ng-container>
+</ng-template>

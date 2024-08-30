@@ -1,0 +1,58 @@
+.tui-table__th {
+  text-align: center;
+}
+
+.tui-table__th {
+  text-align: left;
+}
+
+.tui-table__td {
+  vertical-align: middle;
+}
+
+.tui-table__td_first {
+  border-right: 1px solid var(--tui-text-action);
+}
+
+.tui-table__th_first,
+.tui-table__td_first,
+.tui-table__td_last,
+.tui-table__th_last {
+  text-align: end;
+}
+
+.tui-table__td_first,
+.tui-table__th_first {
+  width: 100px;
+}
+
+.tui-table__td_first {
+  border-right: 1px solid var(--tui-text-action);
+  position: relative;
+}
+
+.tui-table__td_first::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--tui-text-action);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.tui-table__tr:last-child .tui-table__td_first::after {
+  width: 14px;
+  height: 14px;
+  right: -8px;
+  background-color: var(--tui-text-action);
+}
+
+.tui-table__tr:nth-child(2) .tui-table__td_first::after {
+  width: 12px;
+  height: 12px;
+  right: -7px;
+  background-color: var(--tui-text-action);
+}

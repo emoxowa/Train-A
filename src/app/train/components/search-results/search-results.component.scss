@@ -1,0 +1,147 @@
+@import 'styles';
+
+:host {
+  padding: 20px 16px;
+  width: 100%;
+  display: flex;
+  border-radius: 10px;
+  margin: 20px 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: 1200px;
+}
+
+.routes {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.route {
+  padding: 16px;
+  cursor: pointer;
+  background-color: var(--tui-background-base);
+  gap: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--tui-background-neutral-1-pressed);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.schedule {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  width: 100%;
+  gap: 20px;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 5px;
+
+  .time {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--tui-background-neutral-1-pressed);
+    padding-bottom: 10px;
+    position: relative;
+    margin-top: 10px;
+
+    .start-time,
+    .end-time {
+      position: relative;
+      font-weight: 700;
+
+      &::before {
+        content: '⚪';
+        position: absolute;
+        bottom: -6px;
+        width: 8px;
+        height: 8px;
+        font-size: 10px;
+      }
+    }
+
+    .start-time::before {
+      left: -5px;
+    }
+
+    .end-time::before {
+      right: 0;
+    }
+
+    .duration {
+      text-align: center;
+      color: var(--tui-text-secondary);
+    }
+
+    .end-time {
+      text-align: right;
+    }
+  }
+
+  .date {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .city {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    font-weight: 500;
+  }
+}
+
+.price-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  border-left: 1px solid var(--tui-background-neutral-1-pressed);
+  padding-left: 20px;
+
+  .carriage {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+tui-loader {
+  margin-top: 200px;
+}
+
+
+@include desktop {
+  :host {
+    max-width: 1200px;
+  }
+}
+
+@include tablet {
+  :host {
+    max-width: 740px;
+  }
+}
+
+@include mobile {
+  :host {
+    max-width: 500px;
+  }
+}
+
+@include small-mobile {
+  :host {
+    max-width: 300px;
+  }
+}

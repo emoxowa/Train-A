@@ -1,7 +1,7 @@
-import { IStationList } from '@app/admin/models/station-list.model';
+import { IStation } from '@app/admin/models/station-list.model';
 
 export interface IStationState {
-  stationList: IStationList[];
+  stationList: IStation[];
   deletingIndicate: boolean;
   creatingIndicate: boolean;
 }

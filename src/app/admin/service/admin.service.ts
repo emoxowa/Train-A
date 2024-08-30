@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ICreateStationResponse, IStationList } from '../models/station-list.model';
+import { ICreateStationResponse, IStation } from '../models/station-list.model';
 import { ICreateStation } from '../models/create-station.model';
 import { IAdminToken, ICreateAdmin } from '../models/create-admin';
 
@@ -13,8 +13,8 @@ export class AdminService {
 
   public token$ = new BehaviorSubject('');
 
-  getStationList(): Observable<IStationList[]> {
-    return this.http.get<IStationList[]>(`/api/station`);
+  getStationList(): Observable<IStation[]> {
+    return this.http.get<IStation[]>(`/api/station`);
   }
 
   createNewStation(stationData: ICreateStation): Observable<ICreateStationResponse> {

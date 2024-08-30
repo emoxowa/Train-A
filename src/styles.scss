@@ -5,3 +5,35 @@
   --auth-form-flex-gap: 20px;
   --auth-input-padding: 10px 5px;
 }
+
+$breakpoint-desktop-min: 1024px;
+$breakpoint-tablet-min: 768px;
+$breakpoint-tablet-max: 1023px;
+$breakpoint-mobile-min: 425px;
+$breakpoint-mobile-max: 767px;
+$breakpoint-small-mobile-min: 320px;
+$breakpoint-small-mobile-max: 424px;
+
+@mixin desktop {
+  @media (min-width: $breakpoint-desktop-min) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-tablet-min) and (max-width: $breakpoint-tablet-max) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (min-width: $breakpoint-mobile-min) and (max-width: $breakpoint-mobile-max) {
+    @content;
+  }
+}
+
+@mixin small-mobile {
+  @media (min-width: $breakpoint-small-mobile-min) and (max-width: $breakpoint-small-mobile-max) {
+    @content;
+  }
+}
