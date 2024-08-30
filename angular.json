@@ -45,6 +45,11 @@
                 "glob": "**/*",
                 "input": "node_modules/@taiga-ui/icons/src",
                 "output": "assets/taiga-ui/icons"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@taiga-ui/icons-fontawesome/src",
+                "output": "assets/taiga-ui/icons/"
               }
             ],
             "styles": [
@@ -53,7 +58,10 @@
               "node_modules/@taiga-ui/styles/taiga-ui-global.less",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src"]
+            }
           },
           "configurations": {
             "production": {
@@ -126,9 +134,6 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ],
-    "analytics": "26750323-a1a1-42a6-ad00-1f3635205e0a"
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }

@@ -1,0 +1,90 @@
+@import 'styles';
+
+:host {
+  padding: 20px 16px;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  background-color: var(--tui-text-primary);
+  border-radius: 10px;
+  margin: 20px 0;
+  box-sizing: border-box;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.form {
+  width: 100%;
+}
+
+.center {
+  align-items: center;
+}
+
+.tui-icon-button {
+  margin-left: 20px;
+
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+
+  &:hover {
+    background-color: var(--tui-primary);
+    transform: scale(1.1);
+    color: var(--tui-text-on-primary);
+  }
+
+  &:active {
+    transform: scale(1.05);
+  }
+}
+
+@include tablet {
+  :host {
+    max-width: 740px;
+  }
+}
+
+@include mobile {
+  :host {
+    max-width: 500px;
+  }
+
+  .center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tui-icon-button {
+    margin-top: 10px;
+  }
+
+  .tui-form__button {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@include small-mobile {
+  :host {
+    max-width: 300px;
+  }
+
+  .tui-icon-button {
+    margin-top: 10px;
+  }
+
+  .center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tui-form__button {
+    width: 100%;
+  }
+}
