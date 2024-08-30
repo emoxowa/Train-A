@@ -9,6 +9,7 @@ import { SignInResponse } from '../models/sign-in.interface';
 })
 export class AuthService {
   private readonly signInUrl = '/api/signin';
+
   private readonly signUpUrl = '/api/signup';
 
   constructor(
@@ -36,5 +37,9 @@ export class AuthService {
 
   public clearToken(): void {
     localStorage.removeItem('token');
+  }
+
+  public isAuthenticated(): boolean {
+    return !!this.getToken();
   }
 }

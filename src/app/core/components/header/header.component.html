@@ -1,0 +1,32 @@
+<header tuiNavigationHeader class="header">
+  <a class="logo" href="/">
+    <span tuiNavigationLogo>
+      <tui-icon icon="@tui.fa.solid.train" [style.color]="'var(--tui-text-primary-on-accent-1)'" />
+    </span>
+    <div class="logo-wrapper">
+      <h1>ChoozTrain</h1>
+      <div tui-text_body-m>Pick your path, ride the rails.</div>
+    </div>
+  </a>
+  <nav class="navigation">
+    <ul class="navigation-list" *ngIf="authService.isAuthenticated(); else guestLinks">
+      <li [ngClass]="{ 'active-link': isActive('/profile') }">
+        <a class="link" routerLink="/profile">Profile</a>
+      </li>
+      <li [ngClass]="{ 'active-link': isActive('/orders') }">
+        <a class="link" routerLink="/orders">My Orders</a>
+      </li>
+    </ul>
+
+    <ng-template #guestLinks>
+      <ul class="navigation-list">
+        <li [ngClass]="{ 'active-link': isActive('/signin') }">
+          <a class="link" routerLink="/signin">Sign In</a>
+        </li>
+        <li [ngClass]="{ 'active-link': isActive('/signup') }">
+          <a class="link" routerLink="/signup">Sign Up</a>
+        </li>
+      </ul>
+    </ng-template>
+  </nav>
+</header>

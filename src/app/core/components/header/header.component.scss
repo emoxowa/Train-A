@@ -1,0 +1,61 @@
+:host {
+  margin: 0 auto;
+  width: 100%;
+  background-color: var(--tui-background-accent-1-pressed);
+  display: flex;
+  justify-content: center;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  color: var(--tui-text-primary-on-accent-1);
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.logo {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+}
+
+.logo-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+}
+
+.navigation-list {
+  margin: 0;
+  display: flex;
+  gap: 15px;
+}
+
+.active-link .link {
+  border-bottom: 2px solid white;
+  font-weight: bold;
+  padding-bottom: 2px;
+  font-size: var(--tui-font-heading-4);
+
+}
+
+@media (min-width: 320px) and (max-width: 424px) {
+  .logo-wrapper {
+    display: none;
+  }
+}

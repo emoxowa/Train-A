@@ -19,8 +19,11 @@ import { Subscription } from 'rxjs';
 })
 export class SignInComponent implements OnDestroy {
   public loginForm!: FormGroup;
+
   public submitFirstClicked = false;
+
   public isSubmitting = false;
+
   public subscriber!: Subscription;
 
   constructor(
@@ -60,6 +63,8 @@ export class SignInComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriber.unsubscribe();
+    if (this.subscriber) {
+      this.subscriber.unsubscribe();
+    }
   }
 }
