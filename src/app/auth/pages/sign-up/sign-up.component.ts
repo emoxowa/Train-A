@@ -14,7 +14,7 @@ import { AuthService } from '@app/auth/services/auth.service';
 import { EmailValidators } from '@app/auth/validators/emailValidators';
 import { PasswordValidators } from '@app/auth/validators/passwordValidators';
 import { TuiButton } from '@taiga-ui/core';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
@@ -31,7 +31,7 @@ export class SignUpComponent implements OnDestroy {
 
   public isSubmitting = false;
 
-  public subscriber!: Subscription;
+  public subscriber$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -69,23 +69,25 @@ export class SignUpComponent implements OnDestroy {
 
     const { email, password } = this.registerForm.value;
 
-    this.subscriber = this.authService.signUp(email, password).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.router.navigate(['/signin']);
-      },
-      error: (error) => {
-        if (error.status === 400 && error.error.reason === 'invalidUniqueKey') {
+    this.authService
+      .signUp(email, password)
+      .pipe(takeUntil(this.subscriber$))
+      .subscribe({
+        next: () => {
           this.isSubmitting = false;
-          this.registerForm.get('email')?.setErrors({ invalidUniqueKey: true });
-        }
-      },
-    });
+          this.router.navigate(['/signin']);
+        },
+        error: (error) => {
+          if (error.status === 400 && error.error.reason === 'invalidUniqueKey') {
+            this.isSubmitting = false;
+            this.registerForm.get('email')?.setErrors({ invalidUniqueKey: true });
+          }
+        },
+      });
   }
 
   ngOnDestroy(): void {
-    if (this.subscriber) {
-      this.subscriber.unsubscribe();
-    }
+    this.subscriber$.next();
+    this.subscriber$.complete();
   }
 }

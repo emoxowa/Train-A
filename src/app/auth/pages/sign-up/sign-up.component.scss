@@ -4,10 +4,11 @@
   justify-content: center;
   box-sizing: border-box;
   margin-top: 100px;
+    max-width: calc(100vw - 40px);
 }
 
 .container {
-  padding: var(--auth-container-padding);
+  padding: 0;
   width: var(--auth-container-width);
 
   .title {

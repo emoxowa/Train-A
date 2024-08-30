@@ -8,6 +8,10 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
+      {
+        path: '',
+        loadChildren: () => import('./train/train.routes').then((m) => m.TrainRoutes),
+      },
       { path: 'signup', component: SignUpComponent },
       { path: 'signin', component: SignInComponent },
       {

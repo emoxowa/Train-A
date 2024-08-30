@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  margin: 0 auto;
+  width: 42.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.profile {
+  &__button {
+    align-self: flex-start;
+  }
+}
+
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  &__button {
+    align-self: flex-start;
+  }
+}
