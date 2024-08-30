@@ -21,7 +21,9 @@ export class StationEffectService {
       ofType(StationsActions.loadStationList),
       switchMap(() =>
         this.adminService.getStationList().pipe(
-          map((stations: IStation[]) => StationsActions.loadStationsSuccess({ stations })),
+          map((stations: IStation[]) => {
+            return StationsActions.loadStationsSuccess({ stations });
+          }),
           catchError((error) => {
             console.error('Error loading videos:', error);
             return EMPTY;

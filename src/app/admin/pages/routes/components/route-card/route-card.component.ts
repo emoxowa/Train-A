@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { IRoutes } from '@app/admin/models/routes.model';
 import { IStation } from '@app/admin/models/station-list.model';
 import { TuiButton } from '@taiga-ui/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-route-card',
@@ -21,10 +22,9 @@ import { TuiButton } from '@taiga-ui/core';
       </div>
       <h3>Citys:</h3>
       <div class="route-card__station-arr">
-        @for (stationId of routeData.path; track $index) {
-          @let station = getCityById(stationId);
+        @for (station of stationData | async; track $index) {
           @if (station) {
-            <div>{{ station.city }} -</div>
+            <div>{{ station.city }}</div>
           }
         }
       </div>
@@ -38,9 +38,5 @@ import { TuiButton } from '@taiga-ui/core';
 export class RouteCardComponent {
   @Input({ required: true }) routeData!: IRoutes;
 
-  @Input({ required: true }) stationData!: IStation[];
-
-  getCityById(cityId: number): IStation | undefined {
-    return this.stationData.find((station) => station.id === cityId);
-  }
+  @Input({ required: true }) stationData!: Observable<Pick<IStation, 'id' | 'city'>[]>;
 }

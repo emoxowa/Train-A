@@ -1,0 +1,19 @@
+<form class="create-route-from" [formGroup]="createRouteForm">
+  <div class="create-route-form__station" formArrayName="stations">
+    @for (station of stations.controls; track station.value; let i = $index) {
+      <tui-select tuiTextfieldSize="s" [formControlName]="i" (ngModelChange)="onSelectChangeStation(i)">
+        City
+        <input placeholder="Choose your hero" tuiTextfieldLegacy />
+        <tui-data-list-wrapper *tuiDataList [items]="processedStationData" />
+      </tui-select>
+    }
+  </div>
+  <!-- <button size="l" tuiButton>Add station</button> -->
+</form>
+<button size="s" tuiButton (click)="closeForm()">Close form</button>
+
+<!--  -->
+<!--  -->
+
+<!-- [formControlName]="i"
+(ngModelChange)="onSelectChangeStation(i)" -->
