@@ -1,3 +1,14 @@
+.create-route-from{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px; 
+  
+  &__station, &__carriages{
+    flex: 1;
+  }
+}
+
 button {
   width: 80vw;
 }

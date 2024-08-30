@@ -4,6 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, EMPTY, forkJoin, map, mergeMap } from 'rxjs';
 import { RoutesActions } from '../actions/routes.action';
 import { StationsActions } from '../actions/stations.actions';
+import { CarriageActions } from '../actions/carriage.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -20,11 +21,13 @@ export class RoutesEffectService {
         forkJoin({
           routes: this.adminService.getRoutes(),
           stations: this.adminService.getStationList(),
+          carriages: this.adminService.getCarriageList()
         }).pipe(
-          map(({ routes, stations }) => {
+          map(({ routes, stations, carriages }) => {
             return [
               RoutesActions.loadRoutesListSuccsess({ routesList: routes }),
               StationsActions.loadStationsSuccess({ stations }),
+              CarriageActions.loadCarriagesListSuccsess({carriageList: carriages})
             ];
           }),
           catchError((error) => {

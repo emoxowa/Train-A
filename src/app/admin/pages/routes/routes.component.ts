@@ -11,6 +11,7 @@ import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/st
 import { IStation } from '@app/admin/models/station-list.model';
 import { RouteCardComponent } from './components/route-card/route-card.component';
 import { CreateRouteFormComponent } from './components/create-route-form/create-route-form.component';
+import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
 
 @Component({
   selector: 'app-routes',
@@ -18,10 +19,12 @@ import { CreateRouteFormComponent } from './components/create-route-form/create-
   imports: [TuiButton, CommonModule, RouteCardComponent, CreateRouteFormComponent],
   template: `
     @if (isRoutesCreateFormOpen) {
+      @let carriagesArr = carriagesArr$ | async;
       @let stationArr = stationArr$ | async;
-      @if (stationArr) {
+      @if (stationArr && carriagesArr) {
         <app-create-route-form
           [stationData]="stationArr"
+          [carriagesData]="carriagesArr"
           (formClosed)="closeRoutesCreateForm()"
         ></app-create-route-form>
       }
@@ -45,6 +48,8 @@ export class RoutesComponent implements OnInit {
   public routesList$ = this.store.select(selectRoutesArr);
 
   public stationArr$ = this.store.select(selectStationIdAndCity);
+
+  public carriagesArr$ = this.store.select(selectCarriagesIdAndName);
 
   public cdr = inject(ChangeDetectorRef);
 
