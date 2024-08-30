@@ -6,6 +6,7 @@
   --auth-input-padding: 10px 5px;
 }
 
+$breakpoint-desktop-max: 1439px;
 $breakpoint-desktop-min: 1024px;
 $breakpoint-tablet-min: 768px;
 $breakpoint-tablet-max: 1023px;
@@ -15,7 +16,7 @@ $breakpoint-small-mobile-min: 320px;
 $breakpoint-small-mobile-max: 424px;
 
 @mixin desktop {
-  @media (min-width: $breakpoint-desktop-min) {
+  @media (min-width: $breakpoint-desktop-min) and (max-width: $breakpoint-desktop-max) {
     @content;
   }
 }
