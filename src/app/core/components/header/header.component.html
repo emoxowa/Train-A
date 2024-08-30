@@ -37,7 +37,6 @@
       <!-- Для пользователя -->
       <ng-template #userLinks>
         <ul class="navigation-list">
-          <div>{{ userRole$ | async }}</div>
           <li [ngClass]="{ 'active-link': isActive('/profile') }">
             <a class="link" routerLink="/profile">Profile</a>
           </li>
