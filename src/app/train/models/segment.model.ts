@@ -1,5 +1,5 @@
 export interface ISegment {
   time: [string, string];
-  price: { [key: string]: number };
+  price: Record<string, number>;
   occupiedSeats: number[];
 }

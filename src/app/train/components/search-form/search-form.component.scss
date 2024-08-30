@@ -1,3 +1,5 @@
+@import 'styles';
+
 :host {
   padding: 20px 16px;
   width: 100%;
@@ -42,13 +44,13 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
+@include tablet {
   :host {
     max-width: 740px;
   }
 }
 
-@media (min-width: 425px) and (max-width: 767px) {
+@include mobile {
   :host {
     max-width: 500px;
   }
@@ -68,7 +70,7 @@
   }
 }
 
-@media (min-width: 320px) and (max-width: 424px) {
+@include small-mobile {
   :host {
     max-width: 300px;
   }
