@@ -12,6 +12,8 @@ export class AuthService {
 
   private readonly signUpUrl = '/api/signup';
 
+  private readonly logoutUrl = '/api/logout';
+
   constructor(
     private http: HttpClient,
     private router: Router
@@ -25,6 +27,14 @@ export class AuthService {
 
   signUp(email: string, password: string) {
     return this.http.post(this.signUpUrl, { email, password });
+  }
+
+  logout() {
+    return this.http.delete(this.logoutUrl).pipe(
+      tap(() => {
+        this.clearToken();
+      })
+    );
   }
 
   private setToken(token: string): void {

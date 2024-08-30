@@ -1,7 +1,7 @@
 <div class="container">
   <h1 class="title">Sign In</h1>
 
-  <form class="form" [formGroup]="this.loginForm">
+  <form class="form" [formGroup]="this.loginForm" (ngSubmit)="this.onSubmit()">
     <div class="field">
       <label class="label" for="email">Email</label>
       <input class="input" formControlName="email" type="email" id="email" />
@@ -35,8 +35,7 @@
 
     <div class="buttons">
       <button
-        type="button"
-        (click)="this.onSubmit()"
+        type="submit"
         [disabled]="this.loginForm.invalid || this.isSubmitting"
         class="login-btn"
         size="m"

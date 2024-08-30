@@ -1,0 +1,18 @@
+<div class="field">
+  <h2 tuiTitle *ngIf="type">{{ type }}</h2>
+  <div class="field__container" *ngIf="!isEdit">
+    <div class="field__value">{{ value }}</div>
+    <button appearance="primary" size="xs" tuiButton type="button" (click)="onEdit()">
+      <tui-icon icon="@tui.pencil" />
+    </button>
+  </div>
+  <form class="field__container" [formGroup]="fieldForm" *ngIf="isEdit" (ngSubmit)="onSave()">
+    <tui-textfield tuiTextfieldSize="s" class="field__input">
+      <label [for]="type" tuiLabel>{{ type }}</label>
+      <input tuiTextfield type="email" formControlName="value" [id]="type" />
+    </tui-textfield>
+    <button appearance="primary" size="xs" tuiButton type="submit">
+      <tui-icon icon="@tui.save" />
+    </button>
+  </form>
+</div>
