@@ -23,8 +23,4 @@ export class HeaderComponent {
   authService = inject(AuthService);
 
   protected userRole$ = this.store.select(selectUserRole);
-
-  isActive(url: string): boolean {
-    return this.router.url === url;
-  }
 }
