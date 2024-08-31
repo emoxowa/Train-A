@@ -82,12 +82,13 @@ export class CreateRouteFormComponent {
       return;
     }
 
-    // const newRoute: IRoutes = {
-    //   path: this.mutateStations(stations),
-    //   carriages: this.mutateCarriages(carriages),
-    // };
+    const newRoute: IRoutes = {
+      path: this.mutateStations(stations),
+      carriages: this.mutateCarriages(carriages),
+    };
 
-    // console.log('create new route', newRoute);
+    console.log('create new route', newRoute);
+    this.resetForm();
   }
 
   private mutateStations(stationsArr: string[]): number[] {
@@ -116,5 +117,12 @@ export class CreateRouteFormComponent {
 
   public closeForm() {
     this.formClosed.emit();
+  }
+
+  private resetForm() {
+    this.stations.clear();
+    this.carriages.clear();
+    this.stations.push(new FormControl<string | null>(null));
+    this.carriages.push(new FormControl<string | null>(null));
   }
 }
