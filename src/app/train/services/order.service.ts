@@ -1,7 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { IOrder } from '@app/train/models/order.model';
-import { ISegment } from '@app/train/models/segment.model';
+import { map } from 'rxjs';
+
+// TODO: remove later
+interface ICarriage {
+  code?: string;
+  name: string;
+  rows: number;
+  leftSeats: number;
+  rightSeats: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -29,11 +38,51 @@ export class OrderService {
     return order.schedule.segments[segmentIndex].time[timeIndex];
   }
 
+  getStartStationIndex(order: IOrder) {
+    return order.path.findIndex((value) => value === order.stationStart);
+  }
+
+  getEndStationIndex(order: IOrder) {
+    return order.path.findIndex((value) => value === order.stationEnd) - 1;
+  }
+
+  getOrderPrice(order: IOrder, carriageType: string) {
+    return order.schedule.segments
+      .slice(this.getStartStationIndex(order), this.getEndStationIndex(order) + 1)
+      .reduce((acc, value) => acc + value.price[carriageType], 0);
+  }
+
   getTripDuration(order: IOrder) {
     const time = new Date(this.getTime(order, 'end')).getTime() - new Date(this.getTime(order, 'start')).getTime();
     const hours = Math.floor(time / 1000 / 60 / 60);
     const minutes = Math.ceil((time - hours * 60 * 60 * 1000) / 1000 / 60);
 
     return `${hours}h ${minutes}m`;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getCarriagesNumbers(orders: IOrder[], carriages: ICarriage[]) {
+    const carriagesSeats = carriages.map((carriage) => carriage.leftSeats + carriage.rightSeats);
+
+    return orders.map((order) => {
+      const { seatId } = order;
+      let currentTotalSeats = 0;
+      let carriageNumber: number = -1;
+
+      for (let index = 0; index < carriagesSeats.length; index += 1) {
+        currentTotalSeats += carriagesSeats[index];
+        if (currentTotalSeats > seatId) {
+          carriageNumber = index;
+          break;
+        }
+      }
+
+      return carriageNumber;
+    });
+  }
+
+  // TODO: delete everything below later
+  getCarriageList() {
+    return this.http.get<ICarriage[]>('/api/carriage');
   }
 }
