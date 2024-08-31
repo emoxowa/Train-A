@@ -1,23 +1,21 @@
-interface Route {
-    id: number;
-    path: number[];
-    carriages: string[];
-    schedule: Schedule[];
-  }
-  
-  interface Schedule {
-    rideId: number;
-    segments: Segment[];
-    time: [string, string];
-    price: Price;
-  }
-  
-  interface Segment {
-    distance: number;
-  }
-  
-  interface Price {
-    [key: string]: number;
-  }
-  
+export interface IRouteInfo {
+  id: number;
+  path: number[];
+  carriages: string[];
+  schedule: IScheduleInfo[];
+}
 
+export interface IScheduleInfo {
+  rideId: number;
+  segments: ISegmentInfo[];
+  time: [string, string];
+  price: IPriceInfo;
+}
+
+export interface ISegmentInfo {
+  distance: number;
+}
+
+export interface IPriceInfo {
+  [key: string]: number;
+}
