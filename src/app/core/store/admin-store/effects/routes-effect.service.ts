@@ -57,4 +57,19 @@ export class RoutesEffectService {
       )
     )
   );
+
+  deleteRoute$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RoutesActions.deleteRoute),
+      switchMap((action) =>
+        this.adminService.deleteRoute(action.pickRoute).pipe(
+          map(() => RoutesActions.deleteRouteSuccsess({ pickRoute: action.pickRoute })),
+          catchError((error) => {
+            console.error('Error deleting route', error);
+            return EMPTY;
+          })
+        )
+      )
+    )
+  );
 }

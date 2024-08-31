@@ -7,6 +7,8 @@ export enum ERoutesActions {
   LoadRoutesListSuccsess = '[Routes] Load Routes List Succsess',
   AddNewRoute = '[Routes] Add New Route',
   AddNewRouteSuccsess = '[Routes] Add New Route Succsess',
+  DeleteRoute = '[Routes] Delete Route',
+  DeleteRouteSuccsess = '[Routes] Delete Route Succsess',
 }
 
 export const RoutesActions = {
@@ -15,4 +17,6 @@ export const RoutesActions = {
   loadRoutesListSuccsess: createAction(ERoutesActions.LoadRoutesListSuccsess, props<{ routesList: IRoutes[] }>()),
   addNewRoute: createAction(ERoutesActions.AddNewRoute, props<{ newRoute: IRoutes }>()),
   addNewRouteSuccsess: createAction(ERoutesActions.AddNewRouteSuccsess, props<{ newRoute: IRoutes }>()),
+  deleteRoute: createAction(ERoutesActions.DeleteRoute, props<{ pickRoute: number }>()),
+  deleteRouteSuccsess: createAction(ERoutesActions.DeleteRouteSuccsess, props<{ pickRoute: number }>()),
 };

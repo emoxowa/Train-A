@@ -78,8 +78,6 @@ export class CreateRouteFormComponent {
       this.createRouteForm.get('carriages')?.value.filter((carriage: string) => carriage !== null)
     );
 
-    console.log("selected stations", stations)
-
     if (stations.length <= 1) {
       // eslint-disable-next-line no-alert
       alert('add at least two stations');

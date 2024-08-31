@@ -15,5 +15,11 @@ export const routesReducer = createReducer(
       ...state,
       routesList: [newRoute, ...state.routesList],
     };
+  }),
+  on(RoutesActions.deleteRouteSuccsess, (state, { pickRoute }): IRoutesState => {
+    return {
+      ...state,
+      routesList: state.routesList.filter((route) => route.id !== pickRoute),
+    };
   })
 );
