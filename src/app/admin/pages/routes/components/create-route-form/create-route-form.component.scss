@@ -1,11 +1,30 @@
-.create-route-from{
+.create-route-from {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  gap: 5px; 
-  
-  &__station, &__carriages{
+  gap: 5px;
+
+  &__wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
     flex: 1;
+    width: 100%;
+  }
+
+  &__station,
+  &__carriages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__station tui-select,
+  &__carriages tui-select {
+    width: 100%;
   }
 }
 

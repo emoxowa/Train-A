@@ -21,13 +21,13 @@ export class RoutesEffectService {
         forkJoin({
           routes: this.adminService.getRoutes(),
           stations: this.adminService.getStationList(),
-          carriages: this.adminService.getCarriageList()
+          carriages: this.adminService.getCarriageList(),
         }).pipe(
           map(({ routes, stations, carriages }) => {
             return [
               RoutesActions.loadRoutesListSuccsess({ routesList: routes }),
               StationsActions.loadStationsSuccess({ stations }),
-              CarriageActions.loadCarriagesListSuccsess({carriageList: carriages})
+              CarriageActions.loadCarriagesListSuccsess({ carriageList: carriages }),
             ];
           }),
           catchError((error) => {

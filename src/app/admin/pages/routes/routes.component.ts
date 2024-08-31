@@ -9,9 +9,9 @@ import { TuiButton } from '@taiga-ui/core';
 import { distinctUntilChanged, map, Observable, tap } from 'rxjs';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { IStation } from '@app/admin/models/station-list.model';
+import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { RouteCardComponent } from './components/route-card/route-card.component';
 import { CreateRouteFormComponent } from './components/create-route-form/create-route-form.component';
-import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
 
 @Component({
   selector: 'app-routes',

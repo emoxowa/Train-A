@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { IRoutes } from '@app/admin/models/routes.model';
 import { IStation } from '@app/admin/models/station-list.model';
 import { TuiButton, TuiDataList } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
@@ -28,13 +29,13 @@ export class CreateRouteFormComponent {
 
   @Input({ required: true }) stationData: Pick<IStation, 'id' | 'city'>[] | undefined;
 
-  @Input({required: true}) carriagesData: Pick<ICarriagesType, "code" | "name">[] | undefined
+  @Input({ required: true }) carriagesData: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
 
   private formBuilder = inject(FormBuilder);
 
   public createRouteForm: FormGroup = this.formBuilder.group({
-    stations: this.formBuilder.array([this.formBuilder.control('', Validators.required)]),
-    carriages: this.formBuilder.array([this.formBuilder.control('', Validators.required)]),
+    stations: this.formBuilder.array([new FormControl<string | null>(null)]),
+    carriages: this.formBuilder.array([new FormControl<string | null>(null)]),
   });
 
   get stations(): FormArray {
@@ -55,17 +56,65 @@ export class CreateRouteFormComponent {
 
   public onSelectChangeStation(index: number): void {
     if (index === this.stations.length - 1) {
-      this.stations.push(this.formBuilder.control('', Validators.required));
+      this.stations.push(new FormControl<string | null>(null));
     }
   }
 
   public onSelectChangeCarriages(index: number): void {
     if (index === this.carriages.length - 1) {
-      this.carriages.push(this.formBuilder.control('', Validators.required));
+      this.carriages.push(new FormControl<string | null>(null));
     }
   }
 
-  closeForm() {
+  public createRoute() {
+    const stations = Array.from(new Set(this.createRouteForm.get('stations')?.value.slice(0, -1) as string[]));
+    const carriages = this.createRouteForm.get('carriages')?.value.filter((carriage: string) => carriage !== null);
+
+    if (stations.length < 1) {
+      // eslint-disable-next-line no-alert
+      alert('add at least two stations');
+      return;
+    }
+
+    if (carriages.length === 0) {
+      // eslint-disable-next-line no-alert
+      alert('add at least one carriages');
+      return;
+    }
+
+    // const newRoute: IRoutes = {
+    //   path: this.mutateStations(stations),
+    //   carriages: this.mutateCarriages(carriages),
+    // };
+
+    // console.log('create new route', newRoute);
+  }
+
+  private mutateStations(stationsArr: string[]): number[] {
+    const keys: number[] = [];
+    if (this.stationData) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const station of this.stationData) {
+        if (stationsArr.includes(station.city)) keys.push(station.id);
+      }
+    }
+    return keys;
+  }
+
+  private mutateCarriages(carriagesArr: string[]): string[] {
+    const keys: string[] = [];
+    if (this.carriagesData) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const carriage of this.carriagesData) {
+        if (carriage.code && carriagesArr.includes(carriage.name)) {
+          keys.push(carriage.code);
+        }
+      }
+    }
+    return keys;
+  }
+
+  public closeForm() {
     this.formClosed.emit();
   }
 }

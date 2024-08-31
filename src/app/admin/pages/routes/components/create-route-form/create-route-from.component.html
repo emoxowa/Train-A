@@ -1,25 +1,27 @@
 <form class="create-route-from" [formGroup]="createRouteForm">
-  <div class="create-route-from__station" formArrayName="stations">
-    <h2>Select citys</h2>
-    @for (station of stations.controls; track station; let i = $index) {
-      <tui-select tuiTextfieldSize="s" [formControlName]="i" (ngModelChange)="onSelectChangeStation(i)">
-        City
-        <input placeholder="Choose your hero" tuiTextfieldLegacy />
-        <tui-data-list-wrapper *tuiDataList [items]="processedStationData" />
-      </tui-select>
-    }
+  <div class="create-route-from__wrapper">
+    <div class="create-route-from__station" formArrayName="stations">
+      <h2>Select citys</h2>
+      @for (station of stations.controls; track station; let i = $index) {
+        <tui-select tuiTextfieldSize="s" [formControlName]="i" (ngModelChange)="onSelectChangeStation(i)">
+          City
+          <input placeholder="Choose your hero" tuiTextfieldLegacy />
+          <tui-data-list-wrapper *tuiDataList [items]="processedStationData" />
+        </tui-select>
+      }
+    </div>
+    <div class="create-route-from__carriages" formArrayName="carriages">
+      <h2>Select carriages</h2>
+      @for (carriages of carriages.controls; track carriages; let i = $index) {
+        <tui-select tuiTextfieldSize="s" [formControlName]="i" (ngModelChange)="onSelectChangeCarriages(i)">
+          Carriage
+          <input placeholder="Choose your hero" tuiTextfieldLegacy />
+          <tui-data-list-wrapper *tuiDataList [items]="processedCarriagesData" />
+        </tui-select>
+      }
+    </div>
   </div>
-  <div class="create-route-from__carriages" formArrayName="carriages">
-    <h2>Select carriages</h2>
-    @for (carriages of carriages.controls; track carriages; let i = $index) {
-      <tui-select tuiTextfieldSize="s" [formControlName]="i" (ngModelChange)="onSelectChangeCarriages(i)">
-        Carriage
-        <input placeholder="Choose your hero" tuiTextfieldLegacy />
-        <tui-data-list-wrapper *tuiDataList [items]="processedCarriagesData" />
-      </tui-select>
-    }
-  </div>
-  <!-- <button size="l" tuiButton>Add station</button> -->
+  <button size="s" tuiButton (click)="createRoute()">Add route</button>
 </form>
 <button size="s" tuiButton (click)="closeForm()">Close form</button>
 
