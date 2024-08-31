@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { AdminService } from '@app/admin/service/admin.service';
 import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
@@ -50,8 +50,6 @@ export class RoutesComponent implements OnInit {
   public stationArr$ = this.store.select(selectStationIdAndCity);
 
   public carriagesArr$ = this.store.select(selectCarriagesIdAndName);
-
-  public cdr = inject(ChangeDetectorRef);
 
   isRoutesCreateFormOpen: boolean = false;
 

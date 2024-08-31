@@ -21,7 +21,7 @@ import { TuiInputModule, TuiSelectModule, TuiTextfieldControllerModule } from '@
     TuiDataList,
     TuiButton,
     CommonModule,
-    TuiTextfieldControllerModule
+    TuiTextfieldControllerModule,
   ],
   templateUrl: './create-route-from.component.html',
   styleUrl: './create-route-form.component.scss',

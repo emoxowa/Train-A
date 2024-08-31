@@ -6,11 +6,12 @@ import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { Observable } from 'rxjs';
+import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
 
 @Component({
   selector: 'app-route-card',
   standalone: true,
-  imports: [CommonModule, TuiButton],
+  imports: [CommonModule, TuiButton, UpdRouteFormComponent],
   template: `
     <div class="route-card">
       <h2>Route {{ routeData.id }}</h2>
@@ -30,7 +31,12 @@ import { Observable } from 'rxjs';
           }
         }
       </div>
-      <button size="s" tuiButton>Update</button>
+      @if (isRoutesUpdFormOpen) {
+        <app-upd-route-form></app-upd-route-form>
+        <button size="s" (click)="closeRoutesCreateForm()" tuiButton>Close update</button>
+      } @else {
+        <button size="s" (click)="openRoutesUpdForm()" tuiButton>Update</button>
+      }
       <button size="s" tuiButton>Asign ride</button>
       <button size="s" tuiButton (click)="deleteRoute()">Delete</button>
     </div>
@@ -44,9 +50,19 @@ export class RouteCardComponent {
 
   private store = inject(Store);
 
+  public isRoutesUpdFormOpen: boolean = false;
+
   public deleteRoute() {
     if (this.routeData.id) {
       this.store.dispatch(RoutesActions.deleteRoute({ pickRoute: this.routeData.id }));
     }
+  }
+
+  public openRoutesUpdForm() {
+    this.isRoutesUpdFormOpen = true;
+  }
+
+  public closeRoutesCreateForm() {
+    this.isRoutesUpdFormOpen = false;
   }
 }
