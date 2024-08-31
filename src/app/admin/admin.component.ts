@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { StationComponent } from '@app/admin/pages/stations/stations.component';
+import { StationComponent } from './pages/stations/stations.component';
 
 @Component({
   selector: 'app-admin',
