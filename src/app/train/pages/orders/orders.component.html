@@ -1,0 +1,12 @@
+<button (click)="createOrder()">create order for test</button>
+<div *ngFor="let order of orders$ | async">
+  <div>Start trip station: {{ order.stationStart }}</div>
+  <div>Start trip time: {{ orderService.getTime(order, 'start') | date: 'MMMM dd hh:mm' }}</div>
+  <div>End trip station: {{ order.stationEnd }}</div>
+  <div>End trip time: {{ orderService.getTime(order, 'end') | date: 'MMMM dd hh:mm' }}</div>
+  <div>Trip duration: {{ orderService.getTripDuration(order) }}</div>
+  <div>Carriage type:</div>
+  <div>Car number:</div>
+  <div>Seat number: {{ order.seatId }}</div>
+  <div>Price:</div>
+</div>

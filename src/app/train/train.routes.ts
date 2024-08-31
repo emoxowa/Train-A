@@ -16,4 +16,9 @@ export const TrainRoutes: Routes = [
     loadComponent: () => import('@app/train/pages/profile/profile.component').then((m) => m.ProfileComponent),
     canActivate: [authGuard],
   },
+  {
+    path: 'orders',
+    loadComponent: () => import('@app/train/pages/orders/orders.component').then((m) => m.OrdersComponent),
+    canActivate: [authGuard],
+  },
 ];

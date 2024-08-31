@@ -10,4 +10,6 @@ export interface IOrder {
   path: number[];
   carriages: string[];
   schedule: ISchedule;
+  stationStart: number;
+  stationEnd: number;
 }
