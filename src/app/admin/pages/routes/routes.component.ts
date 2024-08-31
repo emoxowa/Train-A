@@ -10,6 +10,7 @@ import { distinctUntilChanged, map, Observable, tap } from 'rxjs';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { IStation } from '@app/admin/models/station-list.model';
 import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
+import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { RouteCardComponent } from './components/route-card/route-card.component';
 import { CreateRouteFormComponent } from './components/create-route-form/create-route-form.component';
 
@@ -18,9 +19,9 @@ import { CreateRouteFormComponent } from './components/create-route-form/create-
   standalone: true,
   imports: [TuiButton, CommonModule, RouteCardComponent, CreateRouteFormComponent],
   template: `
+    @let carriagesArr = carriagesArr$ | async;
+    @let stationArr = stationArr$ | async;
     @if (isRoutesCreateFormOpen) {
-      @let carriagesArr = carriagesArr$ | async;
-      @let stationArr = stationArr$ | async;
       @if (stationArr && carriagesArr) {
         <app-create-route-form
           [stationData]="stationArr"
@@ -34,7 +35,14 @@ import { CreateRouteFormComponent } from './components/create-route-form/create-
     @let routes = routesList$ | async;
     @if (routes) {
       @for (route of routes; track route.id) {
-        <app-route-card [routeData]="route" [stationData]="getCitiesByIds(route.path)"></app-route-card>
+        @if (stationArr && carriagesArr) {
+          <app-route-card
+            [routeData]="route"
+            [stationData]="getCitiesByIds(route.path)"
+            [stationDataAll]="stationArr"
+            [carriagesDataAll]="carriagesArr"
+          ></app-route-card>
+        }
       }
     }
   `,
@@ -86,6 +94,19 @@ export class RoutesComponent implements OnInit {
     return this.stationArr$.pipe(
       map((stations) => stations.filter((station) => cityIds.includes(station.id))),
       distinctUntilChanged()
+    );
+  }
+
+  getCarriagesByCode(carriagesCode: string[]): Observable<Pick<ICarriagesType, 'code' | 'name'>[]> {
+    return this.carriagesArr$.pipe(
+      map((carriages) =>
+        // eslint-disable-next-line array-callback-return
+        carriages.filter((carriage) => {
+          if (carriage.code) {
+            carriagesCode.includes(carriage.code);
+          }
+        })
+      )
     );
   }
 }

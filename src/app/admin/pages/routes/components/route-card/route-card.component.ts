@@ -6,6 +6,7 @@ import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { Observable } from 'rxjs';
+import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
 
 @Component({
@@ -32,7 +33,11 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
         }
       </div>
       @if (isRoutesUpdFormOpen) {
-        <app-upd-route-form></app-upd-route-form>
+        <app-upd-route-form
+          [routeData]="routeData"
+          [stationDataAllUpd]="stationDataAll"
+          [carriagesDataAllUpd]="carriagesDataAll"
+        ></app-upd-route-form>
         <button size="s" (click)="closeRoutesCreateForm()" tuiButton>Close update</button>
       } @else {
         <button size="s" (click)="openRoutesUpdForm()" tuiButton>Update</button>
@@ -47,6 +52,10 @@ export class RouteCardComponent {
   @Input({ required: true }) routeData!: IRoutes;
 
   @Input({ required: true }) stationData!: Observable<Pick<IStation, 'id' | 'city'>[]>;
+
+  @Input({ required: true }) stationDataAll: Pick<IStation, 'id' | 'city'>[] | undefined;
+
+  @Input({ required: true }) carriagesDataAll: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
 
   private store = inject(Store);
 

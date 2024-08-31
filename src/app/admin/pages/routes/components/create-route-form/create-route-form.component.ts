@@ -8,7 +8,7 @@ import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action
 import { Store } from '@ngrx/store';
 import { TuiButton, TuiDataList } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
-import { TuiInputModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
 
 @Component({
   selector: 'app-create-route-form',
@@ -21,7 +21,6 @@ import { TuiInputModule, TuiSelectModule, TuiTextfieldControllerModule } from '@
     TuiDataList,
     TuiButton,
     CommonModule,
-    TuiTextfieldControllerModule,
   ],
   templateUrl: './create-route-from.component.html',
   styleUrl: './create-route-form.component.scss',
