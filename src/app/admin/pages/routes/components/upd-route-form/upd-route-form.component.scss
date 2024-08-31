@@ -1,0 +1,47 @@
+.upd-route-from {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+  justify-content: center;
+
+  margin-bottom: 50px;
+
+  &__wrapper {
+    display: flex;
+    flex: 1;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: center;
+
+    width: 100%;
+  }
+
+  &__station,
+  &__carriages {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__station tui-select,
+  &__carriages tui-select {
+    width: calc(100% - 60px);
+  }
+
+  &__carriages-container,
+  &__stations-container {
+    display: flex;
+    align-items: center;
+  }
+
+  &__delete-button {
+    width: 50px;
+  }
+}
+
+button {
+  width: 80vw;
+  margin: 2.5px;
+}
