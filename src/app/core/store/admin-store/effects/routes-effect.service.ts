@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { AdminService } from '@app/admin/service/admin.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, EMPTY, forkJoin, map, mergeMap, switchMap } from 'rxjs';
+import { IRoutes } from '@app/admin/models/routes.model';
 import { RoutesActions } from '../actions/routes.action';
 import { StationsActions } from '../actions/stations.actions';
 import { CarriageActions } from '../actions/carriage.actions';
@@ -69,6 +70,17 @@ export class RoutesEffectService {
             return EMPTY;
           })
         )
+      )
+    )
+  );
+
+  updRoute$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RoutesActions.updateRoute),
+      switchMap(({ idRoute, updRoute }) =>
+        this.adminService
+          .updRoutes(idRoute, updRoute)
+          .pipe(map((updatedRoute: IRoutes) => RoutesActions.updateRouteSuccsess({ updRoute: updatedRoute })))
       )
     )
   );

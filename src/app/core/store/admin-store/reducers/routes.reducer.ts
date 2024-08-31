@@ -21,5 +21,16 @@ export const routesReducer = createReducer(
       ...state,
       routesList: state.routesList.filter((route) => route.id !== pickRoute),
     };
+  }),
+  on(RoutesActions.updateRoute, (state, { idRoute, updRoute }): IRoutesState => {
+    return {
+      ...state,
+      routesList: state.routesList.map((route) => {
+        if (route.id) {
+          return route.id === idRoute ? { ...route, ...updRoute } : route;
+        }
+        return route;
+      }),
+    };
   })
 );

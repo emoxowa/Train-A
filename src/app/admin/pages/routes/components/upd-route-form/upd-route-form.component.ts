@@ -4,6 +4,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } f
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { IRoutes } from '@app/admin/models/routes.model';
 import { IStation } from '@app/admin/models/station-list.model';
+import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
+import { Store } from '@ngrx/store';
 import { TuiButton, TuiDataList } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
@@ -31,6 +33,8 @@ export class UpdRouteFormComponent implements OnInit {
   @Input({ required: true }) carriagesDataAllUpd: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
 
   @Output() formClosed = new EventEmitter<void>();
+
+  private store = inject(Store);
 
   private formBuilder = inject(FormBuilder);
 
@@ -103,14 +107,14 @@ export class UpdRouteFormComponent implements OnInit {
       return;
     }
 
-    // const newRoute: IRoutes = {
-    //   path: stations,
-    //   carriages,
-    // };
+    const newRoute: IRoutes = {
+      path: stations,
+      carriages,
+    };
 
-    // console.log('upd route', newRoute);
-
-    // this.store.dispatch(RoutesActions.addNewRoute({ newRoute }));
+    if (this.routeData.id) {
+      this.store.dispatch(RoutesActions.updateRoute({ idRoute: this.routeData.id, updRoute: newRoute }));
+    }
     this.closeForm();
     this.resetForm();
   }

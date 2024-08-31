@@ -20,7 +20,7 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
         <h3>Carriages:</h3>
         <div class="route-card__carriage-arr">
           @for (carriage of routeData.carriages; track $index) {
-            <div>{{ carriage }}</div>
+            <div>- {{ carriage }} -</div>
           }
         </div>
       </div>
@@ -28,7 +28,7 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
       <div class="route-card__station-arr">
         @for (station of stationData | async; track $index) {
           @if (station) {
-            <div>{{ station.city }}</div>
+            <div>- {{ station.city }} -</div>
           }
         }
       </div>
