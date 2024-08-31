@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { IRoutes } from '@app/admin/models/routes.model';
 import { IStation } from '@app/admin/models/station-list.model';
-import { Store } from '@ngrx/store';
 import { TuiButton, TuiDataList } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
@@ -31,7 +30,7 @@ export class UpdRouteFormComponent implements OnInit {
 
   @Input({ required: true }) carriagesDataAllUpd: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
 
-  private store = inject(Store);
+  @Output() formClosed = new EventEmitter<void>();
 
   private formBuilder = inject(FormBuilder);
 
@@ -109,7 +108,10 @@ export class UpdRouteFormComponent implements OnInit {
     //   carriages,
     // };
 
+    // console.log('upd route', newRoute);
+
     // this.store.dispatch(RoutesActions.addNewRoute({ newRoute }));
+    this.closeForm();
     this.resetForm();
   }
 
@@ -149,6 +151,10 @@ export class UpdRouteFormComponent implements OnInit {
     this.carriages.clear();
     this.stations.push(new FormControl<string | null>(null));
     this.carriages.push(new FormControl<string | null>(null));
+  }
+
+  public closeForm() {
+    this.formClosed.emit();
   }
 
   private setInitialValues(): void {

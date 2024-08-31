@@ -37,6 +37,7 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
           [routeData]="routeData"
           [stationDataAllUpd]="stationDataAll"
           [carriagesDataAllUpd]="carriagesDataAll"
+          (formClosed)="closeRoutesCreateForm()"
         ></app-upd-route-form>
         <button size="s" (click)="closeRoutesCreateForm()" tuiButton>Close update</button>
       } @else {
