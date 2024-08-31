@@ -25,8 +25,17 @@
 
   &__station tui-select,
   &__carriages tui-select {
-    width: 100%;
+    width: calc(100% - 60px);
   }
+
+  &__carriages-container, &__stations-container{
+    display: flex;
+    align-items: center;
+  }
+
+  &__delete-button{
+    width: 50px;
+  }  
 }
 
 button {

@@ -8,7 +8,7 @@ import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action
 import { Store } from '@ngrx/store';
 import { TuiButton, TuiDataList } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
-import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
+import { TuiInputModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 
 @Component({
   selector: 'app-create-route-form',
@@ -21,6 +21,7 @@ import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
     TuiDataList,
     TuiButton,
     CommonModule,
+    TuiTextfieldControllerModule
   ],
   templateUrl: './create-route-from.component.html',
   styleUrl: './create-route-form.component.scss',
@@ -67,6 +68,18 @@ export class CreateRouteFormComponent {
   public onSelectChangeCarriages(index: number): void {
     if (index === this.carriages.length - 1) {
       this.carriages.push(new FormControl<string | null>(null));
+    }
+  }
+
+  public removeStation(index: number): void {
+    if (this.stations.length > 1) {
+      this.stations.removeAt(index);
+    }
+  }
+
+  public removeCarriage(index: number): void {
+    if (this.carriages.length > 1) {
+      this.carriages.removeAt(index);
     }
   }
 
