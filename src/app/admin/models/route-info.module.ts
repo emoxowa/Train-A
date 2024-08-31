@@ -6,14 +6,13 @@ export interface IRouteInfo {
 }
 
 export interface IScheduleInfo {
-  rideId: number;
+  rideId?: number;
   segments: ISegmentInfo[];
-  time: [string, string];
-  price: IPriceInfo;
 }
 
 export interface ISegmentInfo {
-  distance: number;
+  time: [string, string];
+  price: IPriceInfo;
 }
 
 export interface IPriceInfo {

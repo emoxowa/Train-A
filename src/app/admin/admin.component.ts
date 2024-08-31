@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StationComponent } from './pages/stations/stations.component';
+import { AdminService } from './service/admin.service';
 
 @Component({
   selector: 'app-admin',

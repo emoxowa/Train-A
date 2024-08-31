@@ -84,6 +84,7 @@ export class StationComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
+
     this.store.dispatch(StationsActions.loadStationList());
 
     this.mapService.coordinates$.subscribe(({ lat, lng, city }) => {

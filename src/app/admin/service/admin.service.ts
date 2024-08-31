@@ -6,6 +6,7 @@ import { ICreateStation } from '../models/create-station.model';
 import { IAdminToken, ICreateAdmin } from '../models/create-admin';
 import { ICarriagesType } from '../models/create-new-carriage-type.model';
 import { IRoutes } from '../models/routes.model';
+import { IRouteInfo, IScheduleInfo, ISegmentInfo } from '../models/route-info.module';
 
 @Injectable({
   providedIn: 'root',
@@ -84,6 +85,38 @@ export class AdminService {
         Authorization: `Bearer ${this.token$.value}`,
       },
     });
+  }
+
+  getRouteInformation(idRoute: number):Observable<IRouteInfo[]>{
+    return this.http.get<IRouteInfo[]>(`/api/route/${idRoute}`, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    });
+  }
+
+  createNewRide(idRoute: number, newRideInfo:IScheduleInfo):Observable<number>{
+    return this.http.post<number>(`/api/route/${idRoute}/ride`, newRideInfo, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    })
+  }
+
+  updateRide(idRoute: number, rideId: number, updRideInfo:IScheduleInfo):Observable<void>{
+    return this.http.put<void>(`/api/route/${idRoute}/ride/${rideId}`, updRideInfo, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    })
+  }
+  
+  deleteRide(idRoute: number, rideId: number):Observable<void>{
+    return this.http.delete<void>(`/api/route/${idRoute}/ride/${rideId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    })
   }
 
   // it's for developing

@@ -8,6 +8,8 @@ import { TuiButton } from '@taiga-ui/core';
 import { Observable } from 'rxjs';
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
+import { AdminService } from '@app/admin/service/admin.service';
+import { IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
 
 @Component({
   selector: 'app-route-card',
@@ -43,7 +45,10 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
       } @else {
         <button size="s" (click)="openRoutesUpdForm()" tuiButton>Update</button>
       }
-      <button size="s" tuiButton>Asign ride</button>
+      <button size="s" (click)="showRouteInfo()" tuiButton>Asign ride</button>
+      <button size="s" (click)="postRouteInfo()" tuiButton>Post info</button>
+      <button size="s" (click)="updRouteInfo()" tuiButton>Upd info</button>
+      <button size="s" (click)="deleteRide()" tuiButton>Delete ride info</button>
       <button size="s" tuiButton (click)="deleteRoute()">Delete</button>
     </div>
   `,
@@ -57,6 +62,8 @@ export class RouteCardComponent {
   @Input({ required: true }) stationDataAll: Pick<IStation, 'id' | 'city'>[] | undefined;
 
   @Input({ required: true }) carriagesDataAll: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
+
+  private adminService = inject(AdminService)
 
   private store = inject(Store);
 
@@ -74,5 +81,81 @@ export class RouteCardComponent {
 
   public closeRoutesCreateForm() {
     this.isRoutesUpdFormOpen = false;
+  }
+
+  public showRouteInfo(){
+    // get
+    if(this.routeData.id){
+      this.adminService.getRouteInformation(this.routeData.id).subscribe({
+        next(value) {
+          console.log("show route info", value)
+        },
+      })
+    }
+
+     
+  }
+
+  postRouteInfo(){
+    // post
+    const mockScheduleInfo: IScheduleInfo = {
+      segments: [
+        {
+          time: ['2024-08-08T22:19:57.708Z', '2024-08-12T03:29:57.708Z'],
+          price: {
+            'carriage1': 210,
+            'carriage2': 300,
+            'carriage3': 250,
+            'carriage4': 250,
+            'carriage5': 250,
+            'carriage6': 250
+          }
+        },
+      ]
+    };
+
+    if(this.routeData.id){
+      this.adminService.createNewRide(this.routeData.id, mockScheduleInfo).subscribe({
+        next(value) {
+          console.log('create new ride', value);
+        },
+      })
+    }
+  }
+
+  updRouteInfo(){
+    const mockScheduleInfo: IScheduleInfo = {
+      segments: [
+        {
+          time: ['2024-08-08T22:19:57.708Z', '2024-08-12T03:29:57.708Z'],
+          price: {
+            'carriage1': 210,
+            'carriage2': 300,
+            'carriage3': 250,
+            'carriage4': 250,
+            'carriage5': 250,
+            'carriage6': 300
+          }
+        },
+      ]
+    };
+
+    if(this.routeData.id){
+      this.adminService.updateRide(this.routeData.id, 1898, mockScheduleInfo).subscribe({
+        next(value) {
+          console.log('upd ride', value);
+        },
+      })
+    }
+  }
+
+  deleteRide(){
+    if(this.routeData.id){
+      this.adminService.deleteRide(this.routeData.id, 1898).subscribe({
+        next(value) {
+          console.log("delete route info", value)
+        },
+      })
+    }
   }
 }
