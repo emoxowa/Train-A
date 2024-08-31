@@ -1,23 +1,24 @@
 .create-route-from {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
   gap: 5px;
+  align-items: flex-start;
+  justify-content: center;
 
   &__wrapper {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 5px;
     flex: 1;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: center;
+
     width: 100%;
   }
 
   &__station,
   &__carriages {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 5px;
   }

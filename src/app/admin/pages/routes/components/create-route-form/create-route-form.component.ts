@@ -4,6 +4,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } f
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
 import { IRoutes } from '@app/admin/models/routes.model';
 import { IStation } from '@app/admin/models/station-list.model';
+import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
+import { Store } from '@ngrx/store';
 import { TuiButton, TuiDataList } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
@@ -30,6 +32,8 @@ export class CreateRouteFormComponent {
   @Input({ required: true }) stationData: Pick<IStation, 'id' | 'city'>[] | undefined;
 
   @Input({ required: true }) carriagesData: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
+
+  private store = inject(Store);
 
   private formBuilder = inject(FormBuilder);
 
@@ -67,8 +71,12 @@ export class CreateRouteFormComponent {
   }
 
   public createRoute() {
-    const stations = Array.from(new Set(this.createRouteForm.get('stations')?.value.slice(0, -1) as string[]));
-    const carriages = this.createRouteForm.get('carriages')?.value.filter((carriage: string) => carriage !== null);
+    const stations = this.mutateStations(
+      Array.from(new Set(this.createRouteForm.get('stations')?.value.slice(0, -1) as string[]))
+    );
+    const carriages = this.mutateCarriages(
+      this.createRouteForm.get('carriages')?.value.filter((carriage: string) => carriage !== null)
+    );
 
     if (stations.length < 1) {
       // eslint-disable-next-line no-alert
@@ -83,11 +91,11 @@ export class CreateRouteFormComponent {
     }
 
     const newRoute: IRoutes = {
-      path: this.mutateStations(stations),
-      carriages: this.mutateCarriages(carriages),
+      path: stations,
+      carriages,
     };
 
-    console.log('create new route', newRoute);
+    this.store.dispatch(RoutesActions.addNewRoute({ newRoute }));
     this.resetForm();
   }
 
@@ -104,14 +112,21 @@ export class CreateRouteFormComponent {
 
   private mutateCarriages(carriagesArr: string[]): string[] {
     const keys: string[] = [];
+
     if (this.carriagesData) {
       // eslint-disable-next-line no-restricted-syntax
-      for (const carriage of this.carriagesData) {
-        if (carriage.code && carriagesArr.includes(carriage.name)) {
-          keys.push(carriage.code);
+      for (let i = 0; i < carriagesArr.length; i += 1) {
+        const name = carriagesArr[i];
+        // eslint-disable-next-line no-restricted-syntax
+        for (let j = 0; j < this.carriagesData.length; j += 1) {
+          const carriage = this.carriagesData[j];
+          if (carriage.code && carriage.name === name) {
+            keys.push(carriage.code);
+          }
         }
       }
     }
+
     return keys;
   }
 

@@ -9,5 +9,11 @@ export const routesReducer = createReducer(
       ...state,
       routesList,
     };
+  }),
+  on(RoutesActions.addNewRouteSuccsess, (state, { newRoute }): IRoutesState => {
+    return {
+      ...state,
+      routesList: [newRoute, ...state.routesList],
+    };
   })
 );
