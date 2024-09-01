@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
@@ -38,7 +38,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
   `,
   styleUrl: './carriages-dynamic-from-create.component.scss',
 })
-export class CarriagesDynamicFromCreateComponent {
+export class CarriagesDynamicFromCreateComponent implements OnInit {
   @Output() formClosed = new EventEmitter<void>();
 
   private formBuilder = inject(FormBuilder);
@@ -80,15 +80,13 @@ export class CarriagesDynamicFromCreateComponent {
 
     const createNewCarriage: ICarriage = this.carriagesData;
 
-    const isInStorage = this.carriagesList.some(
-      (carriage) => carriage.name === createNewCarriage.name
-    );
+    const isInStorage = this.carriagesList.some((carriage) => carriage.name === createNewCarriage.name);
 
     if (isInStorage) {
+      // eslint-disable-next-line no-alert
       alert('Carriage with this name already exists.');
       return;
     }
-
 
     this.store.dispatch(CarriageActions.createNewCarriageType({ newCarriages: createNewCarriage }));
     this.closeForm();

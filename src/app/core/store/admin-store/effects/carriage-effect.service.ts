@@ -22,9 +22,7 @@ export class CarriageEffectService {
       switchMap(() =>
         this.adminService
           .getCarriageList()
-          .pipe(
-            map((carriages: ICarriage[]) => CarriageActions.loadCarriagesListSuccsess({ carriageList: carriages }))
-          )
+          .pipe(map((carriages: ICarriage[]) => CarriageActions.loadCarriagesListSuccsess({ carriageList: carriages })))
       )
     )
   );

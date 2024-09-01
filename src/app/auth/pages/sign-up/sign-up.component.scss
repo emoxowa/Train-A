@@ -1,14 +1,15 @@
 :host {
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+
   box-sizing: border-box;
+  height: 100vh;
 }
 
 .container {
-  padding: var(--auth-container-padding);
   width: var(--auth-container-width);
+  padding: var(--auth-container-padding);
 
   .title {
     text-align: center;
@@ -37,10 +38,11 @@
     }
 
     .error {
-      color: red;
       font-weight: var(--auth-font-weight);
+      color: red;
     }
   }
+
   .buttons {
     display: flex;
     gap: 5px;

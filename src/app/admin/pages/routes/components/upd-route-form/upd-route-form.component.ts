@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { IRoutes } from '@app/admin/models/routes.model';
 import { IStation } from '@app/admin/models/station-list.model';
 import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
@@ -30,7 +30,7 @@ export class UpdRouteFormComponent implements OnInit {
 
   @Input({ required: true }) stationDataAllUpd: Pick<IStation, 'id' | 'city'>[] | undefined;
 
-  @Input({ required: true }) carriagesDataAllUpd: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
+  @Input({ required: true }) carriagesDataAllUpd: Pick<ICarriage, 'code' | 'name'>[] | undefined;
 
   @Output() formClosed = new EventEmitter<void>();
 

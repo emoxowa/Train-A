@@ -48,6 +48,7 @@ export class SignUpComponent implements OnDestroy {
     );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   repeatPasswordMatch(group: AbstractControl): ValidationErrors | null {
     const password = group.get('password')?.value;
     const repeatPassword = group.get('repeatPassword')?.value;
