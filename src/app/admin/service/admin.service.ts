@@ -84,8 +84,8 @@ export class AdminService {
     });
   }
 
-  getRouteInformation(idRoute: number): Observable<IRideInfo[]> {
-    return this.http.get<IRideInfo[]>(`/api/route/${idRoute}`, {
+  getRouteInformation(idRoute: number): Observable<IRideInfo> {
+    return this.http.get<IRideInfo>(`/api/route/${idRoute}`, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
       },

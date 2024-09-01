@@ -8,5 +8,5 @@ export enum ERiderActions {
 
 export const RiderAction = {
   loadRiderList: createAction(ERiderActions.LoadRiderList, props<{ idRoute: number }>()),
-  loadRiderListSuccsess: createAction(ERiderActions.LoadRiderListSuccsess, props<{ riderList: IRideInfo[] }>()),
+  loadRiderListSuccsess: createAction(ERiderActions.LoadRiderListSuccsess, props<{ riderList: IRideInfo }>()),
 };

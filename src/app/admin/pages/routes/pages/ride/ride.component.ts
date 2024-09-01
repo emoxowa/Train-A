@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
@@ -5,7 +6,6 @@ import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { IStation } from '@app/admin/models/station-list.model';
 import { AdminService } from '@app/admin/service/admin.service';
 import { RiderAction } from '@app/core/store/admin-store/actions/riders.actions';
-import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
 import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { selectRiderInfo } from '@app/core/store/admin-store/selectors/rider.selector';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
@@ -16,7 +16,7 @@ import { map, Observable, tap } from 'rxjs';
 @Component({
   selector: 'app-ride',
   standalone: true,
-  imports: [TuiButton, RouterLink, RouterLinkActive],
+  imports: [TuiButton, RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './ride.component.html',
   styleUrls: ['./ride.component.scss'],
 })
@@ -51,7 +51,6 @@ export class RideComponent implements OnInit {
       )
       .subscribe();
 
-    this.store.dispatch(RoutesActions.loadRoutesAndStations());
     this.store.dispatch(RiderAction.loadRiderList({ idRoute: this.routeId }));
   }
 

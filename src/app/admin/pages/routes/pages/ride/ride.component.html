@@ -1,4 +1,8 @@
 <button routerLinkActive="active" ariaCurrentWhenActive="page" routerLink="/admin/routes" size="s" tuiButton>
   Back to routes
 </button>
-<p>ride works!</p>
+
+@let riderInfo = riderInfo$ | async;
+@if (riderInfo) {
+  <div>{{ riderInfo.id }}</div>
+}
