@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
@@ -35,7 +35,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
   styleUrl: './carriages-dynamic-form-upd.component.scss',
 })
 export class CarriagesDynamicFormComponent implements OnInit {
-  @Input() carriagesData!: ICarriagesType;
+  @Input() carriagesData!: ICarriage;
 
   @Output() formClosed = new EventEmitter<void>();
 
@@ -43,7 +43,7 @@ export class CarriagesDynamicFormComponent implements OnInit {
 
   private store = inject(Store);
 
-  private initialFormValues!: ICarriagesType;
+  private initialFormValues!: ICarriage;
 
   public editCarriagesForm: FormGroup = this.formBuilder.group({
     name: ['', Validators.required],
@@ -63,7 +63,7 @@ export class CarriagesDynamicFormComponent implements OnInit {
           this.store.dispatch(
             CarriageActions.updCarriageType({
               code: this.carriagesData.code,
-              updatedCarriage: value as ICarriagesType,
+              updatedCarriage: value as ICarriage,
             })
           );
         }
@@ -78,7 +78,7 @@ export class CarriagesDynamicFormComponent implements OnInit {
       return;
     }
 
-    const updCarriage: ICarriagesType = {
+    const updCarriage: ICarriage = {
       code: this.editCarriagesForm.get('name')?.value,
       name: this.editCarriagesForm.get('name')?.value,
       rows: this.editCarriagesForm.get('rows')?.value,

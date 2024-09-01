@@ -1,5 +1,9 @@
 import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
+<<<<<<< HEAD
 import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+=======
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
+>>>>>>> 50b8cf84a7ef28a1f56d4266fe5b669738e72015
 
 @Component({
   selector: 'app-carriage',
@@ -36,7 +40,11 @@ import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model
   styleUrl: './carriage.component.scss',
 })
 export class CarriageComponent implements OnChanges {
+<<<<<<< HEAD
   @Input() carriagesData!: ICarriagesType;
+=======
+  @Input({ required: true }) carriagesData!: ICarriage;
+>>>>>>> 50b8cf84a7ef28a1f56d4266fe5b669738e72015
 
   rows: number[] = [];
 

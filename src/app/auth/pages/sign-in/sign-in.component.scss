@@ -1,0 +1,56 @@
+:host {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.container {
+  padding: var(--auth-container-padding);
+  width: var(--auth-container-width);
+
+  .title {
+    text-align: center;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--auth-form-flex-gap);
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .label {
+      font-size: 1rem;
+      font-weight: var(--auth-font-weight);
+    }
+
+    .input {
+      padding: var(--auth-input-padding);
+      border: 1px solid var(--tui-text-secondary) !important;
+      border-radius: 5px;
+    }
+
+    .error {
+      color: red;
+      font-weight: var(--auth-font-weight);
+    }
+  }
+  .buttons {
+    display: flex;
+    gap: 5px;
+
+    .login-btn {
+      flex: 1;
+
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+  }
+}

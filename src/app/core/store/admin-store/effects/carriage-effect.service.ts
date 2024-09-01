@@ -3,7 +3,7 @@ import { AdminService } from '@app/admin/service/admin.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { switchMap, map } from 'rxjs';
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '../actions/carriage.actions';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class CarriageEffectService {
         this.adminService
           .getCarriageList()
           .pipe(
-            map((carriages: ICarriagesType[]) => CarriageActions.loadCarriagesListSuccsess({ carriageList: carriages }))
+            map((carriages: ICarriage[]) => CarriageActions.loadCarriagesListSuccsess({ carriageList: carriages }))
           )
       )
     )

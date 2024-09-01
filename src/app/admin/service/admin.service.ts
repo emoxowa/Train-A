@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ICreateStationResponse, IStation } from '../models/station-list.model';
 import { ICreateStation } from '../models/create-station.model';
 import { IAdminToken, ICreateAdmin } from '../models/create-admin';
-import { ICarriagesType } from '../models/create-new-carriage-type.model';
+import { ICarriage } from '../models/create-new-carriage-type.model';
 import { IRoutes } from '../models/routes.model';
 
 @Injectable({
@@ -34,13 +34,12 @@ export class AdminService {
       },
     });
   }
-
-  getCarriageList(): Observable<ICarriagesType[]> {
-    return this.http.get<ICarriagesType[]>('/api/carriage');
+  getCarriageList(): Observable<ICarriage[]> {
+    return this.http.get<ICarriage[]>('/api/carriage');
   }
 
-  createNewCarriageType(newCarriageType: ICarriagesType): Observable<Pick<ICarriagesType, 'code'>> {
-    return this.http.post<ICarriagesType>('/api/carriage', newCarriageType, {
+  createNewCarriageType(newCarriageType: ICarriage): Observable<Pick<ICarriage, 'code'>> {
+    return this.http.post<ICarriage>('/api/carriage', newCarriageType, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
       },
@@ -49,9 +48,9 @@ export class AdminService {
 
   updateCarriageType(
     carriageType: string,
-    updateCarriageType: ICarriagesType
-  ): Observable<Omit<ICarriagesType, 'code'>> {
-    return this.http.put<Omit<ICarriagesType, 'code'>>(`/api/carriage/${carriageType}`, updateCarriageType, {
+    updateCarriageType: ICarriage
+  ): Observable<Omit<ICarriage, 'code'>> {
+    return this.http.put<Omit<ICarriage, 'code'>>(`/api/carriage/${carriageType}`, updateCarriageType, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
       },

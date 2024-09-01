@@ -10,7 +10,7 @@ import { TuiButton } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { tap } from 'rxjs';
 import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriagesDynamicFormComponent } from './components/carriages-dynamic-form-upd/carriages-dynamic-form-upd.component';
 import { CarriagesDynamicFromCreateComponent } from './components/carriages-dynamic-from-create/carriages-dynamic-from-create.component';
 
@@ -60,10 +60,10 @@ export class CarriagesComponent {
   }
 
   toggleCreateField() {
-    this.isCreateFieldOpen = !this.isCreateFieldOpen;
+    this.isCreateFieldOpen = !this.isCreateFieldOpen
   }
 
-  toggleUpdForm(carriage: ICarriagesType) {
+  toggleUpdForm(carriage: ICarriage) {
     this.currentCarriageToUpdate = carriage.code;
   }
 
