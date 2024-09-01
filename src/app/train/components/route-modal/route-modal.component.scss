@@ -27,32 +27,35 @@
 }
 
 .tui-table__td_first {
-  border-right: 1px solid var(--tui-text-action);
   position: relative;
+  border-right: 1px solid var(--tui-text-action);
 }
 
 .tui-table__td_first::after {
   content: '';
+
   position: absolute;
-  right: -5px;
   top: 50%;
+  right: -5px;
+  transform: translateY(-50%);
+
   width: 8px;
   height: 8px;
+
   border: 1px solid var(--tui-text-action);
   border-radius: 50%;
-  transform: translateY(-50%);
 }
 
 .tui-table__tr:last-child .tui-table__td_first::after {
+  right: -8px;
   width: 14px;
   height: 14px;
-  right: -8px;
   background-color: var(--tui-text-action);
 }
 
 .tui-table__tr:nth-child(2) .tui-table__td_first::after {
+  right: -7px;
   width: 12px;
   height: 12px;
-  right: -7px;
   background-color: var(--tui-text-action);
 }

@@ -1,0 +1,22 @@
+.route-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: center;
+
+  width: 80vw;
+  padding: 20px;
+
+  border: 1px solid gray;
+  border-radius: 10px;
+
+  &__carriage-arr,
+  &__station-arr {
+    display: flex;
+    flex-flow: row wrap;
+  }
+}
+
+button {
+  width: 80vw;
+}

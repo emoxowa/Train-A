@@ -1,14 +1,16 @@
 @import 'styles';
 
 :host {
-  padding: 20px 16px;
+  display: flex;
+
+  box-sizing: border-box;
   width: 100%;
   max-width: 1200px;
-  display: flex;
+  margin: 20px 0;
+  padding: 20px 16px;
+
   background-color: var(--tui-text-primary);
   border-radius: 10px;
-  margin: 20px 0;
-  box-sizing: border-box;
 }
 
 .wrapper {
@@ -28,15 +30,14 @@
 
 .tui-icon-button {
   margin-left: 20px;
-
   transition:
     background-color 0.3s ease,
     transform 0.3s ease;
 
   &:hover {
-    background-color: var(--tui-primary);
     transform: scale(1.1);
     color: var(--tui-text-on-primary);
+    background-color: var(--tui-primary);
   }
 
   &:active {
@@ -65,8 +66,8 @@
   }
 
   .tui-form__button {
-    margin-left: auto;
     margin-right: auto;
+    margin-left: auto;
   }
 }
 

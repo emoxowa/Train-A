@@ -3,7 +3,6 @@ import { AdminService } from '@app/admin/service/admin.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, EMPTY, map, switchMap } from 'rxjs';
 import { IStation } from '@app/admin/models/station-list.model';
-import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { Store } from '@ngrx/store';
 import { StationsActions } from '../actions/stations.actions';
 
@@ -16,11 +15,6 @@ export class StationEffectService {
   private adminService = inject(AdminService);
 
   private store = inject(Store);
-
-  readonly newAdmin: ICreateAdmin = {
-    email: 'admin@admin.com',
-    password: 'my-password',
-  };
 
   loadStations$ = createEffect(() =>
     this.actions$.pipe(
