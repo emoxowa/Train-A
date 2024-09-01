@@ -51,4 +51,8 @@ export class AuthService {
   public clearToken(): void {
     localStorage.removeItem('token');
   }
+
+  public isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
 }

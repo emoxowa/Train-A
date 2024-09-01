@@ -8,24 +8,29 @@
   width: 100vw;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  max-width: 1200px;
+}
+
+@include desktop {
+  :host {
+    max-width: 986px;
+  }
 }
 
 @include tablet {
   :host {
-    max-width: 740px;
+    max-width: calc(100vw - 40px);
   }
 }
 
 @include mobile {
   :host {
-    max-width: 500px;
+    max-width: calc(100vw - 40px);
   }
 }
 
 @include small-mobile {
   :host {
-    max-width: 300px;
-    padding: 0 10px;
+    max-width: calc(100vw - 40px);
   }
 }

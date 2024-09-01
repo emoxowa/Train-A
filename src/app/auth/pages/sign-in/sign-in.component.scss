@@ -4,12 +4,12 @@
   justify-content: center;
 
   box-sizing: border-box;
-  height: 100vh;
+  margin-top: 100px;
+  max-width: calc(100vw - 40px);
 }
 
 .container {
-  width: var(--auth-container-width);
-  padding: var(--auth-container-padding);
+  padding: 0;
 
   .title {
     text-align: center;

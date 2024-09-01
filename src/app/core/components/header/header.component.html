@@ -1,0 +1,46 @@
+<header tuiNavigationHeader class="header">
+  <a class="logo" [routerLink]="(userRole$ | async) === 'manager' ? '/admin' : '/'">
+    <span tuiNavigationLogo>
+      <tui-icon icon="@tui.fa.solid.train"></tui-icon>
+    </span>
+    <div class="logo-wrapper">
+      <h1>ChoozTrain</h1>
+      <div tui-text_body-m>Pick your path, ride the rails.</div>
+    </div>
+  </a>
+  <nav class="navigation">
+    <ul class="navigation-list" *ngIf="!authService.isAuthenticated(); else authorizedLinks">
+      <li routerLinkActive="active-link">
+        <a class="link" routerLink="/signin">Sign In</a>
+      </li>
+      <li routerLinkActive="active-link">
+        <a class="link" routerLink="/signup">Sign Up</a>
+      </li>
+    </ul>
+
+    <ng-template #authorizedLinks>
+      <ul class="navigation-list" *ngIf="(userRole$ | async) === 'manager'; else userLinks">
+        <li routerLinkActive="active-link">
+          <a class="link" routerLink="/admin">Admin</a>
+        </li>
+        <li routerLinkActive="active-link">
+          <a class="link" routerLink="/profile">Profile</a>
+        </li>
+        <li routerLinkActive="active-link">
+          <a class="link" routerLink="/orders">Orders</a>
+        </li>
+      </ul>
+
+      <ng-template #userLinks>
+        <ul class="navigation-list">
+          <li routerLinkActive="active-link">
+            <a class="link" routerLink="/profile">Profile</a>
+          </li>
+          <li routerLinkActive="active-link">
+            <a class="link" routerLink="/orders">My Orders</a>
+          </li>
+        </ul>
+      </ng-template>
+    </ng-template>
+  </nav>
+</header>
