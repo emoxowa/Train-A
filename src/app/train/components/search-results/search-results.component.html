@@ -7,33 +7,34 @@
 <ng-template #content>
   <ng-container *ngIf="searchResponse$ | async as searchResponse">
     <div *ngIf="searchResponse.routes.length > 0; else noRides" class="routes">
-      <div
-        class="route"
-        *ngFor="let route of searchResponse.routes"
-        (click)="onCardClick(route)"
-        (keyup.enter)="onCardClick(route)"
-        (keydown.space)="onCardClick(route)"
-        tabindex="0"
-      >
-        <div *ngFor="let schedule of route.schedule" class="schedule">
+      <div class="route" *ngFor="let route of searchResponse.routes; let routeIndex = index">
+        <div
+          class="schedule"
+          *ngFor="let schedule of route.schedule; let scheduleIndex = index"
+          (click)="onCardClick(schedule.rideId)"
+          (keyup.enter)="onCardClick(schedule.rideId)"
+          (keydown.space)="onCardClick(schedule.rideId)"
+          tabindex="0"
+        >
           <div class="info-section">
-            <button tuiButton (click)="showDialog(route, $event)" size="s" appearance="outline">Route</button>
+            <button tuiButton (click)="showDialog(schedule, $event)" size="s" appearance="outline">Route</button>
+            <span>{{ schedule.rideId }}</span>
 
             <div class="time">
               <div class="start-time tui-text_body-l-2">
-                {{ schedule.time[0] | date: 'shortTime' }}
+                {{ schedule.segments[0].time[0] | date: 'shortTime' }}
               </div>
               <div class="duration">
-                {{ schedule.time[0] | formatDuration: schedule.time[1] }}
+                {{ schedule.segments[0].time[0] | formatDuration: schedule.segments.at(-1)!.time[1] }}
               </div>
               <div class="end-time tui-text_body-l-2">
-                {{ schedule.time[1] | date: 'shortTime' }}
+                {{ schedule.segments.at(-1)!.time[1] | date: 'shortTime' }}
               </div>
             </div>
 
             <div class="date">
-              <div>{{ schedule.time[0] | date: 'MMMM d' }}</div>
-              <div>{{ schedule.time[1] | date: 'MMMM d' }}</div>
+              <div>{{ schedule.segments[0].time[0] | date: 'MMMM d' }}</div>
+              <div>{{ schedule.segments.at(-1)!.time[1] | date: 'MMMM d' }}</div>
             </div>
 
             <div class="city tui-text_body-l-1">
@@ -43,10 +44,10 @@
           </div>
 
           <div class="price-section">
-            <div *ngFor="let carriageType of route.carriages" class="carriage">
+            <div *ngFor="let carriageType of route.carriages | uniqueCarriages" class="carriage">
               <div class="tui-text_body-m">{{ carriageType }}</div>
               <div>
-                {{ schedule.price[carriageType] | currency: 'USD' : 'symbol' }}
+                {{ schedule | sumCarriagePrice: carriageType | currency: 'USD' : 'symbol' }}
               </div>
             </div>
           </div>

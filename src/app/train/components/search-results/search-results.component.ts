@@ -3,16 +3,18 @@ import { Component, inject, INJECTOR } from '@angular/core';
 import { IStationResponse, ISearchRoutesResponse } from '@app/train/models/search-response.model';
 import { TuiButton, TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';
-import { IRoute } from '@app/train/models/route.model';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { RouteModalComponent } from '@app/train/components/route-modal/route-modal.component';
 import { Router } from '@angular/router';
 import { TrainService } from '@app/train/services/train.service';
 import { map, Observable } from 'rxjs';
+import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
+import { ISchedule } from '@app/train/models/schedule.model';
+import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
 export interface RouteModalData {
-  route: IRoute;
+  schedule: ISchedule;
   from: IStationResponse;
   to: IStationResponse;
 }
@@ -28,6 +30,8 @@ export interface RouteModalData {
     FormatDurationPipe,
     RouteModalComponent,
     TuiLoader,
+    UniqueCarriagesPipe,
+    SumCarriagePricePipe,
   ],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
@@ -46,7 +50,7 @@ export class SearchResultsComponent {
     private dialogs: TuiDialogService
   ) {}
 
-  protected showDialog(route: IRoute, event: Event): void {
+  protected showDialog(schedule: ISchedule, event: Event): void {
     event.stopPropagation();
 
     this.searchResponse$
@@ -62,7 +66,7 @@ export class SearchResultsComponent {
               closeable: true,
               dismissible: true,
               data: {
-                route,
+                schedule,
                 from: searchResponse.from,
                 to: searchResponse.to,
               } as RouteModalData,
@@ -73,7 +77,7 @@ export class SearchResultsComponent {
       .subscribe();
   }
 
-  protected onCardClick(route: IRoute): void {
+  protected onCardClick(rideId: number): void {
     this.searchResponse$
       .pipe(
         map((searchResponse) => {
@@ -84,7 +88,7 @@ export class SearchResultsComponent {
           const fromStationId = searchResponse.from.stationId;
           const toStationId = searchResponse.to.stationId;
 
-          this.router.navigate(['/trip', route.schedule[0].rideId], {
+          this.router.navigate(['/trip', rideId], {
             queryParams: {
               from: fromStationId,
               to: toStationId,

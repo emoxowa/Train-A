@@ -21,15 +21,14 @@ export class RouteModalComponent {
 
   protected getSegmentArrivalTime(index: number): string {
     if (index > 0) {
-      return this.data.route.schedule[0].segments[index - 1].time[1];
+      return this.data.schedule.segments[index - 1].time[1];
     }
     return '';
   }
 
   protected calculateStopDuration(segment: ISegment, index: number): string {
     const arrivalTime = new Date(segment.time[0]).getTime();
-    const departureTime =
-      index > 0 ? new Date(this.data.route.schedule[0].segments[index - 1].time[1]).getTime() : arrivalTime;
+    const departureTime = index > 0 ? new Date(this.data.schedule.segments[index - 1].time[1]).getTime() : arrivalTime;
 
     const dwellTime = (arrivalTime - departureTime) / (1000 * 60);
 
