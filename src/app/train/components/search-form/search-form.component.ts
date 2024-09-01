@@ -51,6 +51,7 @@ export class SearchFormComponent implements OnInit {
     this.store.dispatch(StationsActions.loadStationList());
     const initialDate = this.form.get('date')?.value || null;
     this.selectedDate = initialDate;
+    this.trainService.setSelectedDate(this.selectedDate);
   }
 
   protected form = new FormGroup({
@@ -158,7 +159,7 @@ export class SearchFormComponent implements OnInit {
   protected onDateSelected(date: TuiDay): void {
     this.selectedDate = date;
     this.form.get('date')?.setValue(date);
-
+    this.trainService.setSelectedDate(date);
     this.onSearch();
   }
 

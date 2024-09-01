@@ -6,57 +6,61 @@
 
 <ng-template #content>
   <ng-container *ngIf="searchResponse$ | async as searchResponse">
-    <div *ngIf="searchResponse.routes.length > 0; else noRides" class="routes">
-      <div class="route" *ngFor="let route of searchResponse.routes; let routeIndex = index">
-        <div
-          class="schedule"
-          *ngFor="let schedule of route.schedule; let scheduleIndex = index"
-          (click)="onCardClick(schedule.rideId)"
-          (keyup.enter)="onCardClick(schedule.rideId)"
-          (keydown.space)="onCardClick(schedule.rideId)"
-          tabindex="0"
-        >
-          <div class="info-section">
-            <button tuiButton (click)="showDialog(schedule, $event, route)" size="s" appearance="outline">Route</button>
-            <span>{{ schedule.rideId }}</span>
+    <ng-container *ngIf="searchResponse | filterRoutes: (selectedDate$ | async) as filteredResponse">
+      <div *ngIf="filteredResponse.routes.length > 0; else noRides" class="routes">
+        <div class="route" *ngFor="let route of filteredResponse.routes; let routeIndex = index">
+          <div
+            class="schedule"
+            *ngFor="let schedule of route.schedule; let scheduleIndex = index"
+            (click)="onCardClick(schedule.rideId)"
+            (keyup.enter)="onCardClick(schedule.rideId)"
+            (keydown.space)="onCardClick(schedule.rideId)"
+            tabindex="0"
+          >
+            <div class="info-section">
+              <button tuiButton (click)="showDialog(schedule, $event, route)" size="s" appearance="outline">
+                Route
+              </button>
 
-            <div class="time">
-              <div class="start-time tui-text_body-l-2">
-                {{ schedule.segments[0].time[0] | date: 'shortTime' }}
+              <div class="time">
+                <div class="start-time tui-text_body-l-2">
+                  {{ schedule.segments[0].time[0] | date: 'shortTime' }}
+                </div>
+                <div class="duration">
+                  {{ schedule.segments[0].time[0] | formatDuration: schedule.segments.at(-1)!.time[1] }}
+                </div>
+                <div class="end-time tui-text_body-l-2">
+                  {{ schedule.segments.at(-1)!.time[1] | date: 'shortTime' }}
+                </div>
               </div>
-              <div class="duration">
-                {{ schedule.segments[0].time[0] | formatDuration: schedule.segments.at(-1)!.time[1] }}
+
+              <div class="date">
+                <div>{{ schedule.segments[0].time[0] | date: 'MMMM d' }}</div>
+                <div>{{ schedule.segments.at(-1)!.time[1] | date: 'MMMM d' }}</div>
               </div>
-              <div class="end-time tui-text_body-l-2">
-                {{ schedule.segments.at(-1)!.time[1] | date: 'shortTime' }}
+
+              <div class="city tui-text_body-l-1">
+                <div>{{ searchResponse.from.city }}</div>
+                <div>{{ searchResponse.to.city }}</div>
               </div>
             </div>
 
-            <div class="date">
-              <div>{{ schedule.segments[0].time[0] | date: 'MMMM d' }}</div>
-              <div>{{ schedule.segments.at(-1)!.time[1] | date: 'MMMM d' }}</div>
-            </div>
-
-            <div class="city tui-text_body-l-1">
-              <div>{{ searchResponse.from.city }}</div>
-              <div>{{ searchResponse.to.city }}</div>
-            </div>
-          </div>
-
-          <div class="price-section">
-            <div *ngFor="let carriageType of route.carriages | uniqueCarriages" class="carriage">
-              <div class="tui-text_body-m">{{ carriageType }}</div>
-              <div>
-                {{ schedule | sumCarriagePrice: carriageType | currency: 'USD' : 'symbol' }}
+            <div class="price-section">
+              <div *ngFor="let carriageType of route.carriages | uniqueCarriages" class="carriage">
+                <div class="tui-text_body-m">{{ carriageType }}</div>
+                <div>n seats</div>
+                <div class="price">
+                  {{ schedule | sumCarriagePrice: carriageType | currency: 'USD' : 'symbol' }}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <ng-template #noRides>
-      <app-no-rides-available></app-no-rides-available>
-    </ng-template>
+      <ng-template #noRides>
+        <app-no-rides-available></app-no-rides-available>
+      </ng-template>
+    </ng-container>
   </ng-container>
 </ng-template>

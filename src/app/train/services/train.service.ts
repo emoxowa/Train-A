@@ -4,6 +4,7 @@ import { ISearchRoutesRequest } from '@app/train/models/search-request.model';
 import { IRoute } from '@app/train/models/route.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { TuiDay } from '@taiga-ui/cdk';
 
 export interface TripDetails {
   route: IRoute;
@@ -26,6 +27,14 @@ export class TrainService {
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
   public loading$ = this.loadingSubject.asObservable();
+
+  private selectedDateSubject = new BehaviorSubject<TuiDay | null>(null);
+
+  public selectedDate$ = this.selectedDateSubject.asObservable();
+
+  public setSelectedDate(date: TuiDay | null): void {
+    this.selectedDateSubject.next(date);
+  }
 
   public searchTrips(searchRequest: ISearchRoutesRequest): Observable<ISearchRoutesResponse> {
     this.loadingSubject.next(true);

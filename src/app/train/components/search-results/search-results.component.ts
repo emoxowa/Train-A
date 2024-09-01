@@ -12,6 +12,8 @@ import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
 import { ISchedule } from '@app/train/models/schedule.model';
 import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
 import { IRoute } from '@app/train/models/route.model';
+import { FilterRoutesPipe } from '@app/train/pipes/filter-routes.pipe';
+import { TuiDay } from '@taiga-ui/cdk';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
 export interface RouteModalData {
@@ -34,6 +36,7 @@ export interface RouteModalData {
     TuiLoader,
     UniqueCarriagesPipe,
     SumCarriagePricePipe,
+    FilterRoutesPipe,
   ],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
@@ -46,6 +49,8 @@ export class SearchResultsComponent {
   protected searchResponse$: Observable<ISearchRoutesResponse | null> = this.trainService.searchResponse$;
 
   protected loading$: Observable<boolean> = this.trainService.loading$;
+
+  protected selectedDate$: Observable<TuiDay | null> = this.trainService.selectedDate$;
 
   constructor(
     private router: Router,
