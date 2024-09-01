@@ -1,4 +1,4 @@
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { createAction, props } from '@ngrx/store';
 
 export enum ECarriageActions {
@@ -13,18 +13,15 @@ export const CarriageActions = {
   loadCarriagesList: createAction(ECarriageActions.LoadCarriagesList),
   loadCarriagesListSuccsess: createAction(
     ECarriageActions.LoadCarriagesListSuccsess,
-    props<{ carriageList: ICarriagesType[] }>()
+    props<{ carriageList: ICarriage[] }>()
   ),
   updCarriageType: createAction(
     ECarriageActions.UpdCarriageType,
-    props<{ code: string; updatedCarriage: Omit<ICarriagesType, 'code'> }>()
+    props<{ code: string; updatedCarriage: Omit<ICarriage, 'code'> }>()
   ),
   updCarriageTypeSuccsess: createAction(
     ECarriageActions.UpdCarriageTypeSuccsess,
-    props<{ code: string; updatedCarriage: Omit<ICarriagesType, 'code'> }>()
+    props<{ code: string; updatedCarriage: Omit<ICarriage, 'code'> }>()
   ),
-  createNewCarriageType: createAction(
-    ECarriageActions.CreateNewCarriageType,
-    props<{ newCarriages: ICarriagesType }>()
-  ),
+  createNewCarriageType: createAction(ECarriageActions.CreateNewCarriageType, props<{ newCarriages: ICarriage }>()),
 };

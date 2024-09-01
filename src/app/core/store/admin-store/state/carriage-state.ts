@@ -1,7 +1,7 @@
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 
 export interface ICarriageState {
-  carriageList: ICarriagesType[];
+  carriageList: ICarriage[];
 }
 
 export const initionalCarriageState: ICarriageState = {

@@ -17,7 +17,7 @@ export class RoutesEffectService {
 
   loadRoutes$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(RoutesActions.loadRoutesList),
+      ofType(RoutesActions.loadRoutesAndStations),
       mergeMap(() =>
         forkJoin({
           routes: this.adminService.getRoutes(),

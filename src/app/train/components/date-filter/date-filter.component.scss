@@ -1,0 +1,45 @@
+@import 'styles';
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.button {
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+  justify-content: center;
+
+  height: 50px;
+  padding: 0;
+}
+
+.date {
+  margin: 0;
+  font-size: 12px;
+  line-height: 12px;
+  color: white;
+}
+
+.day {
+  margin: 0;
+  font-size: 10px;
+  line-height: 16px;
+  color: white;
+}
+
+.selected-date {
+  color: var(--tui-chart-categorical-02);
+}
+
+@include small-mobile {
+  :host {
+    display: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
 import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
@@ -52,9 +52,9 @@ export class CarriagesDynamicFromCreateComponent implements OnInit {
     rightSeats: ['', Validators.required],
   });
 
-  private carriagesList: ICarriagesType[] = [];
+  private carriagesList: ICarriage[] = [];
 
-  get carriagesData(): ICarriagesType {
+  get carriagesData(): ICarriage {
     return {
       code: this.createCarriagesForm.get('name')?.value,
       name: this.createCarriagesForm.get('name')?.value,
@@ -78,7 +78,7 @@ export class CarriagesDynamicFromCreateComponent implements OnInit {
       return;
     }
 
-    const createNewCarriage: ICarriagesType = this.carriagesData;
+    const createNewCarriage: ICarriage = this.carriagesData;
 
     const isInStorage = this.carriagesList.some((carriage) => carriage.name === createNewCarriage.name);
 

@@ -1,0 +1,31 @@
+@import 'styles';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  width: 100vw;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@include tablet {
+  :host {
+    max-width: 740px;
+  }
+}
+
+@include mobile {
+  :host {
+    max-width: 500px;
+  }
+}
+
+@include small-mobile {
+  :host {
+    max-width: 300px;
+    padding: 0 10px;
+  }
+}

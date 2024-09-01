@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { IRoutes } from '@app/admin/models/routes.model';
 import { IStation } from '@app/admin/models/station-list.model';
 import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
@@ -31,7 +31,7 @@ export class CreateRouteFormComponent {
 
   @Input({ required: true }) stationData: Pick<IStation, 'id' | 'city'>[] | undefined;
 
-  @Input({ required: true }) carriagesData: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
+  @Input({ required: true }) carriagesData: Pick<ICarriage, 'code' | 'name'>[] | undefined;
 
   private store = inject(Store);
 

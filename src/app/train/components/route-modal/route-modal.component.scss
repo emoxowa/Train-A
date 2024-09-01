@@ -1,0 +1,61 @@
+.tui-table__th {
+  text-align: center;
+}
+
+.tui-table__th {
+  text-align: left;
+}
+
+.tui-table__td {
+  vertical-align: middle;
+}
+
+.tui-table__td_first {
+  border-right: 1px solid var(--tui-text-action);
+}
+
+.tui-table__th_first,
+.tui-table__td_first,
+.tui-table__td_last,
+.tui-table__th_last {
+  text-align: end;
+}
+
+.tui-table__td_first,
+.tui-table__th_first {
+  width: 100px;
+}
+
+.tui-table__td_first {
+  position: relative;
+  border-right: 1px solid var(--tui-text-action);
+}
+
+.tui-table__td_first::after {
+  content: '';
+
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  transform: translateY(-50%);
+
+  width: 8px;
+  height: 8px;
+
+  border: 1px solid var(--tui-text-action);
+  border-radius: 50%;
+}
+
+.tui-table__tr:last-child .tui-table__td_first::after {
+  right: -8px;
+  width: 14px;
+  height: 14px;
+  background-color: var(--tui-text-action);
+}
+
+.tui-table__tr:nth-child(2) .tui-table__td_first::after {
+  right: -7px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--tui-text-action);
+}

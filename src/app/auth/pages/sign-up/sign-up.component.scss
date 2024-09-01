@@ -1,0 +1,58 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  height: 100vh;
+}
+
+.container {
+  width: var(--auth-container-width);
+  padding: var(--auth-container-padding);
+
+  .title {
+    text-align: center;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--auth-form-flex-gap);
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .label {
+      font-size: 1rem;
+      font-weight: var(--auth-font-weight);
+    }
+
+    .input {
+      padding: var(--auth-input-padding);
+      border: 1px solid var(--tui-text-secondary) !important;
+      border-radius: 5px;
+    }
+
+    .error {
+      font-weight: var(--auth-font-weight);
+      color: red;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 5px;
+
+    .register-btn {
+      flex: 1;
+
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { Observable } from 'rxjs';
-import { ICarriagesType } from '@app/admin/models/create-new-carriage-type.model';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
 import { AdminService } from '@app/admin/service/admin.service';
 import { IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
@@ -61,7 +61,7 @@ export class RouteCardComponent {
 
   @Input({ required: true }) stationDataAll: Pick<IStation, 'id' | 'city'>[] | undefined;
 
-  @Input({ required: true }) carriagesDataAll: Pick<ICarriagesType, 'code' | 'name'>[] | undefined;
+  @Input({ required: true }) carriagesDataAll: Pick<ICarriage, 'code' | 'name'>[] | undefined;
 
   private adminService = inject(AdminService)
 
