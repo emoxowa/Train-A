@@ -7,14 +7,15 @@ import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { Observable } from 'rxjs';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
-import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
 import { AdminService } from '@app/admin/service/admin.service';
-import { IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
+import { IScheduleInfo } from '@app/admin/models/route-info.module';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
 
 @Component({
   selector: 'app-route-card',
   standalone: true,
-  imports: [CommonModule, TuiButton, UpdRouteFormComponent],
+  imports: [CommonModule, TuiButton, UpdRouteFormComponent, RouterLink, RouterOutlet, RouterLinkActive],
   template: `
     <div class="route-card">
       <h2>Route {{ routeData.id }}</h2>
@@ -45,12 +46,16 @@ import { IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module
       } @else {
         <button size="s" (click)="openRoutesUpdForm()" tuiButton>Update</button>
       }
-      <button size="s" (click)="showRouteInfo()" tuiButton>Asign ride</button>
+      <a routerLinkActive="active" [routerLink]="['/routes', routeData.id]">
+        <button size="s" (click)="showRouteInfo()" tuiButton>Asign ride</button>
+      </a>
+      <!-- <button size="s" (click)="showRouteInfo()" tuiButton>Asign ride</button> -->
       <button size="s" (click)="postRouteInfo()" tuiButton>Post info</button>
       <button size="s" (click)="updRouteInfo()" tuiButton>Upd info</button>
       <button size="s" (click)="deleteRide()" tuiButton>Delete ride info</button>
       <button size="s" tuiButton (click)="deleteRoute()">Delete</button>
     </div>
+    <router-outlet></router-outlet>
   `,
   styleUrl: './route-card.component.scss',
 })
@@ -63,7 +68,7 @@ export class RouteCardComponent {
 
   @Input({ required: true }) carriagesDataAll: Pick<ICarriage, 'code' | 'name'>[] | undefined;
 
-  private adminService = inject(AdminService)
+  private adminService = inject(AdminService);
 
   private store = inject(Store);
 
@@ -83,79 +88,81 @@ export class RouteCardComponent {
     this.isRoutesUpdFormOpen = false;
   }
 
-  public showRouteInfo(){
+  public showRouteInfo() {
     // get
-    if(this.routeData.id){
+    if (this.routeData.id) {
       this.adminService.getRouteInformation(this.routeData.id).subscribe({
         next(value) {
-          console.log("show route info", value)
+          // eslint-disable-next-line no-console
+          console.log('show route info', value);
         },
-      })
+      });
     }
-
-     
   }
 
-  postRouteInfo(){
+  postRouteInfo() {
     // post
     const mockScheduleInfo: IScheduleInfo = {
       segments: [
         {
           time: ['2024-08-08T22:19:57.708Z', '2024-08-12T03:29:57.708Z'],
           price: {
-            'carriage1': 210,
-            'carriage2': 300,
-            'carriage3': 250,
-            'carriage4': 250,
-            'carriage5': 250,
-            'carriage6': 250
-          }
+            carriage1: 210,
+            carriage2: 300,
+            carriage3: 250,
+            carriage4: 250,
+            carriage5: 250,
+            carriage6: 250,
+          },
         },
-      ]
+      ],
     };
 
-    if(this.routeData.id){
+    if (this.routeData.id) {
       this.adminService.createNewRide(this.routeData.id, mockScheduleInfo).subscribe({
         next(value) {
+          // eslint-disable-next-line no-console
           console.log('create new ride', value);
         },
-      })
+      });
     }
   }
 
-  updRouteInfo(){
+  updRouteInfo() {
     const mockScheduleInfo: IScheduleInfo = {
       segments: [
         {
           time: ['2024-08-08T22:19:57.708Z', '2024-08-12T03:29:57.708Z'],
           price: {
-            'carriage1': 210,
-            'carriage2': 300,
-            'carriage3': 250,
-            'carriage4': 250,
-            'carriage5': 250,
-            'carriage6': 300
-          }
+            carriage1: 210,
+            carriage2: 300,
+            carriage3: 250,
+            carriage4: 250,
+            carriage5: 250,
+            carriage6: 300,
+          },
         },
-      ]
+      ],
     };
 
-    if(this.routeData.id){
+    if (this.routeData.id) {
       this.adminService.updateRide(this.routeData.id, 1898, mockScheduleInfo).subscribe({
         next(value) {
+          // eslint-disable-next-line no-console
           console.log('upd ride', value);
         },
-      })
+      });
     }
   }
 
-  deleteRide(){
-    if(this.routeData.id){
+  deleteRide() {
+    if (this.routeData.id) {
       this.adminService.deleteRide(this.routeData.id, 1898).subscribe({
         next(value) {
-          console.log("delete route info", value)
+          // eslint-disable-next-line no-console
+          console.log('delete route info', value);
         },
-      })
+      });
     }
   }
 }

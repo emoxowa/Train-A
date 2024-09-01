@@ -18,4 +18,8 @@ export const AdminRoutes: Routes = [
     path: 'routes',
     loadComponent: () => import('./pages/routes/routes.component').then((m) => m.RoutesComponent),
   },
+  {
+    path: 'routes/:id',
+    loadComponent: () => import('./pages/routes/pages/ride/ride.component').then((m) => m.RideComponent),
+  },
 ];
