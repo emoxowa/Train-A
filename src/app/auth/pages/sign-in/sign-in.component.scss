@@ -10,6 +10,7 @@
 
 .container {
   padding: 0;
+  width: var(--auth-container-width);
 
   .title {
     text-align: center;
