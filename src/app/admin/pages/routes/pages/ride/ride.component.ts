@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
+import { IScheduleInfo } from '@app/admin/models/route-info.module';
 import { IStation } from '@app/admin/models/station-list.model';
 import { AdminService } from '@app/admin/service/admin.service';
 import { RiderAction } from '@app/core/store/admin-store/actions/riders.actions';
@@ -12,11 +13,12 @@ import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/st
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { map, Observable, tap } from 'rxjs';
+import { RideCardComponent } from '../components/ride-card/ride-card.component';
 
 @Component({
   selector: 'app-ride',
   standalone: true,
-  imports: [TuiButton, RouterLink, RouterLinkActive, CommonModule],
+  imports: [TuiButton, RouterLink, RouterLinkActive, CommonModule, RideCardComponent],
   templateUrl: './ride.component.html',
   styleUrls: ['./ride.component.scss'],
 })
@@ -52,6 +54,39 @@ export class RideComponent implements OnInit {
       .subscribe();
 
     this.store.dispatch(RiderAction.loadRiderList({ idRoute: this.routeId }));
+  }
+
+  // getRideInfo() {
+  //   this.adminService
+  //     .getRouteInformation(2)
+  //     .pipe(tap((data) => console.log('Reqest ride', data)))
+  //     .subscribe();
+  // }
+
+  postRouteInfo() {
+    // post
+    const mockScheduleInfo: IScheduleInfo = {
+      segments: [
+        {
+          time: ['2024-08-08T22:19:57.708Z', '2024-08-12T03:29:57.708Z'],
+          price: {
+            carriage1: 210,
+            carriage2: 300,
+            carriage3: 250,
+            carriage4: 250,
+            carriage5: 250,
+            carriage6: 250,
+          },
+        },
+      ],
+    };
+
+    this.adminService.createNewRide(2, mockScheduleInfo).subscribe({
+      next(value) {
+        // eslint-disable-next-line no-console
+        console.log('create new ride', value);
+      },
+    });
   }
 
   getCitiesByIds(cityIds: number[]): Observable<Pick<IStation, 'id' | 'city'>[]> {

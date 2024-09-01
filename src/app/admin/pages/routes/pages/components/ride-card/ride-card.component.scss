@@ -1,0 +1,14 @@
+.ride-card__container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-around;
+
+  border: 5px solid red;
+
+  &__city,
+  &__time,
+  &__carriage {
+    width: 30vw;
+  }
+}

@@ -2,7 +2,25 @@
   Back to routes
 </button>
 
+<!-- <button (click)="getRideInfo()" size="s" tuiButton>Get ride</button> -->
+
+<button (click)="postRouteInfo()" size="s" tuiButton>Add ride</button>
+
 @let riderInfo = riderInfo$ | async;
-@if (riderInfo) {
-  <div>{{ riderInfo.id }}</div>
+@let stationArr = stationArr$ | async;
+@let carriagesArr = carriagesArr$ | async;
+@if (riderInfo && stationArr && carriagesArr) {
+  @for (rider of riderInfo.schedule; track rider.rideId) {
+    @if (rider.rideId) {
+      <app-ride-card
+        [carriagesDataAllUpd]="carriagesArr"
+        [stationDataAllUpd]="stationArr"
+        [cityRide]="riderInfo.path"
+        [idRide]="rider.rideId"
+        [rideData]="rider.segments"
+        [carriageRide]="riderInfo.carriages"
+      >
+      </app-ride-card>
+    }
+  }
 }

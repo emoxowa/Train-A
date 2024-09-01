@@ -14,6 +14,17 @@ export class RiderEffectService {
 
   private adminService = inject(AdminService);
 
+  // loadRidersTest$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(RiderAction.loadRiderList),
+  //     switchMap((action) =>
+  //       this.adminService
+  //         .getRouteInformation(action.idRoute)
+  //         .pipe(map((riders: IRideInfo) => RiderAction.loadRiderListSuccsess({ riderList: riders })))
+  //     )
+  //   )
+  // );
+
   loadRiders$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RiderAction.loadRiderList),
