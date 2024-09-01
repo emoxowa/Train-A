@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { IOrder } from '@app/train/models/order.model';
-import { map } from 'rxjs';
+import { IOrder, IOrderCreateResponse, IOrderCreateRequest } from '@app/train/models/order.model';
 
 // TODO: remove later
 interface ICarriage {
@@ -28,6 +27,14 @@ export class OrderService {
     return this.http.get<IOrder[]>('/api/order', { params });
   }
 
+  createOrder(order: IOrderCreateRequest) {
+    return this.http.post<IOrderCreateResponse>('/api/order', order);
+  }
+
+  cancelActiveOrder(orderId: number) {
+    return this.http.delete<object>(`/api/order/${orderId}`);
+  }
+
   // eslint-disable-next-line class-methods-use-this
   getTime(order: IOrder, type: 'start' | 'end') {
     const stationId = type === 'start' ? order.stationStart : order.stationEnd;
@@ -38,10 +45,12 @@ export class OrderService {
     return order.schedule.segments[segmentIndex].time[timeIndex];
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getStartStationIndex(order: IOrder) {
     return order.path.findIndex((value) => value === order.stationStart);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getEndStationIndex(order: IOrder) {
     return order.path.findIndex((value) => value === order.stationEnd) - 1;
   }
@@ -81,7 +90,7 @@ export class OrderService {
     });
   }
 
-  // TODO: delete everything below later
+  // TODO: delete later
   getCarriageList() {
     return this.http.get<ICarriage[]>('/api/carriage');
   }

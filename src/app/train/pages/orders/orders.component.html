@@ -3,16 +3,23 @@
   @let startStationIndex = orderService.getStartStationIndex(order);
   @let endStationIndex = orderService.getEndStationIndex(order);
   @let carriageNumber = (carriagesNumbers$ | async)?.[index];
-  @let carriageType = carriageNumber ? order.carriages[carriageNumber] : undefined;
+  @let carriageType = carriageNumber !== undefined ? order.carriages[carriageNumber] : undefined;
+
   <div>Start trip station: {{ order.stationStart }}</div>
   <div>Start trip time: {{ order.schedule.segments[startStationIndex].time[0] | date: 'MMMM dd hh:mm' }}</div>
   <div>End trip station: {{ order.stationEnd }}</div>
   <div>End trip time: {{ order.schedule.segments[endStationIndex].time[1] | date: 'MMMM dd hh:mm' }}</div>
   <div>Trip duration: {{ orderService.getTripDuration(order) }}</div>
-  <div>Carriage type: {{ carriageNumber ? order.carriages[carriageNumber] : 'Carriage type not found' }}</div>
-  <div>Car number: {{ carriageNumber || 'Carriage type not found' }}</div>
+  <div>
+    Carriage type: {{ carriageNumber !== undefined ? order.carriages[carriageNumber] : 'Carriage type not found' }}
+  </div>
+  <div>Car number: {{ carriageNumber }}</div>
   <div>Seat number: {{ order.seatId }}</div>
   <div>
-    Price: {{ carriageType ? (orderService.getOrderPrice(order, carriageType) | currency) : 'Price type not found' }}
+    Price:
+    {{ carriageType ? (orderService.getOrderPrice(order, carriageType) | currency) : 'Price type not found' }}
   </div>
+  @if (order.status === 'active') {
+    <button (click)="onCancel(order.id)">Cancel</button>
+  }
 </div>

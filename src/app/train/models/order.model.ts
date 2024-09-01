@@ -1,4 +1,4 @@
-import { ISchedule } from '@app/train/models/schedule.model';
+import { ISegment } from '@app/train/models/segment.model';
 
 export interface IOrder {
   id: number;
@@ -9,7 +9,15 @@ export interface IOrder {
   status: 'active' | 'completed' | 'rejected' | 'canceled';
   path: number[];
   carriages: string[];
-  schedule: ISchedule;
+  schedule: { segments: IOrderScheduleSegment[] };
   stationStart: number;
   stationEnd: number;
 }
+
+export type IOrderCreateRequest = Pick<IOrder, 'rideId' | 'seatId' | 'stationStart' | 'stationEnd'>;
+
+export interface IOrderCreateResponse {
+  id: number;
+}
+
+type IOrderScheduleSegment = Pick<ISegment, 'time' | 'price'>;

@@ -9,5 +9,17 @@ export const orderReducer = createReducer(
       ...state,
       orders,
     };
+  }),
+  on(OrderActions.createOrderSuccess, (state, { order }): IOrderState => {
+    return {
+      ...state,
+      orders: [...state.orders, { ...order }],
+    };
+  }),
+  on(OrderActions.cancelOrderSuccess, (state, { orderId }): IOrderState => {
+    return {
+      ...state,
+      orders: state.orders.map((order) => (order.id === orderId ? { ...order, status: 'canceled' } : order)),
+    };
   })
 );
