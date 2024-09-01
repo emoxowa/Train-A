@@ -9,7 +9,6 @@
     </div>
   </a>
   <nav class="navigation">
-    <!-- Если пользователь неавторизован -->
     <ul class="navigation-list" *ngIf="!authService.isAuthenticated(); else authorizedLinks">
       <li routerLinkActive="active-link">
         <a class="link" routerLink="/signin">Sign In</a>
@@ -19,9 +18,7 @@
       </li>
     </ul>
 
-    <!-- Если пользователь авторизован -->
     <ng-template #authorizedLinks>
-      <!-- Для менеджера -->
       <ul class="navigation-list" *ngIf="(userRole$ | async) === 'manager'; else userLinks">
         <li routerLinkActive="active-link">
           <a class="link" routerLink="/admin">Admin</a>
@@ -34,7 +31,6 @@
         </li>
       </ul>
 
-      <!-- Для пользователя -->
       <ng-template #userLinks>
         <ul class="navigation-list">
           <li routerLinkActive="active-link">
