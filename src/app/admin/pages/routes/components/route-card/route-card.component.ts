@@ -9,13 +9,13 @@ import { Observable } from 'rxjs';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { AdminService } from '@app/admin/service/admin.service';
 import { IScheduleInfo } from '@app/admin/models/route-info.module';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
 
 @Component({
   selector: 'app-route-card',
   standalone: true,
-  imports: [CommonModule, TuiButton, UpdRouteFormComponent, RouterLink, RouterOutlet, RouterLinkActive],
+  imports: [CommonModule, TuiButton, UpdRouteFormComponent, RouterLink, RouterLinkActive],
   template: `
     <div class="route-card">
       <h2>Route {{ routeData.id }}</h2>
@@ -46,16 +46,15 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
       } @else {
         <button size="s" (click)="openRoutesUpdForm()" tuiButton>Update</button>
       }
-      <a routerLinkActive="active" [routerLink]="['/routes', routeData.id]">
-        <button size="s" (click)="showRouteInfo()" tuiButton>Asign ride</button>
-      </a>
+      @if (routeData.id) {
+        <button [routerLink]="['/admin/routes', routeData.id]" size="s" tuiButton>Asign ride</button>
+      }
       <!-- <button size="s" (click)="showRouteInfo()" tuiButton>Asign ride</button> -->
       <button size="s" (click)="postRouteInfo()" tuiButton>Post info</button>
       <button size="s" (click)="updRouteInfo()" tuiButton>Upd info</button>
       <button size="s" (click)="deleteRide()" tuiButton>Delete ride info</button>
       <button size="s" tuiButton (click)="deleteRoute()">Delete</button>
     </div>
-    <router-outlet></router-outlet>
   `,
   styleUrl: './route-card.component.scss',
 })
