@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { AdminService } from '@app/admin/service/admin.service';
 import { IScheduleInfo } from '@app/admin/models/route-info.module';
-import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
 
 @Component({
@@ -17,7 +17,6 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
   standalone: true,
   imports: [CommonModule, TuiButton, UpdRouteFormComponent, RouterLink, RouterLinkActive, RouterModule],
   template: `
-    <router-outlet></router-outlet>
     <div class="route-card">
       <h2>Route {{ routeData.id }}</h2>
       <div>
@@ -75,6 +74,8 @@ export class RouteCardComponent {
   private adminService = inject(AdminService);
 
   private store = inject(Store);
+
+  private router = inject(Router);
 
   public isRoutesUpdFormOpen: boolean = false;
 
