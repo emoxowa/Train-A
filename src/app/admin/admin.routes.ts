@@ -23,7 +23,7 @@ export const AdminRoutes: Routes = [
         loadComponent: () => import('./pages/routes/routes.component').then((m) => m.RoutesComponent),
       },
       {
-        path: 'routes/ride/:id',
+        path: 'routes/:id',
         loadComponent: () => import('./pages/routes/pages/ride/ride.component').then((m) => m.RideComponent),
       },
     ],
