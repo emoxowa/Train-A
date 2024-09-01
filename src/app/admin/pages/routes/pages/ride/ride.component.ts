@@ -4,8 +4,10 @@ import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { IStation } from '@app/admin/models/station-list.model';
 import { AdminService } from '@app/admin/service/admin.service';
+import { RiderAction } from '@app/core/store/admin-store/actions/riders.actions';
 import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
 import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
+import { selectRiderInfo } from '@app/core/store/admin-store/selectors/rider.selector';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
@@ -23,7 +25,7 @@ export class RideComponent implements OnInit {
 
   private route: ActivatedRoute = inject(ActivatedRoute);
 
-  private routeId: string = this.route.snapshot.params['id'];
+  private routeId: number = Number(this.route.snapshot.params['id']);
 
   private store = inject(Store);
 
@@ -31,13 +33,15 @@ export class RideComponent implements OnInit {
 
   public carriagesArr$ = this.store.select(selectCarriagesIdAndName);
 
+  public riderInfo$ = this.store.select(selectRiderInfo);
+
   // for developing
   readonly newAdmin: ICreateAdmin = {
     email: 'admin@admin.com',
     password: 'my-password',
   };
 
-  constructor() {
+  ngOnInit(): void {
     this.adminService
       .loginAdmin(this.newAdmin)
       .pipe(
@@ -46,10 +50,9 @@ export class RideComponent implements OnInit {
         })
       )
       .subscribe();
-  }
 
-  ngOnInit(): void {
     this.store.dispatch(RoutesActions.loadRoutesAndStations());
+    this.store.dispatch(RiderAction.loadRiderList({ idRoute: this.routeId }));
   }
 
   getCitiesByIds(cityIds: number[]): Observable<Pick<IStation, 'id' | 'city'>[]> {

@@ -6,7 +6,7 @@ import { ICreateStation } from '../models/create-station.model';
 import { IAdminToken, ICreateAdmin } from '../models/create-admin';
 import { ICarriage } from '../models/create-new-carriage-type.model';
 import { IRoutes } from '../models/routes.model';
-import { IRouteInfo, IScheduleInfo } from '../models/route-info.module';
+import { IRideInfo, IScheduleInfo } from '../models/route-info.module';
 
 @Injectable({
   providedIn: 'root',
@@ -84,8 +84,8 @@ export class AdminService {
     });
   }
 
-  getRouteInformation(idRoute: number): Observable<IRouteInfo[]> {
-    return this.http.get<IRouteInfo[]>(`/api/route/${idRoute}`, {
+  getRouteInformation(idRoute: number): Observable<IRideInfo[]> {
+    return this.http.get<IRideInfo[]>(`/api/route/${idRoute}`, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
       },
