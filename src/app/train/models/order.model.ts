@@ -14,7 +14,12 @@ export interface IOrder {
   stationEnd: number;
 }
 
-export type IOrderCreateRequest = Pick<IOrder, 'rideId' | 'seatId' | 'stationStart' | 'stationEnd'>;
+export type IOrderCreateRequest = {
+  rideId: number;
+  seat: number;
+  stationStart: number;
+  stationEnd: number;
+};
 
 export interface IOrderCreateResponse {
   id: number;

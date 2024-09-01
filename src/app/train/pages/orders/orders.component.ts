@@ -3,9 +3,8 @@ import { Store } from '@ngrx/store';
 import { OrderActions } from '@core/store/order-store/actions/order.actions';
 import { selectOrders } from '@core/store/order-store/selectors/order.selectors';
 import { AsyncPipe, CurrencyPipe, DatePipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { OrderService } from '@app/train/services/order.service';
-import { map, Observable, switchMap } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-orders',
@@ -17,18 +16,36 @@ import { map, Observable, switchMap } from 'rxjs';
 export class OrdersComponent implements OnInit {
   private readonly store = inject(Store);
 
-  private readonly http = inject(HttpClient);
-
   protected readonly orderService = inject(OrderService);
 
-  protected readonly orders$ = this.store.select(selectOrders);
-
-  // TODO: implement after carriages
-  protected readonly carriagesNumbers$: Observable<number[]> = this.orders$.pipe(
+  protected readonly orders$ = this.store.select(selectOrders).pipe(
     switchMap((orders) =>
-      this.orderService
-        .getCarriageList()
-        .pipe(map((carriages) => this.orderService.getCarriagesNumbers(orders, carriages)))
+      this.orderService.getCarriageList().pipe(
+        map((carriages) => {
+          return orders.map((order) => {
+            const startStationIndex = this.orderService.getStartStationIndex(order);
+            const endStationIndex = this.orderService.getEndStationIndex(order);
+            const duration = this.orderService.getTripDuration(order);
+            const carriageIndex = this.orderService.getCarriageIndex(order.seatId, order.carriages, carriages);
+            const carriageType = order.carriages[carriageIndex];
+            const price = this.orderService.getOrderPrice(order, carriageType);
+
+            return {
+              id: order.id,
+              stationStart: order.stationStart,
+              timeStart: order.schedule.segments[startStationIndex].time[0],
+              stationEnd: order.stationEnd,
+              timeEnd: order.schedule.segments[endStationIndex].time[1],
+              duration,
+              carriageType,
+              carriageNumber: carriageIndex + 1,
+              seatNumber: order.seatId + 1,
+              price,
+              status: order.status,
+            };
+          });
+        })
+      )
     )
   );
 
@@ -46,7 +63,7 @@ export class OrdersComponent implements OnInit {
       OrderActions.createOrder({
         orderRequest: {
           rideId: 1,
-          seatId: 6,
+          seat: 21,
           stationStart: 83,
           stationEnd: 40,
         },

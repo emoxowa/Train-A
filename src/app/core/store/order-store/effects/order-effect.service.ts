@@ -26,8 +26,11 @@ export class OrderEffectService {
           map((response) => {
             return OrderActions.createOrderSuccess({
               order: {
-                ...orderRequest,
-                ...response,
+                id: response.id,
+                seatId: orderRequest.seat,
+                rideId: orderRequest.rideId,
+                stationStart: orderRequest.stationStart,
+                stationEnd: orderRequest.stationEnd,
                 status: 'active',
                 routeId: 1,
                 userId: 1,

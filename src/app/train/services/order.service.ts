@@ -70,24 +70,25 @@ export class OrderService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getCarriagesNumbers(orders: IOrder[], carriages: ICarriage[]) {
-    const carriagesSeats = carriages.map((carriage) => carriage.leftSeats + carriage.rightSeats);
-
-    return orders.map((order) => {
-      const { seatId } = order;
-      let currentTotalSeats = 0;
-      let carriageNumber: number = -1;
-
-      for (let index = 0; index < carriagesSeats.length; index += 1) {
-        currentTotalSeats += carriagesSeats[index];
-        if (currentTotalSeats > seatId) {
-          carriageNumber = index;
-          break;
-        }
-      }
-
-      return carriageNumber;
+  getCarriageIndex(seatId: number, currentRideCarriages: string[], carriages: ICarriage[]) {
+    const carriagesSeats: Record<string, number> = {};
+    carriages.forEach((carriage) => {
+      carriagesSeats[carriage.name] = carriage.leftSeats + carriage.rightSeats;
     });
+
+    let currentTotalSeats = 0;
+    let carriageNumber: number = -1;
+
+    for (let index = 0; index < currentRideCarriages.length; index += 1) {
+      const carriageType = currentRideCarriages[index];
+      currentTotalSeats += carriagesSeats[carriageType];
+      if (currentTotalSeats > seatId) {
+        carriageNumber = index;
+        break;
+      }
+    }
+
+    return carriageNumber;
   }
 
   // TODO: delete later
