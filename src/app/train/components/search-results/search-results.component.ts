@@ -11,12 +11,14 @@ import { map, Observable } from 'rxjs';
 import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
 import { ISchedule } from '@app/train/models/schedule.model';
 import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
+import { IRoute } from '@app/train/models/route.model';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
 export interface RouteModalData {
   schedule: ISchedule;
   from: IStationResponse;
   to: IStationResponse;
+  path: IRoute['path'];
 }
 
 @Component({
@@ -50,7 +52,7 @@ export class SearchResultsComponent {
     private dialogs: TuiDialogService
   ) {}
 
-  protected showDialog(schedule: ISchedule, event: Event): void {
+  protected showDialog(schedule: ISchedule, event: Event, route: IRoute): void {
     event.stopPropagation();
 
     this.searchResponse$
@@ -69,6 +71,7 @@ export class SearchResultsComponent {
                 schedule,
                 from: searchResponse.from,
                 to: searchResponse.to,
+                path: route.path,
               } as RouteModalData,
             })
             .subscribe();

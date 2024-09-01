@@ -1,8 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ISegment } from '@app/train/models/segment.model';
 import { TuiButton, TuiDialog, TuiDialogContext, TuiScrollbar } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
+import { selectStationArr } from '@app/core/store/admin-store/selectors/stations.selectors';
+import { IStation } from '@app/admin/models/station-list.model';
+import { map, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { StationsActions } from '@app/core/store/admin-store/actions/stations.actions';
 import { RouteModalData } from '../search-results/search-results.component';
 
 @Component({
@@ -12,8 +17,20 @@ import { RouteModalData } from '../search-results/search-results.component';
   templateUrl: './route-modal.component.html',
   styleUrl: './route-modal.component.scss',
 })
-export class RouteModalComponent {
+export class RouteModalComponent implements OnInit {
+  private store = inject(Store);
+
   private readonly context = inject<TuiDialogContext<void, RouteModalData>>(POLYMORPHEUS_CONTEXT);
+
+  public stations$: Observable<IStation[]> = this.store.select(selectStationArr);
+
+  ngOnInit(): void {
+    this.store.dispatch(StationsActions.loadStationList());
+  }
+
+  protected getCityName(stationId: number): Observable<string | undefined> {
+    return this.stations$.pipe(map((stations) => stations.find((station) => station.id === stationId)?.city));
+  }
 
   protected get data(): RouteModalData {
     return this.context.data;

@@ -121,14 +121,21 @@
   flex-direction: column;
   gap: 10px;
   justify-content: flex-end;
-
   padding-left: 20px;
-
   border-left: 1px solid var(--tui-background-neutral-1-pressed);
 
   .carriage {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
+    .tui-text_body-m,
+    div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100px;
+    }
   }
 }
 
