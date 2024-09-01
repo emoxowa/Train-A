@@ -58,9 +58,6 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
           Asign ride
         </button>
       }
-      <button size="s" (click)="postRouteInfo()" tuiButton>Post info</button>
-      <button size="s" (click)="updRouteInfo()" tuiButton>Upd info</button>
-      <button size="s" (click)="deleteRide()" tuiButton>Delete ride info</button>
       <button size="s" tuiButton (click)="deleteRoute()">Delete</button>
     </div>
   `,
