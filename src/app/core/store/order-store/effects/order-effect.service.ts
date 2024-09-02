@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, filter, map, of, switchMap } from 'rxjs';
 import { OrderActions } from '@core/store/order-store/actions/order.actions';
 import { OrderService } from '@app/train/services/order.service';
 import { IOrder } from '@app/train/models/order.model';
@@ -23,6 +23,7 @@ export class OrderEffectService {
       ofType(OrderActions.loadOrders),
       switchMap(() =>
         this.store.select(selectUserRole).pipe(
+          filter((role) => !!role),
           switchMap((role) =>
             this.orderService.getOrders(role === EUserRole.manager).pipe(
               map((orders: IOrder[]) =>
