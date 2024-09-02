@@ -10,7 +10,7 @@ import { IStation } from '@app/admin/models/station-list.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    @if (rideSchedule) {
+  @if (rideSchedule) {
       <div>Ride {{ idRide }}</div>
     }
     @for (ride of rideSchedule; track ride; let i = $index) {
@@ -27,16 +27,45 @@ import { IStation } from '@app/admin/models/station-list.model';
           }
         </div>
         <div class="ride-card__time">
-          <!-- @for (time of ride.time; track time; let j = $index) {
-            @if (j === 0) {
-              <div class="ride-card__time-element">Departure {{ time | date: 'dd.MM.yyyy HH:mm' }}</div>
-            } @else {
-              Arrival {{ time | date: 'dd.MM.yyyy HH:mm' }}
+            @if(isEditingTime[i]){
+              @if (segmentData) {
+              @if (i === 0) {
+                <input
+                    class="ride-card__time-input" 
+                    type="datetime-local" 
+                    (input)="onInputChangeTime($event, idRide)"
+                    [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
+                  />
+              } @else if (i === rideSchedule.length - 1) {
+                <input
+                    class="ride-card__time-input" 
+                    type="datetime-local" 
+                    (input)="onInputChangeTime($event, idRide)"
+                    [value]="formatToDateTimeLocal(segmentData.segments[i].time[1])"
+                  />
+              } @else {
+                <div class="ride-card__time-input_arrive">
+                  <span>arrive</span>
+                  <input
+                    class="ride-card__time-input" 
+                    type="datetime-local" 
+                    (input)="onInputChangeTime($event, idRide)"
+                    [value]="formatToDateTimeLocal(segmentData.segments[i - 1].time[1])"
+                  />
+                </div>
+                <div class="ride-card__time-input_depart">
+                  <span>depart </span>
+                  <input
+                    class="ride-card__time-input" 
+                    type="datetime-local" 
+                    (input)="onInputChangeTime($event, idRide)"
+                    [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
+                  />
+                </div>
+              }
             }
-          } -->
-          <div class="test-time">
-            <h4>time</h4>
-            @if (segmentData) {
+            } @else if (!isEditingTime[i]) {
+              @if (segmentData) {
               @if (i === 0) {
                 <div>depart {{ segmentData.segments[i].time[0] | date: 'dd.MM.yyyy HH:mm' }}</div>
               } @else if (i === rideSchedule.length - 1) {
@@ -46,34 +75,39 @@ import { IStation } from '@app/admin/models/station-list.model';
                 <div>depart {{ segmentData.segments[i].time[0] | date: 'dd.MM.yyyy HH:mm' }}</div>
               }
             }
-          </div>
+          }
+          @if(!isEditingTime[i]){
+              <button (click)="toggleEditTime(i)" class="ride-card__edit-carriage">Edit</button>
+            } @else if (isEditingTime[i]) {
+              <button (click)="toggleEditTime(i)">Save</button>
+            } 
         </div>
         <div class="ride-card__carriage">
           @if (segmentData) {
             @let priceCarriage = getCarriagePriceArray(segmentData.segments[i].price);
-            @for (carriage of priceCarriage; track carriage[0]; let j = $index) {
-              @if (!isEditing[i]) {
+            @for (carriage of priceCarriage; track carriage[0]; let j = $index;) {
+              @if(!isEditingPrice[i]){
                 <div class="ride-card__cariage-element">
-                  <span>{{ carriage[0] }} </span>
-                  <span>{{ carriage[1] }}</span>
-                </div>
-              } @else if (isEditing[i]) {
+                <span>{{carriage[0]}} </span>
+                <span>{{carriage[1]}}</span>
+              </div>
+              } @else if (isEditingPrice[i]) {
                 <div class="ride-card__cariage-element">
-                  <span>{{ carriage[0] }}</span>
-                  <input
-                    class="ride-card__carriage-input"
-                    type="number"
+                <span>{{carriage[0]}}</span>
+                <input
+                    class="ride-card__carriage-input" 
+                    type="number" 
                     (input)="onInputChangePrice($event, carriage[0], idRide)"
                     [value]="carriage[1]"
                   />
-                </div>
-              }
+              </div> 
+              }             
             }
-            @if (!isEditing[i]) {
-              <button (click)="toggleEdit(i)" class="ride-card__edit-carriage">Edit</button>
-            } @else if (isEditing[i]) {
-              <button (click)="toggleEdit(i)">Save</button>
-            }
+            @if(!isEditingPrice[i]){
+              <button (click)="toggleEditPrice(i)" class="ride-card__edit-carriage">Edit</button>
+            } @else if (isEditingPrice[i]) {
+              <button (click)="toggleEditPrice(i)">Save</button>
+            }    
           }
         </div>
       </div>
@@ -81,12 +115,12 @@ import { IStation } from '@app/admin/models/station-list.model';
   `,
   styleUrl: './ride-card.component.scss',
 })
-export class RideCardComponent implements OnInit {
+export class RideCardComponent implements OnInit{
   private formBuilder = inject(FormBuilder);
 
   @Input({ required: true }) rideInfo!: IRideInfo;
 
-  @Input({ required: true }) routeId!: number;
+  @Input({ required:true }) routeId!: number;
 
   @Input({ required: true }) rideSchedule!: ISegmentInfo[];
 
@@ -100,42 +134,60 @@ export class RideCardComponent implements OnInit {
 
   @Input({ required: true }) carriagesDataAllUpd: Pick<ICarriage, 'code' | 'name'>[] | undefined;
 
-  isEditing: boolean[] = [];
+  isEditingPrice: boolean[] = [];
 
-  ngOnInit(): void {
-    // if (this.rideSchedule && this.rideInfo) {
-    //   this.rideSchedule.forEach((ride, i) => {
-    //     const segmentData = this.findSegmentByRiderId(this.idRide);
-    //     if (segmentData) {
-    //       this.getcarriagePriceArray(segmentData.segments[i].price).forEach((carriage) => {
-    //         this.carriagePriceGroup.addControl(carriage[0], new FormControl(carriage[1]));
-    //       });
-    //     }
-    //   });
-    // }
-    // console.log('ride info', this.rideInfo);
-    // console.log('ride schedule', this.rideSchedule);
-    // console.log('idRide ride', this.idRide);
-    // console.log('carriage ride', this.carriageRide);
-    // console.log('city ride', this.cityRide);
-    // console.log('all station ride', this.stationDataAllUpd)
-    // console.log('all carriages ride', this.carriagesDataAllUpd)
-    this.isEditing = new Array(this.rideSchedule.length).fill(false);
+  isEditingTime: boolean[] = [];
+
+  ngOnInit(): void {  
+  // console.log('ride info', this.rideInfo);
+  // console.log('ride schedule', this.rideSchedule);
+  // console.log('idRide ride', this.idRide);
+  // console.log('carriage ride', this.carriageRide);
+  // console.log('city ride', this.cityRide);
+  // console.log('all station ride', this.stationDataAllUpd)
+  // console.log('all carriages ride', this.carriagesDataAllUpd)
+  this.isEditingPrice = new Array(this.rideSchedule.length).fill(false);
+  this.isEditingTime = new Array(this.rideSchedule.length).fill(false);
   }
 
-  toggleEdit(index: number): void {
-    if (this.isEditing[index]) {
-      console.log('Saving changes for ride index', index);
-    }
-    this.isEditing[index] = !this.isEditing[index];
+  toggleEditPrice(index: number): void {
+    this.isEditingPrice[index] = !this.isEditingPrice[index];
+  }
+
+  toggleEditTime(index: number): void {
+    this.isEditingTime[index] = !this.isEditingTime[index];
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  formatToDateTimeLocal(isoString: string): string {
+    const date = new Date(isoString);
+    
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
   // eslint-disable-next-line class-methods-use-this
   onInputChangePrice(event: Event, carriageName: string, rideIndex: number) {
     const inputElement = event.target as HTMLInputElement;
     const inputValue = inputElement.value;
-    // console.log('route Index', this.routeId)
-    // console.log(`Input value changed at ride index ${rideIndex} and carriage index ${carriageName}: ${inputValue}`);
+    // eslint-disable-next-line no-console
+    console.log('route Index', this.routeId)
+    // eslint-disable-next-line no-console
+    console.log(`Input value changed at ride index ${rideIndex} and carriage index ${carriageName}: ${inputValue}`);
+  }
+
+  onInputChangeTime(event:Event, rideIndex: number){
+    const inputElement = event.target as HTMLInputElement;
+    const inputValue = inputElement.value;
+    // eslint-disable-next-line no-console
+    console.log('route Index', this.routeId)
+    // eslint-disable-next-line no-console
+    console.log(`Input value changed at ride index ${rideIndex}: ${inputValue}`);
   }
 
   // eslint-disable-next-line class-methods-use-this

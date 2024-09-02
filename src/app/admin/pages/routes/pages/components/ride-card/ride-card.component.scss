@@ -9,10 +9,11 @@
   &__city,
   &__time,
   &__carriage {
-    width: 30vw;
     display: flex;
+    width: 30vw;
   }
 }
+
 .ride-card__carriage-input {
   width: 50px;
 }
