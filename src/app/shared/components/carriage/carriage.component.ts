@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { TuiIcon } from '@taiga-ui/core';
@@ -5,7 +6,7 @@ import { TuiIcon } from '@taiga-ui/core';
 @Component({
   selector: 'app-carriage',
   standalone: true,
-  imports: [TuiIcon],
+  imports: [TuiIcon, CommonModule],
   template: `
     <div class="carriage">
       <div class="carriage__header">
@@ -20,27 +21,27 @@ import { TuiIcon } from '@taiga-ui/core';
           <tui-icon icon="@tui.fa.solid.restroom" style="align-self: flex-end;"></tui-icon>
         </div>
         <div class="carriage__body">
-          @for (row of rows; track row; let rowIndex = $index) {
-            <div class="carriage__row">
-              <div class="carriage__left-seats">
-                @for (seat of leftSeats; track seat; let seatIndexLeft = $index) {
-                  <div class="carriage__seat">L-{{ seat + (leftSeats.length + rightSeats.length) * rowIndex }}</div>
-                }
-              </div>
-
-              <div class="carriage__right-seats">
-                @for (seat of rightSeats; track seat; let seatIndexRight = $index) {
-                  <div class="carriage__seat">
-                    R-{{
-                      getSeats(carriagesData.leftSeats).length +
-                        seat +
-                        (leftSeats.length + rightSeats.length) * rowIndex
-                    }}
-                  </div>
-                }
+          <div class="carriage__row" *ngFor="let row of rows; let rowIndex = index">
+            <div class="carriage__left-seats">
+              <div
+                class="carriage__seat"
+                *ngFor="let seat of leftSeats; let seatIndexLeft = index"
+                (click)="onSeatClick(calculateSeatIndex(rowIndex, seatIndexLeft, 'L'))"
+              >
+                {{ calculateSeatIndex(rowIndex, seatIndexLeft, 'L') }}
               </div>
             </div>
-          }
+
+            <div class="carriage__right-seats">
+              <div
+                class="carriage__seat"
+                *ngFor="let seat of rightSeats; let seatIndexRight = index"
+                (click)="onSeatClick(calculateSeatIndex(rowIndex, seatIndexRight, 'R'))"
+              >
+                {{ calculateSeatIndex(rowIndex, seatIndexRight, 'R') }}
+              </div>
+            </div>
+          </div>
         </div>
         <div class="carriage__restroom"><tui-icon icon="@tui.fa.solid.restroom"></tui-icon></div>
       </div>
@@ -75,5 +76,17 @@ export class CarriageComponent implements OnChanges {
   getSeats(count: number): number[] {
     const seats = Array.from({ length: count }, (_, index) => index + 1);
     return seats;
+  }
+
+  calculateSeatIndex(rowIndex: number, seatIndex: number, side: string): number {
+    const seatsPerRow = this.leftSeats.length + this.rightSeats.length;
+    if (side === 'L') {
+      return rowIndex * seatsPerRow + seatIndex + 1;
+    }
+    return rowIndex * seatsPerRow + this.leftSeats.length + seatIndex + 1;
+  }
+
+  onSeatClick(seatIndex: number): void {
+    console.log(`Clicked on seat ${seatIndex}`);
   }
 }
