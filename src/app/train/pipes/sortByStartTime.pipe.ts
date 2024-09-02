@@ -12,6 +12,7 @@ export class SortByStartTime implements PipeTransform {
     );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private compare(a: string, b: string) {
     return new Date(a).getTime() - new Date(b).getTime();
   }

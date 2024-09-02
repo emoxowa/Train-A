@@ -41,14 +41,17 @@ export class AuthService {
     );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private setToken(token: string): void {
     localStorage.setItem('token', token);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public getToken(): string {
     return localStorage.getItem('token')!;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   public clearToken(): void {
     localStorage.removeItem('token');
   }

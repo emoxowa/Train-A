@@ -1,19 +1,19 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { OrderActions } from '@core/store/order-store/actions/order.actions';
 import { selectOrders } from '@core/store/order-store/selectors/order.selectors';
 import { AsyncPipe, CurrencyPipe, DatePipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
 import { OrderService } from '@app/train/services/order.service';
-import { EMPTY, map, Observable, switchMap, tap } from 'rxjs';
+import { EMPTY, map, Observable, switchMap, filter } from 'rxjs';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiAlertService, TuiButton, TuiDialog, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';
 import { SortByStartTime } from '@app/train/pipes/sortByStartTime.pipe';
 import { IOrderViewData } from '@app/train/models/order.model';
-import { HttpClient } from '@angular/common/http';
 import { selectUserRole } from '@core/store/user-store/selectors/user.selectors';
 import { EUserRole } from '@app/train/models/user.model';
 import { ProfileService } from '@app/train/services/profile.service';
+import { AdminService } from '@app/admin/service/admin.service';
 
 @Component({
   selector: 'app-orders',
@@ -39,11 +39,11 @@ import { ProfileService } from '@app/train/services/profile.service';
 export class OrdersComponent implements OnInit, OnDestroy {
   private readonly store = inject(Store);
 
-  private readonly http = inject(HttpClient);
-
   protected readonly orderService = inject(OrderService);
 
   private readonly profileService = inject(ProfileService);
+
+  protected readonly adminService = inject(AdminService);
 
   private readonly alerts = inject(TuiAlertService);
 
@@ -66,8 +66,9 @@ export class OrdersComponent implements OnInit, OnDestroy {
     .subscribe();
 
   protected readonly orders$: Observable<IOrderViewData[]> = this.store.select(selectOrders).pipe(
+    filter((orders) => orders.length > 0),
     switchMap((orders) =>
-      this.orderService.getCarriageList().pipe(
+      this.adminService.getCarriageList().pipe(
         map((carriages) => {
           return orders.map((order) => {
             const startStationIndex = this.orderService.getStartStationIndex(order);

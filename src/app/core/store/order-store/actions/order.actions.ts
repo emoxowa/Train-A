@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { IOrder, IOrderCreateRequest } from '@app/train/models/order.model';
+import { IOrder } from '@app/train/models/order.model';
 
 export enum EOrderActions {
   LoadOrders = '[Order] Load Orders',
