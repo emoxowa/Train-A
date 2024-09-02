@@ -32,14 +32,20 @@
         <div class="carriages">
           <ng-container *ngFor="let carriage of routeDetails.carriages">
             <div *ngIf="!selectedCarriage || carriage === selectedCarriage" class="carriage-item">
-              <app-carriage [carriagesData]="getCarriageData(carriage)"></app-carriage>
+              <app-carriage
+                [carriagesData]="getCarriageData(carriage)"
+                (seatSelected)="onSeatSelected($event)"
+              ></app-carriage>
             </div>
           </ng-container>
         </div>
 
         <div class="booking">
-          <div class="booking-info"><span>Car 8, Seat 27</span><span>$1000</span></div>
-          <button tuiButton>Book seat</button>
+          <div class="booking-info">
+            <span>Car {{ selectedCarriage }}, Seat {{ selectedSeat }}</span
+            ><span>$1000</span>
+          </div>
+          <button tuiButton (click)="bookSeat()" [disabled]="selectedSeat === null">Book seat</button>
         </div>
       </div>
 

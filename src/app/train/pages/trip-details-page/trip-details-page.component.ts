@@ -16,6 +16,8 @@ import { LegendComponent } from '@app/train/components/legend/legend.component';
 import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
+import { OrderService } from '@app/train/services/order.service';
+import { IOrderCreateRequest } from '@app/train/models/order.model';
 import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
 import { RouteModalData } from '../../components/search-results/search-results.component';
 
@@ -35,6 +37,8 @@ export class TripDetailsPageComponent implements OnInit {
 
   private readonly trainService = inject(TrainService);
 
+  private readonly orderService = inject(OrderService);
+
   private readonly route = inject(ActivatedRoute);
 
   private store = inject(Store);
@@ -47,6 +51,8 @@ export class TripDetailsPageComponent implements OnInit {
 
   public selectedCarriage: string | null = null;
 
+  public selectedSeat: number | null = null;
+
   public carriagesList$: Observable<ICarriage[]> = this.store.select(selectCarriagesArr);
 
   ngOnInit(): void {
@@ -58,7 +64,7 @@ export class TripDetailsPageComponent implements OnInit {
 
       this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
         if (routeDetails && routeDetails.carriages.length > 0) {
-          const [firstCarriage] = routeDetails.carriages.sort();
+          const [firstCarriage] = routeDetails.carriages;
           this.selectedCarriage = firstCarriage;
         }
       });
@@ -99,6 +105,10 @@ export class TripDetailsPageComponent implements OnInit {
     this.selectedCarriage = carriage;
   }
 
+  onSeatSelected(seatIndex: number): void {
+    this.selectedSeat = seatIndex;
+  }
+
   getCarriageData(carriageCode: string): ICarriage {
     let carriageData: ICarriage | undefined;
     this.carriagesList$.pipe(take(1)).subscribe((carriages) => {
@@ -114,5 +124,23 @@ export class TripDetailsPageComponent implements OnInit {
         rightSeats: 0,
       }
     );
+  }
+
+  bookSeat(): void {
+    if (this.selectedSeat !== null && this.selectedCarriage && this.rideInformation$) {
+      this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
+        const orderRequest: IOrderCreateRequest = {
+          rideId: rideInfo.rideId,
+          seat: this.selectedSeat!,
+          stationStart: 1,
+          stationEnd: 3,
+        };
+        this.orderService.createOrder(orderRequest).subscribe((response) => {
+          console.log('Order created with ID:', response.id);
+        });
+      });
+    } else {
+      console.log('Please select a seat to book.');
+    }
   }
 }
