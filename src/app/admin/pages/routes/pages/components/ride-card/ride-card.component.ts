@@ -25,32 +25,34 @@ import { IStation } from '@app/admin/models/station-list.model';
           }
         </div>
         <div class="ride-card__time">
-          @for (time of ride.time; track time; let j = $index) {
+          <!-- @for (time of ride.time; track time; let j = $index) {
             @if (j === 0) {
               <div class="ride-card__time-element">Departure {{ time | date: 'dd.MM.yyyy HH:mm' }}</div>
             } @else {
               Arrival {{ time | date: 'dd.MM.yyyy HH:mm' }}
             }
-          }
+          } -->
           <div class="test-time">
             <h4>test time</h4>
-            <!-- @if(i < rideSchedule.length - 1 && rideInfo.schedule[idRide].segments[i] && rideInfo.schedule[idRide].segments[i + 1]){
-              <div>depart next segment {{rideInfo.schedule[idRide].segments[i + 1].time[0] | date: 'dd.MM.yyyy HH:mm'}}</div>
-            <div>arrive next segment {{rideInfo.schedule[idRide].segments[i + 1].time[1] | date: 'dd.MM.yyyy HH:mm'}}</div>
-            } -->
-            <!-- <div>segment {{rideInfo.schedule[i].segments[i] | json}}</div>
-            @if(i < rideSchedule.length - 1){
-              <div>next segment{{rideInfo.schedule[i].segments[i+1] | json}}</div>
-            } -->
-            <div>
+            @let segmentData = findSegmentByRiderId(idRide);
+            @if (segmentData) {
+              @if (i === 0) {
+                <div>depart {{ segmentData.segments[i].time[0] | date: 'dd.MM.yyyy HH:mm' }}</div>
+              } @else if (i === rideSchedule.length - 1) {
+                <div>arrive {{ segmentData.segments[i].time[1] | date: 'dd.MM.yyyy HH:mm' }}</div>
+              } @else {
+                <div>arrive {{ segmentData.segments[i - 1].time[1] | date: 'dd.MM.yyyy HH:mm' }}</div>
+                <div>depart {{ segmentData.segments[i].time[0] | date: 'dd.MM.yyyy HH:mm' }}</div>
+              }
+            }
+            <!-- <div>
               @if (i < rideSchedule.length - 1) {
-                @let segmentData = findSegmentByRiderId(idRide);
                 @if (segmentData) {
                   <div>depart {{ segmentData.segments[i + 1].time[0] | date: 'dd.MM.yyyy HH:mm' }}</div>
                   <div>arrive {{ segmentData.segments[i + 1].time[1] | date: 'dd.MM.yyyy HH:mm' }}</div>
                 }
               }
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="ride-card__carriage">
