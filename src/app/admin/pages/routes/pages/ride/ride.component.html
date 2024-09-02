@@ -9,7 +9,7 @@
 @let riderInfo = riderInfo$ | async;
 @let stationArr = stationArr$ | async;
 @let carriagesArr = carriagesArr$ | async;
-@if (riderInfo && stationArr && carriagesArr) {
+@if (riderInfo && stationArr && carriagesArr && riderInfo) {
   @for (rider of riderInfo.schedule; track rider.rideId) {
     @if (rider.rideId) {
       <app-ride-card
@@ -17,8 +17,9 @@
         [stationDataAllUpd]="stationArr"
         [cityRide]="riderInfo.path"
         [idRide]="rider.rideId"
-        [rideData]="rider.segments"
+        [rideSchedule]="rider.segments"
         [carriageRide]="riderInfo.carriages"
+        [rideInfo]="riderInfo"
       >
       </app-ride-card>
     }
