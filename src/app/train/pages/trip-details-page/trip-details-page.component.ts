@@ -19,13 +19,23 @@ import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
 import { OrderService } from '@app/train/services/order.service';
 import { IOrderCreateRequest } from '@app/train/models/order.model';
+import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
 import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
 import { RouteModalData } from '../../components/search-results/search-results.component';
 
 @Component({
   selector: 'app-trip-details-page',
   standalone: true,
-  imports: [CommonModule, TuiAppBar, TuiSegmented, TuiButton, UniqueCarriagesPipe, LegendComponent, CarriageComponent],
+  imports: [
+    CommonModule,
+    TuiAppBar,
+    TuiSegmented,
+    TuiButton,
+    UniqueCarriagesPipe,
+    LegendComponent,
+    CarriageComponent,
+    SumCarriagePricePipe,
+  ],
   templateUrl: './trip-details-page.component.html',
   styleUrls: ['./trip-details-page.component.scss'],
 })
@@ -58,6 +68,8 @@ export class TripDetailsPageComponent implements OnInit {
 
   public occupiedSeats: number[] = [];
 
+  public availableSeatsCount: number = 0;
+
   ngOnInit(): void {
     const rideId = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -73,6 +85,7 @@ export class TripDetailsPageComponent implements OnInit {
       });
 
       this.calculateOccupiedSeats();
+      this.calculateAvailableSeatsCount();
     }
   }
 
@@ -152,6 +165,49 @@ export class TripDetailsPageComponent implements OnInit {
     return this.selectedSeat!;
   }
 
+  calculateAvailableSeatsCount(): void {
+    this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
+      if (!routeDetails) return;
+
+      let totalSeats = 0;
+
+      routeDetails.carriages.forEach((carriageCode) => {
+        const carriageData = this.getCarriageData(carriageCode);
+        totalSeats += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
+      });
+
+      this.availableSeatsCount = totalSeats - this.occupiedSeats.length;
+    });
+  }
+
+  getAvailableSeatsCountForCarriage(carriageCode: string): number {
+    let totalAvailableSeats = 0;
+
+    this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
+      if (!routeDetails) return;
+
+      let seatOffset = 0;
+
+      routeDetails.carriages.forEach((code) => {
+        const carriageData = this.getCarriageData(code);
+        const carriageSeatsCount = carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
+
+        if (code === carriageCode) {
+          const occupiedSeatsForThisCarriage = this.occupiedSeats
+            .filter((seat) => seat > seatOffset && seat <= seatOffset + carriageSeatsCount)
+            .map((seat) => seat - seatOffset);
+
+          const availableSeatsForThisCarriage = carriageSeatsCount - occupiedSeatsForThisCarriage.length;
+          totalAvailableSeats += availableSeatsForThisCarriage;
+        }
+
+        seatOffset += carriageSeatsCount;
+      });
+    });
+
+    return totalAvailableSeats;
+  }
+
   bookSeat(): void {
     if (this.selectedSeat !== null && this.selectedCarriage && this.rideInformation$) {
       this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
@@ -204,5 +260,21 @@ export class TripDetailsPageComponent implements OnInit {
     });
 
     return occupiedSeatsForCarriage;
+  }
+
+  calculateTotalPriceForCarriageType(carriageType: string): number {
+    let totalPrice = 0;
+
+    this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
+      if (!rideInfo) return;
+
+      rideInfo.schedule.segments.forEach((segment) => {
+        if (segment.price[carriageType]) {
+          totalPrice += segment.price[carriageType];
+        }
+      });
+    });
+
+    return totalPrice;
   }
 }

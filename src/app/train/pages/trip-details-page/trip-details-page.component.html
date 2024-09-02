@@ -23,7 +23,8 @@
             *ngFor="let carriage of routeDetails.carriages | uniqueCarriages"
             (click)="onCarriageSelected(carriage)"
           >
-            {{ carriage }}
+            <p>{{ carriage }}: {{ getAvailableSeatsCountForCarriage(carriage) }}</p>
+            <p>{{ rideInfo.schedule | sumCarriagePrice: carriage | currency: 'USD' : 'symbol' }}</p>
           </button>
         </tui-segmented>
       </div>
@@ -47,15 +48,19 @@
 
         <div class="booking">
           <div class="booking-info">
-            <span>Car {{ selectedCarriage }}, Seat {{ selectedSeat }}</span
-            ><span>$1000</span>
+            <span *ngIf="selectedSeat">{{ selectedCarriage }}, Seat {{ selectedSeat }}</span
+            ><span *ngIf="selectedSeat">$1000</span>
           </div>
           <button tuiButton (click)="bookSeat()" [disabled]="selectedSeat === null">Book seat</button>
         </div>
       </div>
 
       <div class="legend-container">
-        <app-legend [reservedSeats]="5" [availableSeats]="10" [selectedSeats]="3"></app-legend>
+        <app-legend
+          [reservedSeats]="occupiedSeats.length"
+          [availableSeats]="availableSeatsCount"
+          [selectedSeats]="selectedSeat ? 1 : 0"
+        ></app-legend>
       </div>
     </div>
   </ng-container>
