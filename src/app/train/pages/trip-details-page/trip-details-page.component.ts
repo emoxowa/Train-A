@@ -4,7 +4,7 @@ import { IRoute } from '@app/train/models/route.model';
 import { TuiButton, TuiDialogService } from '@taiga-ui/core';
 import { TuiAppBar } from '@taiga-ui/layout';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, take } from 'rxjs';
 import { TuiSegmented } from '@taiga-ui/kit';
 import { TrainService } from '@app/train/services/train.service';
 import { ActivatedRoute } from '@angular/router';
@@ -42,12 +42,21 @@ export class TripDetailsPageComponent implements OnInit {
 
   public stationArr$ = this.store.select(selectStationIdAndCity);
 
+  public selectedCarriage: string | null = null;
+
   ngOnInit(): void {
     const rideId = Number(this.route.snapshot.paramMap.get('id'));
 
     if (rideId) {
       this.rideInformation$ = this.trainService.getRideInformation(rideId);
       this.routeDetails$ = this.trainService.routeDetails$;
+
+      this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
+        if (routeDetails && routeDetails.carriages.length > 0) {
+          const [firstCarriage] = routeDetails.carriages.sort();
+          this.selectedCarriage = firstCarriage;
+        }
+      });
     }
   }
 
@@ -79,5 +88,9 @@ export class TripDetailsPageComponent implements OnInit {
 
   protected goBack(): void {
     this.location.back();
+  }
+
+  onCarriageSelected(carriage: string): void {
+    this.selectedCarriage = carriage;
   }
 }

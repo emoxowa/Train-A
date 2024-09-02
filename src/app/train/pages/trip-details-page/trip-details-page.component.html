@@ -19,20 +19,34 @@
     <div class="content">
       <div>
         <tui-segmented>
-          <button *ngFor="let carriage of routeDetails.carriages | uniqueCarriages">{{ carriage }}</button>
+          <button
+            *ngFor="let carriage of routeDetails.carriages | uniqueCarriages"
+            (click)="onCarriageSelected(carriage)"
+          >
+            {{ carriage }}
+          </button>
         </tui-segmented>
       </div>
 
       <div class="carriage-info">
-        <div class="carriages">{{ routeDetails.carriages }}</div>
+        <div class="carriages">
+          <ng-container *ngFor="let carriage of routeDetails.carriages">
+            <div *ngIf="!selectedCarriage || carriage === selectedCarriage" class="carriage-item">
+              {{ carriage }}
+            </div>
+          </ng-container>
+        </div>
+
         <div class="booking"></div>
       </div>
 
-      <app-legend [reservedSeats]="5" [availableSeats]="10" [selectedSeats]="3"></app-legend>
+      <div class="legend-container">
+        <app-legend [reservedSeats]="5" [availableSeats]="10" [selectedSeats]="3"></app-legend>
+      </div>
     </div>
   </ng-container>
 </ng-container>
 
 <ng-template #notFound>
-  <p>Route not found.</p>
+  <p>Ride not found.</p>
 </ng-template>
