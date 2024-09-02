@@ -13,6 +13,8 @@ export class ProfileService {
 
   private readonly passwordUrl = `${this.profileUrl}/password`;
 
+  private readonly usersUrl = `/api/users`;
+
   public getUserInformation(): Observable<IUserResponse> {
     return this.http.get<IUserResponse>(this.profileUrl);
   }
@@ -23,5 +25,9 @@ export class ProfileService {
 
   public updatePassword(password: string) {
     return this.http.put(this.passwordUrl, { password });
+  }
+
+  public getUsers() {
+    return this.http.get<IUserResponse[]>(this.usersUrl);
   }
 }

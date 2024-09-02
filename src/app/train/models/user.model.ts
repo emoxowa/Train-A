@@ -7,6 +7,7 @@ export interface IUserResponse {
   name: string;
   email: string;
   role: EUserRole;
+  id?: number;
 }
 
 export interface IUser {

@@ -13,6 +13,7 @@ import { IOrderViewData } from '@app/train/models/order.model';
 import { HttpClient } from '@angular/common/http';
 import { selectUserRole } from '@core/store/user-store/selectors/user.selectors';
 import { EUserRole } from '@app/train/models/user.model';
+import { ProfileService } from '@app/train/services/profile.service';
 
 @Component({
   selector: 'app-orders',
@@ -42,11 +43,19 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   protected readonly orderService = inject(OrderService);
 
+  private readonly profileService = inject(ProfileService);
+
   private readonly alerts = inject(TuiAlertService);
 
   protected currentOrderId: number = -1;
 
+  protected currentUserId: number | undefined;
+
   protected isCancelDialogOpen = false;
+
+  protected readonly currentUserName$ = this.profileService
+    .getUsers()
+    .pipe(map((users) => users.find((user) => user.id === (this.currentUserId || 1))?.name));
 
   protected readonly isManager$ = this.store
     .select(selectUserRole)
@@ -78,6 +87,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
               seatNumber: order.seatId + 1,
               price,
               status: order.status,
+              userId: order.userId,
             };
           });
         })
@@ -87,36 +97,20 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store.dispatch(OrderActions.loadOrders());
-
-    // TODO: remove
-    this.http.get('/api/route/1').subscribe((route) => console.log(route));
   }
 
   ngOnDestroy() {
     this.alertsSubscription.unsubscribe();
   }
 
-  showCancelDialog(orderId: number) {
+  showCancelDialog(orderId: number, userId: number | undefined) {
     this.currentOrderId = orderId;
+    this.currentUserId = userId;
     this.isCancelDialogOpen = true;
   }
 
   onCancelConfirm() {
-    this.store.dispatch(OrderActions.cancelOrder({ orderId: this.currentOrderId as number }));
+    this.store.dispatch(OrderActions.cancelOrder({ orderId: this.currentOrderId }));
     this.isCancelDialogOpen = false;
-  }
-
-  // TODO: remove it later
-  protected createOrder() {
-    this.store.dispatch(
-      OrderActions.createOrder({
-        orderRequest: {
-          rideId: 1,
-          seat: 1,
-          stationStart: 83,
-          stationEnd: 40,
-        },
-      })
-    );
   }
 }

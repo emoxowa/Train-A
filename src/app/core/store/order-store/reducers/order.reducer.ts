@@ -11,12 +11,6 @@ export const orderReducer = createReducer(
       orders,
     };
   }),
-  on(OrderActions.createOrderSuccess, (state, { order }): IOrderState => {
-    return {
-      ...state,
-      orders: [...state.orders, { ...order }],
-    };
-  }),
   on(OrderActions.cancelOrderSuccess, (state, { orderId }): IOrderState => {
     return {
       ...state,

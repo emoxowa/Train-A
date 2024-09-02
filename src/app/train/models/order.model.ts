@@ -5,13 +5,13 @@ export interface IOrder {
   rideId: number;
   routeId: number;
   seatId: number;
-  userId: number;
   status: EOrderStatus;
   path: number[];
   carriages: string[];
   schedule: { segments: IOrderScheduleSegment[] };
   stationStart: number;
   stationEnd: number;
+  userId?: number;
 }
 
 export type IOrderCreateRequest = {
@@ -36,6 +36,7 @@ export interface IOrderViewData {
   seatNumber: number;
   price: number;
   status: EOrderStatus;
+  userId?: number;
 }
 
 export const enum EOrderStatus {

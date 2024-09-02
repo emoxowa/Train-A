@@ -3,15 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { IOrder, IOrderCreateResponse, IOrderCreateRequest } from '@app/train/models/order.model';
 import { Subject } from 'rxjs';
 import { IAlert } from '@app/train/models/alert.model';
-
-// TODO: remove later
-interface ICarriage {
-  code?: string;
-  name: string;
-  rows: number;
-  leftSeats: number;
-  rightSeats: number;
-}
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 
 @Injectable({
   providedIn: 'root',
@@ -85,10 +77,5 @@ export class OrderService {
     }
 
     return carriageNumber;
-  }
-
-  // TODO: delete later
-  getCarriageList() {
-    return this.http.get<ICarriage[]>('/api/carriage');
   }
 }
