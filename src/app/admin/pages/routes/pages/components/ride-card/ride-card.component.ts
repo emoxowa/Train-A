@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
-import { IRideInfo, IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
+import { IPriceInfo, IRideInfo, IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
 import { IStation } from '@app/admin/models/station-list.model';
 
 @Component({
@@ -13,6 +13,7 @@ import { IStation } from '@app/admin/models/station-list.model';
       <div>Ride {{ idRide }}</div>
     }
     @for (ride of rideSchedule; track ride; let i = $index) {
+      @let segmentData = findSegmentByRiderId(idRide);
       <div class="ride-card__container">
         <div class="ride-card__city">
           <div class="ride-card__city-element">
@@ -33,8 +34,7 @@ import { IStation } from '@app/admin/models/station-list.model';
             }
           } -->
           <div class="test-time">
-            <h4>test time</h4>
-            @let segmentData = findSegmentByRiderId(idRide);
+            <h4>time</h4>
             @if (segmentData) {
               @if (i === 0) {
                 <div>depart {{ segmentData.segments[i].time[0] | date: 'dd.MM.yyyy HH:mm' }}</div>
@@ -45,23 +45,15 @@ import { IStation } from '@app/admin/models/station-list.model';
                 <div>depart {{ segmentData.segments[i].time[0] | date: 'dd.MM.yyyy HH:mm' }}</div>
               }
             }
-            <!-- <div>
-              @if (i < rideSchedule.length - 1) {
-                @if (segmentData) {
-                  <div>depart {{ segmentData.segments[i + 1].time[0] | date: 'dd.MM.yyyy HH:mm' }}</div>
-                  <div>arrive {{ segmentData.segments[i + 1].time[1] | date: 'dd.MM.yyyy HH:mm' }}</div>
-                }
-              }
-            </div> -->
           </div>
         </div>
         <div class="ride-card__carriage">
-          <!-- @for (carriage of carriageRide; track trackCarriageByIndex) {
-            <div class="ride-card__carriage-element">
-              {{ getCarriageByCode(carriage) }}
-            </div>
-          } -->
-          <div>test carriages</div>
+          @if (segmentData) {
+            @let priceCarriage = getcarriagePriceArray(segmentData.segments[i].price);
+            @for (carriage of priceCarriage; track carriage[0]) {
+              <div>{{ getCarriageByCode(carriage[0]) }} {{ carriage[1] }}</div>
+            }
+          }
         </div>
       </div>
     }
@@ -94,6 +86,11 @@ export class RideCardComponent {
   // console.log('all station ride', this.stationDataAllUpd)
   // console.log('all carriages ride', this.carriagesDataAllUpd)
   // }
+
+  // eslint-disable-next-line class-methods-use-this
+  getcarriagePriceArray(carriagePriceObj: IPriceInfo) {
+    return Object.entries(carriagePriceObj);
+  }
 
   getCityById(cityId: number): string {
     if (this.stationDataAllUpd) {
