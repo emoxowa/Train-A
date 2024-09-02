@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, INJECTOR, OnInit } from '@angular/core';
 import { IRoute } from '@app/train/models/route.model';
@@ -105,8 +106,8 @@ export class TripDetailsPageComponent implements OnInit {
     this.selectedCarriage = carriage;
   }
 
-  onSeatSelected(seatIndex: number): void {
-    this.selectedSeat = seatIndex;
+  onSeatSelected(seatIndex: number, carriageIndex: number): void {
+    this.selectedSeat = this.calculateAbsoluteSeatIndex(carriageIndex, seatIndex);
   }
 
   getCarriageData(carriageCode: string): ICarriage {
@@ -124,6 +125,27 @@ export class TripDetailsPageComponent implements OnInit {
         rightSeats: 0,
       }
     );
+  }
+
+  calculateAbsoluteSeatIndex(carriageIndex: number, seatIndex: number): number {
+    let seatOffset = 0;
+
+    this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
+      if (!routeDetails) {
+        return;
+      }
+
+      for (let i = 0; i < carriageIndex; i += 1) {
+        const carriageData = this.getCarriageData(routeDetails.carriages[i]);
+        seatOffset += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
+      }
+
+      const absoluteSeatIndex = seatOffset + seatIndex;
+      console.log(`Absolute Seat Index: ${absoluteSeatIndex}`);
+      this.selectedSeat = absoluteSeatIndex;
+    });
+
+    return this.selectedSeat!;
   }
 
   bookSeat(): void {

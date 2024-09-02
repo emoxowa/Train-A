@@ -30,11 +30,15 @@
 
       <div class="carriage-info">
         <div class="carriages">
-          <ng-container *ngFor="let carriage of routeDetails.carriages">
-            <div *ngIf="!selectedCarriage || carriage === selectedCarriage" class="carriage-item">
+          <ng-container *ngFor="let carriage of routeDetails.carriages; let carriageIndex = index">
+            <div
+              *ngIf="!selectedCarriage || carriage === selectedCarriage"
+              class="carriage-item"
+              [attr.data-carriage-index]="carriageIndex"
+            >
               <app-carriage
                 [carriagesData]="getCarriageData(carriage)"
-                (seatSelected)="onSeatSelected($event)"
+                (seatSelected)="onSeatSelected($event, carriageIndex)"
               ></app-carriage>
             </div>
           </ng-container>
