@@ -39,6 +39,7 @@
               <app-carriage
                 [carriagesData]="getCarriageData(carriage)"
                 (seatSelected)="onSeatSelected($event, carriageIndex)"
+                [occupiedSeats]="getOccupiedSeatsForCarriage(carriageIndex)"
               ></app-carriage>
             </div>
           </ng-container>

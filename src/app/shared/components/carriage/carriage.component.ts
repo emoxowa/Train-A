@@ -12,7 +12,9 @@ import { TuiIcon } from '@taiga-ui/core';
     <div class="carriage">
       <div class="carriage__header">
         <span>{{ carriagesData.name }}</span>
-        <div class="carriage__seats">{{ (leftSeats.length + rightSeats.length) * rows.length }} seats</div>
+        <div class="carriage__seats">
+          {{ (leftSeats.length + rightSeats.length) * rows.length - occupiedSeats.length }} seats
+        </div>
       </div>
       <div class="carriage__container">
         <div class="carriage__enter">
@@ -27,7 +29,13 @@ import { TuiIcon } from '@taiga-ui/core';
             <div class="carriage__left-seats">
               <div
                 class="carriage__seat"
-                [ngClass]="{ 'selected-seat': calculateSeatIndex(rowIndex, seatIndexLeft, 'L') === selectedSeatIndex }"
+                [ngClass]="{
+                  'selected-seat': calculateSeatIndex(rowIndex, seatIndexLeft, 'L') === selectedSeatIndex,
+                  'occupied-seat': isOccupiedSeat(calculateSeatIndex(rowIndex, seatIndexLeft, 'L')),
+                  'available-seat':
+                    !isOccupiedSeat(calculateSeatIndex(rowIndex, seatIndexLeft, 'L')) &&
+                    calculateSeatIndex(rowIndex, seatIndexLeft, 'L') !== selectedSeatIndex,
+                }"
                 *ngFor="let seat of leftSeats; let seatIndexLeft = index"
                 (click)="onSeatClick(calculateSeatIndex(rowIndex, seatIndexLeft, 'L'))"
               >
@@ -38,7 +46,13 @@ import { TuiIcon } from '@taiga-ui/core';
             <div class="carriage__right-seats">
               <div
                 class="carriage__seat"
-                [ngClass]="{ 'selected-seat': calculateSeatIndex(rowIndex, seatIndexRight, 'R') === selectedSeatIndex }"
+                [ngClass]="{
+                  'selected-seat': calculateSeatIndex(rowIndex, seatIndexRight, 'R') === selectedSeatIndex,
+                  'occupied-seat': isOccupiedSeat(calculateSeatIndex(rowIndex, seatIndexRight, 'R')),
+                  'available-seat':
+                    !isOccupiedSeat(calculateSeatIndex(rowIndex, seatIndexRight, 'R')) &&
+                    calculateSeatIndex(rowIndex, seatIndexRight, 'R') !== selectedSeatIndex,
+                }"
                 *ngFor="let seat of rightSeats; let seatIndexRight = index"
                 (click)="onSeatClick(calculateSeatIndex(rowIndex, seatIndexRight, 'R'))"
               >
@@ -56,6 +70,8 @@ import { TuiIcon } from '@taiga-ui/core';
 })
 export class CarriageComponent implements OnChanges {
   @Input({ required: true }) carriagesData!: ICarriage;
+
+  @Input() occupiedSeats: number[] = [];
 
   @Output() seatSelected = new EventEmitter<number>();
 
@@ -96,8 +112,15 @@ export class CarriageComponent implements OnChanges {
   }
 
   onSeatClick(seatIndex: number): void {
-    console.log(`Clicked on seat ${seatIndex}`);
+    if (this.isOccupiedSeat(seatIndex)) {
+      console.log(`Seat ${seatIndex} is occupied`);
+      return;
+    }
     this.selectedSeatIndex = seatIndex;
     this.seatSelected.emit(seatIndex);
+  }
+
+  isOccupiedSeat(seatIndex: number): boolean {
+    return this.occupiedSeats.includes(seatIndex);
   }
 }

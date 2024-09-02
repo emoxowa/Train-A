@@ -56,6 +56,8 @@ export class TripDetailsPageComponent implements OnInit {
 
   public carriagesList$: Observable<ICarriage[]> = this.store.select(selectCarriagesArr);
 
+  public occupiedSeats: number[] = [];
+
   ngOnInit(): void {
     const rideId = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -69,6 +71,8 @@ export class TripDetailsPageComponent implements OnInit {
           this.selectedCarriage = firstCarriage;
         }
       });
+
+      this.calculateOccupiedSeats();
     }
   }
 
@@ -164,5 +168,41 @@ export class TripDetailsPageComponent implements OnInit {
     } else {
       console.log('Please select a seat to book.');
     }
+  }
+
+  calculateOccupiedSeats(): void {
+    this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
+      if (!rideInfo) return;
+
+      rideInfo.schedule.segments.forEach((segment) => {
+        this.occupiedSeats.push(...segment.occupiedSeats);
+      });
+
+      this.occupiedSeats = Array.from(new Set(this.occupiedSeats));
+    });
+  }
+
+  getOccupiedSeatsForCarriage(carriageIndex: number): number[] {
+    let seatOffset = 0;
+    let carriageSeatsCount = 0;
+    let occupiedSeatsForCarriage: number[] = [];
+
+    this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
+      if (!routeDetails) return;
+
+      for (let i = 0; i < carriageIndex; i += 1) {
+        const carriageData = this.getCarriageData(routeDetails.carriages[i]);
+        seatOffset += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
+      }
+
+      const carriageData = this.getCarriageData(routeDetails.carriages[carriageIndex]);
+      carriageSeatsCount = carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
+
+      occupiedSeatsForCarriage = this.occupiedSeats
+        .filter((seat) => seat > seatOffset && seat <= seatOffset + carriageSeatsCount)
+        .map((seat) => seat - seatOffset);
+    });
+
+    return occupiedSeatsForCarriage;
   }
 }
