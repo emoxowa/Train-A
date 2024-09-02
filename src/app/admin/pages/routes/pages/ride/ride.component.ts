@@ -27,9 +27,9 @@ export class RideComponent implements OnInit {
 
   private route: ActivatedRoute = inject(ActivatedRoute);
 
-  private routeId: number = Number(this.route.snapshot.params['id']);
-
   private store = inject(Store);
+
+  public routeId: number = Number(this.route.snapshot.params['id']);
 
   public stationArr$ = this.store.select(selectStationIdAndCity);
 

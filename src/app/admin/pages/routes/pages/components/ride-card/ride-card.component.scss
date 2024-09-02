@@ -10,5 +10,9 @@
   &__time,
   &__carriage {
     width: 30vw;
+    display: flex;
   }
+}
+.ride-card__carriage-input {
+  width: 50px;
 }
