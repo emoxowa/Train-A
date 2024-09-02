@@ -32,7 +32,7 @@
         <div class="carriages">
           <ng-container *ngFor="let carriage of routeDetails.carriages">
             <div *ngIf="!selectedCarriage || carriage === selectedCarriage" class="carriage-item">
-              {{ carriage }}
+              <app-carriage [carriagesData]="getCarriageData(carriage)"></app-carriage>
             </div>
           </ng-container>
         </div>

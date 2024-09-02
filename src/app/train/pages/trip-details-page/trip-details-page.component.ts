@@ -13,13 +13,16 @@ import { Store } from '@ngrx/store';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
 import { LegendComponent } from '@app/train/components/legend/legend.component';
+import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
+import { CarriageComponent } from '@app/shared/components/carriage/carriage.component';
 import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
 import { RouteModalData } from '../../components/search-results/search-results.component';
 
 @Component({
   selector: 'app-trip-details-page',
   standalone: true,
-  imports: [CommonModule, TuiAppBar, TuiSegmented, TuiButton, UniqueCarriagesPipe, LegendComponent],
+  imports: [CommonModule, TuiAppBar, TuiSegmented, TuiButton, UniqueCarriagesPipe, LegendComponent, CarriageComponent],
   templateUrl: './trip-details-page.component.html',
   styleUrls: ['./trip-details-page.component.scss'],
 })
@@ -43,6 +46,8 @@ export class TripDetailsPageComponent implements OnInit {
   public stationArr$ = this.store.select(selectStationIdAndCity);
 
   public selectedCarriage: string | null = null;
+
+  public carriagesList$: Observable<ICarriage[]> = this.store.select(selectCarriagesArr);
 
   ngOnInit(): void {
     const rideId = Number(this.route.snapshot.paramMap.get('id'));
@@ -92,5 +97,22 @@ export class TripDetailsPageComponent implements OnInit {
 
   onCarriageSelected(carriage: string): void {
     this.selectedCarriage = carriage;
+  }
+
+  getCarriageData(carriageCode: string): ICarriage {
+    let carriageData: ICarriage | undefined;
+    this.carriagesList$.pipe(take(1)).subscribe((carriages) => {
+      carriageData = carriages.find((carriage) => carriage.code === carriageCode);
+    });
+
+    return (
+      carriageData || {
+        code: 'unknown',
+        name: 'Unknown Carriage',
+        rows: 0,
+        leftSeats: 0,
+        rightSeats: 0,
+      }
+    );
   }
 }
