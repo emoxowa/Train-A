@@ -33,7 +33,7 @@
 
   &__container {
     display: grid;
-    grid-template-columns: 100px 1fr 50px;
+    grid-template-columns: 70px 1fr 40px;
     border: 1px solid gray;
     padding: 10px;
     border-radius: 10px;
@@ -87,15 +87,20 @@
     align-items: center;
     justify-content: center;
 
-    height: 25px;
-    width: 25px;
-    padding: 5px;
+    height: 20px;
+    width: 20px;
+    padding: 3px;
 
     font-size: 10px;
     text-align: center;
 
     background-color: #e0e0e0;
     border-radius: 3px;
+
+    &.selected-seat {
+      background-color: #ffb84d;
+      color: #fff;
+    }
 
     &:hover {
       background-color: rgb(0 0 0 / 30%);

@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import { CommonModule } from '@angular/common';
-import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { TuiIcon } from '@taiga-ui/core';
 
@@ -20,11 +21,13 @@ import { TuiIcon } from '@taiga-ui/core';
           <tui-icon icon="@tui.fa.solid.trash" style="align-self: flex-end;"></tui-icon>
           <tui-icon icon="@tui.fa.solid.restroom" style="align-self: flex-end;"></tui-icon>
         </div>
+
         <div class="carriage__body">
           <div class="carriage__row" *ngFor="let row of rows; let rowIndex = index">
             <div class="carriage__left-seats">
               <div
                 class="carriage__seat"
+                [ngClass]="{ 'selected-seat': calculateSeatIndex(rowIndex, seatIndexLeft, 'L') === selectedSeatIndex }"
                 *ngFor="let seat of leftSeats; let seatIndexLeft = index"
                 (click)="onSeatClick(calculateSeatIndex(rowIndex, seatIndexLeft, 'L'))"
               >
@@ -35,6 +38,7 @@ import { TuiIcon } from '@taiga-ui/core';
             <div class="carriage__right-seats">
               <div
                 class="carriage__seat"
+                [ngClass]="{ 'selected-seat': calculateSeatIndex(rowIndex, seatIndexRight, 'R') === selectedSeatIndex }"
                 *ngFor="let seat of rightSeats; let seatIndexRight = index"
                 (click)="onSeatClick(calculateSeatIndex(rowIndex, seatIndexRight, 'R'))"
               >
@@ -43,6 +47,7 @@ import { TuiIcon } from '@taiga-ui/core';
             </div>
           </div>
         </div>
+
         <div class="carriage__restroom"><tui-icon icon="@tui.fa.solid.restroom"></tui-icon></div>
       </div>
     </div>
@@ -52,11 +57,15 @@ import { TuiIcon } from '@taiga-ui/core';
 export class CarriageComponent implements OnChanges {
   @Input({ required: true }) carriagesData!: ICarriage;
 
+  @Output() seatSelected = new EventEmitter<number>();
+
   rows: number[] = [];
 
   leftSeats: number[] = [];
 
   rightSeats: number[] = [];
+
+  selectedSeatIndex: number | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['carriagesData'] && this.carriagesData) {
@@ -88,5 +97,7 @@ export class CarriageComponent implements OnChanges {
 
   onSeatClick(seatIndex: number): void {
     console.log(`Clicked on seat ${seatIndex}`);
+    this.selectedSeatIndex = seatIndex;
+    this.seatSelected.emit(seatIndex);
   }
 }
