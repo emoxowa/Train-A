@@ -1,52 +1,81 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, inject, INJECTOR } from '@angular/core';
-// import { ActivatedRoute } from '@angular/router';
-// import { IRoute } from '@app/train/models/route.model';
-// import { TrainService, TripDetails } from '@app/train/services/train.service';
+import { Component, inject, INJECTOR, OnInit } from '@angular/core';
+import { IRoute } from '@app/train/models/route.model';
 import { TuiButton, TuiDialogService } from '@taiga-ui/core';
 import { TuiAppBar } from '@taiga-ui/layout';
-// import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-// import { map, Observable } from 'rxjs';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { combineLatest, map, Observable } from 'rxjs';
 import { TuiSegmented } from '@taiga-ui/kit';
-// import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
-// import { RouteModalData } from '../../components/search-results/search-results.component';
+import { TrainService } from '@app/train/services/train.service';
+import { ActivatedRoute } from '@angular/router';
+import { IRideInformation } from '@app/train/models/ride-information.model';
+import { Store } from '@ngrx/store';
+import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
+import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
+import { LegendComponent } from '@app/train/components/legend/legend.component';
+import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
+import { RouteModalData } from '../../components/search-results/search-results.component';
 
 @Component({
   selector: 'app-trip-details-page',
   standalone: true,
-  imports: [CommonModule, TuiAppBar, TuiSegmented, TuiButton],
+  imports: [CommonModule, TuiAppBar, TuiSegmented, TuiButton, UniqueCarriagesPipe, LegendComponent],
   templateUrl: './trip-details-page.component.html',
   styleUrls: ['./trip-details-page.component.scss'],
 })
-export class TripDetailsPageComponent {
-  // protected trip$: Observable<TripDetails | undefined>;
-
+export class TripDetailsPageComponent implements OnInit {
   private readonly dialogs = inject(TuiDialogService);
 
   private readonly injector = inject(INJECTOR);
 
   private readonly location = inject(Location);
 
-  // protected showDialog(route: IRoute, event: Event): void {
-  //   event.stopPropagation();
+  private readonly trainService = inject(TrainService);
 
-  //   this.trip$.subscribe((trip) => {
-  //     if (trip) {
-  //       this.dialogs
-  //         .open(new PolymorpheusComponent(RouteModalComponent, this.injector), {
-  //           size: 'm',
-  //           closeable: true,
-  //           dismissible: true,
-  //           data: {
-  //             route,
-  //             from: trip.from,
-  //             to: trip.to,
-  //           } as RouteModalData,
-  //         })
-  //         .subscribe();
-  //     }
-  //   });
-  // }
+  private readonly route = inject(ActivatedRoute);
+
+  private store = inject(Store);
+
+  protected rideInformation$!: Observable<IRideInformation>;
+
+  protected routeDetails$!: Observable<IRoute | null>;
+
+  public stationArr$ = this.store.select(selectStationIdAndCity);
+
+  ngOnInit(): void {
+    const rideId = Number(this.route.snapshot.paramMap.get('id'));
+
+    if (rideId) {
+      this.rideInformation$ = this.trainService.getRideInformation(rideId);
+      this.routeDetails$ = this.trainService.routeDetails$;
+    }
+  }
+
+  protected showDialog(event: Event): void {
+    event.stopPropagation();
+
+    combineLatest([this.rideInformation$, this.routeDetails$]).subscribe(([rideInfo, routeDetails]) => {
+      if (rideInfo && routeDetails) {
+        this.dialogs
+          .open(new PolymorpheusComponent(RouteModalComponent, this.injector), {
+            size: 'm',
+            closeable: true,
+            dismissible: true,
+            data: {
+              schedule: rideInfo.schedule,
+              from: routeDetails.path[0],
+              to: routeDetails.path.at(-1),
+              path: rideInfo.path,
+            } as RouteModalData,
+          })
+          .subscribe();
+      }
+    });
+  }
+
+  protected getCityName(stationId: number): Observable<string | undefined> {
+    return this.stationArr$.pipe(map((stations) => stations.find((station) => station.id === stationId)?.city));
+  }
 
   protected goBack(): void {
     this.location.back();

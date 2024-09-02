@@ -6,6 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class UniqueCarriagesPipe implements PipeTransform {
   transform(carriages: string[]): string[] {
-    return Array.from(new Set(carriages));
+    return Array.from(new Set(carriages)).sort();
   }
 }

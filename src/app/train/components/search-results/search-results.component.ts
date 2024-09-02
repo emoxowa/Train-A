@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, INJECTOR } from '@angular/core';
-import { IStationResponse, ISearchRoutesResponse } from '@app/train/models/search-response.model';
+import { ISearchRoutesResponse } from '@app/train/models/search-response.model';
 import { TuiButton, TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
@@ -18,8 +18,8 @@ import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-availa
 
 export interface RouteModalData {
   schedule: ISchedule;
-  from: IStationResponse;
-  to: IStationResponse;
+  from: number;
+  to: number;
   path: IRoute['path'];
 }
 
@@ -74,8 +74,8 @@ export class SearchResultsComponent {
               dismissible: true,
               data: {
                 schedule,
-                from: searchResponse.from,
-                to: searchResponse.to,
+                from: searchResponse.from.stationId,
+                to: searchResponse.to.stationId,
                 path: route.path,
               } as RouteModalData,
             })
@@ -85,7 +85,8 @@ export class SearchResultsComponent {
       .subscribe();
   }
 
-  protected onCardClick(rideId: number): void {
+  protected onCardClick(rideId: number, route: IRoute): void {
+    this.trainService.setRouteDetails(route);
     this.searchResponse$
       .pipe(
         map((searchResponse) => {
