@@ -3,9 +3,11 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { OrderActions } from '@core/store/order-store/actions/order.actions';
 import { OrderService } from '@app/train/services/order.service';
-import { IOrder } from '@app/train/models/order.model';
+import { EOrderStatus, IOrder } from '@app/train/models/order.model';
 import { Store } from '@ngrx/store';
 import { selectUserRole } from '@core/store/user-store/selectors/user.selectors';
+import { TuiAlertService } from '@taiga-ui/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,8 @@ export class OrderEffectService {
   private readonly orderService = inject(OrderService);
 
   private readonly store = inject(Store);
+
+  private readonly alerts = inject(TuiAlertService);
 
   private createOrder$ = createEffect(() =>
     this.actions$.pipe(
@@ -31,7 +35,7 @@ export class OrderEffectService {
                 rideId: orderRequest.rideId,
                 stationStart: orderRequest.stationStart,
                 stationEnd: orderRequest.stationEnd,
-                status: 'active',
+                status: EOrderStatus.active,
                 routeId: 1,
                 userId: 1,
                 path: [35, 83, 103, 84, 69, 76, 8, 90, 60, 40],
@@ -168,8 +172,17 @@ export class OrderEffectService {
       ofType(OrderActions.cancelOrder),
       switchMap(({ orderId }) =>
         this.orderService.cancelActiveOrder(orderId).pipe(
-          map(() => OrderActions.cancelOrderSuccess({ orderId })),
-          catchError(() => of(OrderActions.cancelOrderFailure()))
+          map(() => {
+            this.orderService.alertMessage$.next({ message: 'Order canceled', type: 'success' });
+            return OrderActions.cancelOrderSuccess({ orderId });
+          }),
+          catchError((error) => {
+            this.orderService.alertMessage$.next({
+              message: `Failed to cancel the order. Error: ${error.error.message}`,
+              type: 'error',
+            });
+            return of(OrderActions.cancelOrderFailure());
+          })
         )
       )
     )

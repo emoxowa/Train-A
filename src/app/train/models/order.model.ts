@@ -6,7 +6,7 @@ export interface IOrder {
   routeId: number;
   seatId: number;
   userId: number;
-  status: 'active' | 'completed' | 'rejected' | 'canceled';
+  status: EOrderStatus;
   path: number[];
   carriages: string[];
   schedule: { segments: IOrderScheduleSegment[] };
@@ -23,6 +23,26 @@ export type IOrderCreateRequest = {
 
 export interface IOrderCreateResponse {
   id: number;
+}
+
+export interface IOrderViewData {
+  id: number;
+  stationStart: number;
+  timeStart: string;
+  stationEnd: number;
+  timeEnd: string;
+  carriageType: string;
+  carriageNumber: number;
+  seatNumber: number;
+  price: number;
+  status: EOrderStatus;
+}
+
+export const enum EOrderStatus {
+  active = 'active',
+  completed = 'completed',
+  rejected = 'rejected',
+  canceled = 'canceled',
 }
 
 type IOrderScheduleSegment = Pick<ISegment, 'time' | 'price'>;

@@ -1,13 +1,34 @@
 <button (click)="createOrder()">create order for test</button>
-<div *ngFor="let order of orders$ | async; index as index">
-  <div>Start trip station: {{ order.stationStart }}</div>
-  <div>Start trip time: {{ order.timeStart | date: 'MMMM dd hh:mm' }}</div>
-  <div>End trip station: {{ order.stationEnd }}</div>
-  <div>End trip time: {{ order.timeEnd | date: 'MMMM dd hh:mm' }}</div>
-  <div>Trip duration: {{ order.duration }}</div>
-  <div>Carriage type: {{ order.carriageType }}</div>
-  <div>Car number: {{ order.carriageNumber }}</div>
-  <div>Seat number: {{ order.seatNumber }}</div>
-  <div>Price: {{ order.price }}</div>
-  <button *ngIf="order.status === 'active'" (click)="onCancel(order.id)">Cancel</button>
+<h1 class="title" tuiTitle="l">My orders</h1>
+<div class="orders">
+  <div
+    *ngFor="let order of (orders$ | async) || [] | sortByStartTime; index as index"
+    tuiCardLarge="compact"
+    tuiSurface="elevated"
+  >
+    <div><span class="orders-card__subtitle">Start trip station:</span> {{ order.stationStart }}</div>
+    <div><span class="orders-card__subtitle">Start trip time:</span> {{ order.timeStart | date: 'MMMM dd hh:mm' }}</div>
+    <div><span class="orders-card__subtitle">End trip station:</span> {{ order.stationEnd }}</div>
+    <div><span class="orders-card__subtitle">End trip time:</span> {{ order.timeEnd | date: 'MMMM dd hh:mm' }}</div>
+    <div>
+      <span class="orders-card__subtitle">Trip duration:</span> {{ order.timeStart | formatDuration: order.timeEnd }}
+    </div>
+    <div><span class="orders-card__subtitle">Carriage type:</span> {{ order.carriageType }}</div>
+    <div><span class="orders-card__subtitle">Car number:</span> {{ order.carriageNumber }}</div>
+    <div><span class="orders-card__subtitle">Seat number:</span> {{ order.seatNumber }}</div>
+    <div><span class="orders-card__subtitle">Price:</span> {{ order.price | currency }}</div>
+    <button tuiButton size="s" *ngIf="order.status === 'active'" (click)="showCancelDialog(order.id)">Cancel</button>
+  </div>
 </div>
+
+<ng-template [(tuiDialog)]="isCancelDialogOpen">
+  <div class="confirm-dialog">
+    <h2 tuiTitle="m">Are you sure you want to cancel the order?</h2>
+    <div *ngIf="isManager$ | async">
+      <div>
+        <span>Order ID: {{ this.currentOrderId }}</span>
+      </div>
+    </div>
+    <button tuiButton (click)="onCancelConfirm()">Confirm</button>
+  </div>
+</ng-template>

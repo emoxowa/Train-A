@@ -1,6 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { IOrder, IOrderCreateResponse, IOrderCreateRequest } from '@app/train/models/order.model';
+import { Subject } from 'rxjs';
+import { IAlert } from '@app/train/models/alert.model';
 
 // TODO: remove later
 interface ICarriage {
@@ -16,6 +18,8 @@ interface ICarriage {
 })
 export class OrderService {
   private readonly http = inject(HttpClient);
+
+  public readonly alertMessage$ = new Subject<IAlert>();
 
   getOrders(isManager: boolean = false) {
     let params: HttpParams | undefined;
@@ -59,14 +63,6 @@ export class OrderService {
     return order.schedule.segments
       .slice(this.getStartStationIndex(order), this.getEndStationIndex(order) + 1)
       .reduce((acc, value) => acc + value.price[carriageType], 0);
-  }
-
-  getTripDuration(order: IOrder) {
-    const time = new Date(this.getTime(order, 'end')).getTime() - new Date(this.getTime(order, 'start')).getTime();
-    const hours = Math.floor(time / 1000 / 60 / 60);
-    const minutes = Math.ceil((time - hours * 60 * 60 * 1000) / 1000 / 60);
-
-    return `${hours}h ${minutes}m`;
   }
 
   // eslint-disable-next-line class-methods-use-this
