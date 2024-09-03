@@ -16,6 +16,7 @@ import { OrderEffectService } from '@core/store/order-store/effects/order-effect
 import { routes } from './app.routes';
 import { CarriageEffectService } from './core/store/admin-store/effects/carriage-effect.service';
 import { environment } from '../environments/environment';
+import { RoutesEffectService } from './core/store/admin-store/effects/routes-effect.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     NG_EVENT_PLUGINS,
     provideStore(appReducer, { initialState: initialAppState }),
-    provideEffects([StationEffectService, UserEffectService, OrderEffectService, CarriageEffectService]),
+    provideEffects([StationEffectService, UserEffectService, OrderEffectService, CarriageEffectService, RoutesEffectService]),
     provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),
     importProvidersFrom(
       StoreDevtoolsModule.instrument({
