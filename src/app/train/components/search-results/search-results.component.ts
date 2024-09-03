@@ -87,6 +87,7 @@ export class SearchResultsComponent {
   protected onCardClick(rideId: number): void {
     this.searchResponse$
       .pipe(
+        take(1),
         map((searchResponse) => {
           if (!searchResponse) {
             return;
