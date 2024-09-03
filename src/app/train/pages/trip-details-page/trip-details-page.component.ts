@@ -3,13 +3,12 @@ import { Component, inject, INJECTOR, OnInit } from '@angular/core';
 import { TuiButton, TuiDialogService } from '@taiga-ui/core';
 import { TuiAppBar } from '@taiga-ui/layout';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { catchError, first, map, Observable, of, shareReplay, take } from 'rxjs';
+import { catchError, first, Observable, of, shareReplay, take } from 'rxjs';
 import { TuiSegmented } from '@taiga-ui/kit';
 import { TrainService } from '@app/train/services/train.service';
 import { ActivatedRoute } from '@angular/router';
 import { IRideInformation } from '@app/train/models/ride-information.model';
 import { Store } from '@ngrx/store';
-import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
 import { LegendComponent } from '@app/train/components/legend/legend.component';
 import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
@@ -58,8 +57,6 @@ export class TripDetailsPageComponent implements OnInit {
 
   protected rideInformation$!: Observable<IRideInformation | null>;
 
-  public stationArr$ = this.store.select(selectStationIdAndCity);
-
   public selectedCarriage: string | null = null;
 
   public selectedOrderCarriage: string | null = null;
@@ -79,6 +76,10 @@ export class TripDetailsPageComponent implements OnInit {
   public showNoRidesAvailable: boolean = false;
 
   ngOnInit(): void {
+    this.initializeRideData();
+  }
+
+  private initializeRideData(): void {
     const rideId = Number(this.route.snapshot.paramMap.get('id'));
     this.stationStart = Number(this.route.snapshot.queryParamMap.get('from'));
     this.stationEnd = Number(this.route.snapshot.queryParamMap.get('to'));
@@ -94,10 +95,10 @@ export class TripDetailsPageComponent implements OnInit {
 
       this.rideInformation$.pipe(first()).subscribe((ride) => {
         if (ride && ride.carriages.length > 0) {
-          const [firstCarriage] = ride.carriages;
-          this.selectedCarriage = firstCarriage;
-          this.calculateOccupiedSeats();
-          this.calculateAvailableSeatsCount();
+          const [carriage] = ride.carriages;
+          this.selectedCarriage = carriage;
+          this.calculateOccupiedSeats(ride);
+          this.calculateAvailableSeatsCount(ride);
         }
       });
     }
@@ -105,28 +106,21 @@ export class TripDetailsPageComponent implements OnInit {
 
   protected showDialog(event: Event): void {
     event.stopPropagation();
-
-    this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
-      if (rideInfo) {
-        this.dialogs
-          .open(new PolymorpheusComponent(RouteModalComponent, this.injector), {
-            size: 'm',
-            closeable: true,
-            dismissible: true,
-            data: {
-              schedule: rideInfo.schedule,
-              from: this.stationStart,
-              to: this.stationEnd,
-              path: rideInfo.path,
-            } as RouteModalData,
-          })
-          .subscribe();
-      }
+    this.withRideInfo((rideInfo) => {
+      this.dialogs
+        .open(new PolymorpheusComponent(RouteModalComponent, this.injector), {
+          size: 'm',
+          closeable: true,
+          dismissible: true,
+          data: {
+            schedule: rideInfo.schedule,
+            from: this.stationStart,
+            to: this.stationEnd,
+            path: rideInfo.path,
+          } as RouteModalData,
+        })
+        .subscribe();
     });
-  }
-
-  protected getCityName(stationId: number): Observable<string | undefined> {
-    return this.stationArr$.pipe(map((stations) => stations.find((station) => station.id === stationId)?.city));
   }
 
   protected goBack(): void {
@@ -139,10 +133,15 @@ export class TripDetailsPageComponent implements OnInit {
 
   onSeatSelected(seatIndex: number, carriageIndex: number): void {
     this.selectedSeat = this.calculateAbsoluteSeatIndex(carriageIndex, seatIndex);
+    this.withRideInfo((rideInfo) => {
+      this.selectedOrderCarriage = rideInfo.carriages[carriageIndex] || null;
+    });
+  }
 
+  private withRideInfo(callback: (rideInfo: IRideInformation) => void): void {
     this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
       if (rideInfo) {
-        this.selectedOrderCarriage = rideInfo.carriages[carriageIndex] || null;
+        callback(rideInfo);
       }
     });
   }
@@ -152,61 +151,37 @@ export class TripDetailsPageComponent implements OnInit {
     this.carriagesList$.pipe(take(1)).subscribe((carriages) => {
       carriageData = carriages.find((carriage) => carriage.code === carriageCode);
     });
-
-    return (
-      carriageData || {
-        code: 'unknown',
-        name: 'Unknown Carriage',
-        rows: 0,
-        leftSeats: 0,
-        rightSeats: 0,
-      }
-    );
+    return carriageData || { code: 'unknown', name: 'Unknown Carriage', rows: 0, leftSeats: 0, rightSeats: 0 };
   }
 
-  calculateAbsoluteSeatIndex(carriageIndex: number, seatIndex: number): number {
+  private calculateAbsoluteSeatIndex(carriageIndex: number, seatIndex: number): number {
     let seatOffset = 0;
-
-    this.rideInformation$.pipe(take(1)).subscribe((ride) => {
-      if (!ride) {
-        return;
-      }
-
+    this.withRideInfo((ride) => {
       for (let i = 0; i < carriageIndex; i += 1) {
         const carriageData = this.getCarriageData(ride.carriages[i]);
         seatOffset += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
       }
-
-      const absoluteSeatIndex = seatOffset + seatIndex;
-      this.selectedSeat = absoluteSeatIndex;
+      this.selectedSeat = seatOffset + seatIndex;
     });
-
     return this.selectedSeat!;
   }
 
-  calculateAvailableSeatsCount(): void {
-    this.rideInformation$.pipe(take(1)).subscribe((ride) => {
-      if (!ride) return;
+  private calculateAvailableSeatsCount(ride: IRideInformation): void {
+    this.availableSeatsCount = this.calculateTotalSeats(ride) - this.occupiedSeats.length;
+  }
 
-      let totalSeats = 0;
-
-      ride.carriages.forEach((carriageCode) => {
-        const carriageData = this.getCarriageData(carriageCode);
-        totalSeats += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
-      });
-
-      this.availableSeatsCount = totalSeats - this.occupiedSeats.length;
-    });
+  private calculateTotalSeats(ride: IRideInformation): number {
+    return ride.carriages.reduce((totalSeats, carriageCode) => {
+      const carriageData = this.getCarriageData(carriageCode);
+      return totalSeats + carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
+    }, 0);
   }
 
   getAvailableSeatsCountForCarriage(carriageCode: string): number {
     let totalAvailableSeats = 0;
+    let seatOffset = 0;
 
-    this.rideInformation$.pipe(take(1)).subscribe((ride) => {
-      if (!ride) return;
-
-      let seatOffset = 0;
-
+    this.withRideInfo((ride) => {
       ride.carriages.forEach((code) => {
         const carriageData = this.getCarriageData(code);
         const carriageSeatsCount = carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
@@ -216,8 +191,7 @@ export class TripDetailsPageComponent implements OnInit {
             .filter((seat) => seat > seatOffset && seat <= seatOffset + carriageSeatsCount)
             .map((seat) => seat - seatOffset);
 
-          const availableSeatsForThisCarriage = carriageSeatsCount - occupiedSeatsForThisCarriage.length;
-          totalAvailableSeats += availableSeatsForThisCarriage;
+          totalAvailableSeats += carriageSeatsCount - occupiedSeatsForThisCarriage.length;
         }
 
         seatOffset += carriageSeatsCount;
@@ -229,9 +203,9 @@ export class TripDetailsPageComponent implements OnInit {
 
   bookSeat(): void {
     if (this.selectedSeat !== null && this.selectedCarriage && this.rideInformation$) {
-      this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
+      this.withRideInfo((rideInfo) => {
         const orderRequest: IOrderCreateRequest = {
-          rideId: rideInfo!.rideId,
+          rideId: rideInfo.rideId,
           seat: this.selectedSeat!,
           stationStart: this.stationStart,
           stationEnd: this.stationEnd,
@@ -241,16 +215,11 @@ export class TripDetailsPageComponent implements OnInit {
     }
   }
 
-  calculateOccupiedSeats(): void {
-    this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
-      if (!rideInfo) return;
-
-      rideInfo.schedule.segments.forEach((segment) => {
-        this.occupiedSeats.push(...segment.occupiedSeats);
-      });
-
-      this.occupiedSeats = Array.from(new Set(this.occupiedSeats));
-    });
+  private calculateOccupiedSeats(rideInfo: IRideInformation): void {
+    this.occupiedSeats = rideInfo.schedule.segments.reduce((seats, segment) => {
+      return [...seats, ...segment.occupiedSeats];
+    }, [] as number[]);
+    this.occupiedSeats = Array.from(new Set(this.occupiedSeats));
   }
 
   getOccupiedSeatsForCarriage(carriageIndex: number): number[] {
@@ -258,9 +227,7 @@ export class TripDetailsPageComponent implements OnInit {
     let carriageSeatsCount = 0;
     let occupiedSeatsForCarriage: number[] = [];
 
-    this.rideInformation$.pipe(take(1)).subscribe((ride) => {
-      if (!ride) return;
-
+    this.withRideInfo((ride) => {
       for (let i = 0; i < carriageIndex; i += 1) {
         const carriageData = this.getCarriageData(ride.carriages[i]);
         seatOffset += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
@@ -275,21 +242,5 @@ export class TripDetailsPageComponent implements OnInit {
     });
 
     return occupiedSeatsForCarriage;
-  }
-
-  calculateTotalPriceForCarriageType(carriageType: string): number {
-    let totalPrice = 0;
-
-    this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
-      if (!rideInfo) return;
-
-      rideInfo.schedule.segments.forEach((segment) => {
-        if (segment.price[carriageType]) {
-          totalPrice += segment.price[carriageType];
-        }
-      });
-    });
-
-    return totalPrice;
   }
 }

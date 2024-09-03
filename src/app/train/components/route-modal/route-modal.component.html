@@ -19,12 +19,12 @@
       <ng-container *ngIf="i > 0">
         <td class="tui-table__td tui-table__td_first">
           <div class="tui-text_body-s-2">
-            {{ getSegmentArrivalTime(i) | date: 'shortTime' }}
+            {{ i | segmentArrivalTime: data.schedule.segments | date: 'shortTime' }}
           </div>
           <div class="tui-text_body-s-2">{{ segment.time[0] | date: 'shortTime' }}</div>
         </td>
         <td class="tui-table__td">{{ data.path[i] | cityName | async }}</td>
-        <td class="tui-table__td tui-table__td_last">{{ calculateStopDuration(segment, i) }}</td>
+        <td class="tui-table__td tui-table__td_last">{{ segment | stopDuration: i : data.schedule.segments }}</td>
       </ng-container>
     </tr>
 
