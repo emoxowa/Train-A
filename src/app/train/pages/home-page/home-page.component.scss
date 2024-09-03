@@ -4,8 +4,10 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin: 0 auto;
+  width: 100vw;
   max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 @include desktop {
@@ -28,6 +30,7 @@
 
 @include small-mobile {
   :host {
-    max-width: calc(100vw - 40px);
+    max-width: 300px;
+    padding: 0 10px;
   }
 }

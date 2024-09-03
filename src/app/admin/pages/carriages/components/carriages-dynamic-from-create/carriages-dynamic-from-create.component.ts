@@ -83,6 +83,7 @@ export class CarriagesDynamicFromCreateComponent implements OnInit {
     const isInStorage = this.carriagesList.some((carriage) => carriage.name === createNewCarriage.name);
 
     if (isInStorage) {
+      // eslint-disable-next-line no-alert
       alert('Carriage with this name already exists.');
       return;
     }

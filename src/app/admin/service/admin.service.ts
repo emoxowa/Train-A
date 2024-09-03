@@ -5,6 +5,7 @@ import { ICreateStationResponse, IStation } from '../models/station-list.model';
 import { ICreateStation } from '../models/create-station.model';
 import { IAdminToken, ICreateAdmin } from '../models/create-admin';
 import { ICarriage } from '../models/create-new-carriage-type.model';
+import { IRoutes } from '../models/routes.model';
 
 @Injectable({
   providedIn: 'root',
@@ -48,6 +49,34 @@ export class AdminService {
 
   updateCarriageType(carriageType: string, updateCarriageType: ICarriage): Observable<Omit<ICarriage, 'code'>> {
     return this.http.put<Omit<ICarriage, 'code'>>(`/api/carriage/${carriageType}`, updateCarriageType, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    });
+  }
+
+  getRoutes(): Observable<IRoutes[]> {
+    return this.http.get<IRoutes[]>('/api/route');
+  }
+
+  createRoute(newRoute: IRoutes): Observable<IRoutes> {
+    return this.http.post<IRoutes>('/api/route', newRoute, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    });
+  }
+
+  updRoutes(IdRoute: number, updRoute: IRoutes): Observable<IRoutes> {
+    return this.http.put<IRoutes>(`/api/route/${IdRoute}`, updRoute, {
+      headers: {
+        Authorization: `Bearer ${this.token$.value}`,
+      },
+    });
+  }
+
+  deleteRoute(IdRoute: number): Observable<void> {
+    return this.http.delete<void>(`/api/route/${IdRoute}`, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
       },
