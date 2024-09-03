@@ -27,9 +27,9 @@ export interface IOrderCreateResponse {
 
 export interface IOrderViewData {
   id: number;
-  stationStart: number;
+  stationStart: string;
   timeStart: string;
-  stationEnd: number;
+  stationEnd: string;
   timeEnd: string;
   carriageType: string;
   carriageNumber: number;

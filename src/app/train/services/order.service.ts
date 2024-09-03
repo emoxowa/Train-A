@@ -32,16 +32,6 @@ export class OrderService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getTime(order: IOrder, type: 'start' | 'end') {
-    const stationId = type === 'start' ? order.stationStart : order.stationEnd;
-    const stationIndex = order.path.findIndex((value) => value === stationId);
-    const segmentIndex = type === 'start' ? stationIndex : stationIndex - 1;
-    const timeIndex = type === 'start' ? 0 : 1;
-
-    return order.schedule.segments[segmentIndex].time[timeIndex];
-  }
-
-  // eslint-disable-next-line class-methods-use-this
   getStartStationIndex(order: IOrder) {
     return order.path.findIndex((value) => value === order.stationStart);
   }
@@ -61,21 +51,23 @@ export class OrderService {
   getCarriageIndex(seatId: number, currentRideCarriages: string[], carriages: ICarriage[]) {
     const carriagesSeats: Record<string, number> = {};
     carriages.forEach((carriage) => {
-      carriagesSeats[carriage.name] = carriage.leftSeats + carriage.rightSeats;
+      carriagesSeats[carriage.name] = (carriage.leftSeats + carriage.rightSeats) * carriage.rows;
     });
 
     let currentTotalSeats = 0;
     let carriageNumber: number = -1;
+    let seatNumber = seatId;
 
     for (let index = 0; index < currentRideCarriages.length; index += 1) {
       const carriageType = currentRideCarriages[index];
       currentTotalSeats += carriagesSeats[carriageType];
-      if (currentTotalSeats > seatId) {
+      if (currentTotalSeats >= seatId) {
         carriageNumber = index;
         break;
       }
+      seatNumber -= carriagesSeats[carriageType];
     }
 
-    return carriageNumber;
+    return [carriageNumber, seatNumber];
   }
 }
