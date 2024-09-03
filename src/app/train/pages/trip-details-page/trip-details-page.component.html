@@ -45,9 +45,9 @@
 
         <div class="booking" *ngIf="selectedSeat">
           <div class="booking-info">
-            <span *ngIf="selectedSeat">{{ selectedCarriage }}, Seat {{ selectedSeat }}</span
+            <span *ngIf="selectedSeat">{{ selectedOrderCarriage }}, Seat {{ selectedSeat }}</span
             ><span *ngIf="selectedSeat">{{
-              rideInfo.schedule | sumCarriagePrice: selectedCarriage | currency: 'USD' : 'symbol'
+              rideInfo.schedule | sumCarriagePrice: selectedOrderCarriage | currency: 'USD' : 'symbol'
             }}</span>
           </div>
           <button tuiButton (click)="bookSeat()" [disabled]="selectedSeat === null">Book seat</button>

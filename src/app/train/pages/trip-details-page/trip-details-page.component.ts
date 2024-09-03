@@ -62,6 +62,8 @@ export class TripDetailsPageComponent implements OnInit {
 
   public selectedCarriage: string | null = null;
 
+  public selectedOrderCarriage: string | null = null;
+
   public selectedSeat: number | null = null;
 
   public carriagesList$: Observable<ICarriage[]> = this.store.select(selectCarriagesArr);
@@ -137,6 +139,12 @@ export class TripDetailsPageComponent implements OnInit {
 
   onSeatSelected(seatIndex: number, carriageIndex: number): void {
     this.selectedSeat = this.calculateAbsoluteSeatIndex(carriageIndex, seatIndex);
+
+    this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
+      if (rideInfo) {
+        this.selectedOrderCarriage = rideInfo.carriages[carriageIndex] || null;
+      }
+    });
   }
 
   getCarriageData(carriageCode: string): ICarriage {
