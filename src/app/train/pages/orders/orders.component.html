@@ -1,4 +1,4 @@
-<h1 class="title" tuiTitle="l">My orders</h1>
+<h1 class="title" tuiTitle="l">{{ (isManager$ | async) ? 'Orders' : 'My orders' }}</h1>
 <div class="orders">
   <div
     *ngFor="let order of (orders$ | async) || [] | sortByStartTime; index as index"
