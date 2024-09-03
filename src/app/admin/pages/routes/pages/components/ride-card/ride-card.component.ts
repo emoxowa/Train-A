@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, inject, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { IPriceInfo, IRideInfo, IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
 import { IStation } from '@app/admin/models/station-list.model';
@@ -10,7 +10,7 @@ import { IStation } from '@app/admin/models/station-list.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-  @if (rideSchedule) {
+    @if (rideSchedule) {
       <div>Ride {{ idRide }}</div>
     }
     @for (ride of rideSchedule; track ride; let i = $index) {
@@ -27,32 +27,32 @@ import { IStation } from '@app/admin/models/station-list.model';
           }
         </div>
         <div class="ride-card__time">
-            @if(isEditingTime[i]){
-              @if (segmentData) {
+          @if (isEditingTime[i]) {
+            @if (segmentData) {
               @if (i === 0) {
                 <input
-                    #timeInputDepart
-                    class="ride-card__time-input" 
-                    type="datetime-local"
-                    [attr.data-index]="i" 
-                    [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
-                  />
+                  #timeInputDepart
+                  class="ride-card__time-input"
+                  type="datetime-local"
+                  [attr.data-index]="i"
+                  [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
+                />
               } @else if (i === rideSchedule.length - 1) {
                 <input
-                    #timeInputArrive
-                    class="ride-card__time-input" 
-                    type="datetime-local"
-                    [attr.data-index]="i"
-                    [value]="formatToDateTimeLocal(segmentData.segments[i].time[1])"
-                  />
+                  #timeInputArrive
+                  class="ride-card__time-input"
+                  type="datetime-local"
+                  [attr.data-index]="i"
+                  [value]="formatToDateTimeLocal(segmentData.segments[i].time[1])"
+                />
               } @else {
                 <div class="ride-card__time-input_arrive">
                   <span>arrive</span>
                   <input
                     #timeInputArrive
-                    class="ride-card__time-input" 
+                    class="ride-card__time-input"
                     type="datetime-local"
-                    [attr.data-index]="i" 
+                    [attr.data-index]="i"
                     [value]="formatToDateTimeLocal(segmentData.segments[i - 1].time[1])"
                   />
                 </div>
@@ -60,41 +60,41 @@ import { IStation } from '@app/admin/models/station-list.model';
                   <span>depart </span>
                   <input
                     #timeInputDepart
-                    class="ride-card__time-input" 
+                    class="ride-card__time-input"
                     type="datetime-local"
-                    [attr.data-index]="i" 
+                    [attr.data-index]="i"
                     [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
                   />
                 </div>
               }
             }
-            } @else if (!isEditingTime[i]) {
-              @if(segmentData){
-                @if (i === 0) {
+          } @else if (!isEditingTime[i]) {
+            @if (segmentData) {
+              @if (i === 0) {
                 <input
-                    #timeInputDepart
-                    class="ride-card__time-input" 
-                    type="datetime-local"
-                    [attr.data-index]="i" 
-                    [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
-                    [disabled]="true"
-                  />
-                } @else if (i === rideSchedule.length - 1) {
+                  #timeInputDepart
+                  class="ride-card__time-input"
+                  type="datetime-local"
+                  [attr.data-index]="i"
+                  [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
+                  [disabled]="true"
+                />
+              } @else if (i === rideSchedule.length - 1) {
                 <input
-                    #timeInputArrive
-                    class="ride-card__time-input" 
-                    type="datetime-local"
-                    [attr.data-index]="i" 
-                    [value]="formatToDateTimeLocal(segmentData.segments[i].time[1])"
-                    [disabled]="true"
-                  />
-                } @else {
+                  #timeInputArrive
+                  class="ride-card__time-input"
+                  type="datetime-local"
+                  [attr.data-index]="i"
+                  [value]="formatToDateTimeLocal(segmentData.segments[i].time[1])"
+                  [disabled]="true"
+                />
+              } @else {
                 <div class="ride-card__time-input_arrive">
                   <span>arrive</span>
                   <input
                     #timeInputArrive
-                    class="ride-card__time-input" 
-                    type="datetime-local" 
+                    class="ride-card__time-input"
+                    type="datetime-local"
                     [attr.data-index]="i"
                     [value]="formatToDateTimeLocal(segmentData.segments[i - 1].time[1])"
                     [disabled]="true"
@@ -104,58 +104,58 @@ import { IStation } from '@app/admin/models/station-list.model';
                   <span>depart </span>
                   <input
                     #timeInputDepart
-                    class="ride-card__time-input" 
+                    class="ride-card__time-input"
                     type="datetime-local"
-                    [attr.data-index]="i" 
+                    [attr.data-index]="i"
                     [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
                     [disabled]="true"
                   />
                 </div>
               }
-              }
+            }
           }
-          @if(!isEditingTime[i]){
-              <button (click)="toggleEditTime(i)" class="ride-card__edit-carriage">Edit</button>
-            } @else if (isEditingTime[i]) {
-              <button (click)="toggleEditTime(i)" (click)="saveRide(i)">Save</button>
-            } 
+          @if (!isEditingTime[i]) {
+            <button (click)="toggleEditTime(i)" class="ride-card__edit-carriage">Edit</button>
+          } @else if (isEditingTime[i]) {
+            <button (click)="toggleEditTime(i)" (click)="saveRide(i)">Save</button>
+          }
         </div>
         <div class="ride-card__carriage">
           @if (segmentData) {
             @let priceCarriage = getCarriagePriceArray(segmentData.segments[i].price);
-            @for (carriage of priceCarriage; track carriage[0]; let j = $index;) {
-              @if(!isEditingPrice[i]){
+            @for (carriage of priceCarriage; track carriage[0]; let j = $index) {
+              @if (!isEditingPrice[i]) {
                 <div class="ride-card__cariage-element">
-                <div class="ride-card__cariage-element">
-                  <span #carriageName [attr.data-index]="i">{{carriage[0]}}</span>
-                  <input
+                  <div class="ride-card__cariage-element">
+                    <span #carriageName [attr.data-index]="i">{{ carriage[0] }}</span>
+                    <input
                       #carriageInput
-                      class="ride-card__carriage-input" 
+                      class="ride-card__carriage-input"
                       type="number"
                       [attr.data-index]="i"
                       [value]="carriage[1]"
                       [disabled]="true"
                     />
-                </div> 
-              </div>
+                  </div>
+                </div>
               } @else if (isEditingPrice[i]) {
                 <div class="ride-card__cariage-element">
-                  <span #carriageName [attr.data-index]="i">{{carriage[0]}}</span>
+                  <span #carriageName [attr.data-index]="i">{{ carriage[0] }}</span>
                   <input
-                      #carriageInput
-                      class="ride-card__carriage-input" 
-                      type="number"
-                      [attr.data-index]="i" 
-                      [value]="carriage[1]"
-                    />
-                </div> 
-              }             
+                    #carriageInput
+                    class="ride-card__carriage-input"
+                    type="number"
+                    [attr.data-index]="i"
+                    [value]="carriage[1]"
+                  />
+                </div>
+              }
             }
-            @if(!isEditingPrice[i]){
+            @if (!isEditingPrice[i]) {
               <button (click)="toggleEditPrice(i)" class="ride-card__edit-carriage">Edit</button>
             } @else if (isEditingPrice[i]) {
               <button (click)="toggleEditPrice(i)" (click)="saveRide(i)">Save</button>
-            }    
+            }
           }
         </div>
       </div>
@@ -163,11 +163,10 @@ import { IStation } from '@app/admin/models/station-list.model';
   `,
   styleUrl: './ride-card.component.scss',
 })
-export class RideCardComponent implements OnInit{
-
+export class RideCardComponent implements OnInit {
   @Input({ required: true }) rideInfo!: IRideInfo;
 
-  @Input({ required:true }) routeId!: number;
+  @Input({ required: true }) routeId!: number;
 
   @Input({ required: true }) rideSchedule!: ISegmentInfo[];
 
@@ -186,14 +185,16 @@ export class RideCardComponent implements OnInit{
   isEditingTime: boolean[] = [];
 
   @ViewChildren('timeInputDepart') timeInputsDepart!: QueryList<ElementRef<HTMLInputElement>>;
+
   @ViewChildren('timeInputArrive') timeInputsArrive!: QueryList<ElementRef<HTMLInputElement>>;
+
   @ViewChildren('carriageInput') carriageInputs!: QueryList<ElementRef<HTMLInputElement>>;
+
   @ViewChildren('carriageName') carriageName!: QueryList<ElementRef<HTMLInputElement>>;
 
   ngOnInit(): void {
-  console.log('routeId', this.routeId)  
-  this.isEditingPrice = new Array(this.rideSchedule.length).fill(false);
-  this.isEditingTime = new Array(this.rideSchedule.length).fill(false);
+    this.isEditingPrice = new Array(this.rideSchedule.length).fill(false);
+    this.isEditingTime = new Array(this.rideSchedule.length).fill(false);
   }
 
   toggleEditPrice(index: number): void {
@@ -207,13 +208,13 @@ export class RideCardComponent implements OnInit{
   // eslint-disable-next-line class-methods-use-this
   formatToDateTimeLocal(isoString: string): string {
     const date = new Date(isoString);
-    
+
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
@@ -248,39 +249,43 @@ export class RideCardComponent implements OnInit{
     const departInputs = this.getValuesByIndex(this.timeInputsDepart, index, 'data-index');
     const arriveInputs = this.getValuesByIndex(this.timeInputsArrive, index, 'data-index');
     const prevDepartInputs = this.getValuesByIndex(this.timeInputsDepart, index - 1, 'data-index');
-    const prevArriveInputs = this.getValuesByIndex(this.timeInputsArrive, index - 1, 'data-index');
     const nextDepartInputs = this.getValuesByIndex(this.timeInputsDepart, index + 1, 'data-index');
-    const nextArriveInputs = this.getValuesByIndex(this.timeInputsArrive, index + 1, 'data-index');
-    
+
     const carriagesInputs = this.getValuesByIndex(this.carriageInputs, index, 'data-index');
     const prevCarriagesInputs = this.getValuesByIndex(this.carriageInputs, index - 1, 'data-index');
     const carriageNameTextContent = this.getTextContentByIndex(this.carriageName, index, 'data-index');
-  
+
     const prevTime = [...arriveInputs, ...prevDepartInputs];
     const time = [...departInputs, ...nextDepartInputs];
-  
+
     const prevCarriagesPrice = this.mapCarriagePrices(carriageNameTextContent, prevCarriagesInputs);
     const carriagesPrice = this.mapCarriagePrices(carriageNameTextContent, carriagesInputs);
-  
-    console.log('prev time', prevTime)
-    console.log('time', time)
+
+    // eslint-disable-next-line no-console
+    console.log('prev time', prevTime);
+    // eslint-disable-next-line no-console
+    console.log('time', time);
+    // eslint-disable-next-line no-console
     console.log('prev price', prevCarriagesPrice);
+    // eslint-disable-next-line no-console
     console.log('carriage price', carriagesPrice);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private mapCarriagePrices(carriageNames: (string | null)[], carriageInputs: string[]): IPriceInfo {
     const validCarriageNames = carriageNames.filter((name): name is string => name !== null);
-    
+
     const carriagePrices: IPriceInfo = {};
-    
+
     for (let i = 0; i < validCarriageNames.length; i += 1) {
       const key = validCarriageNames[i];
       carriagePrices[key] = Number(carriageInputs[i]);
     }
-  
+
     return carriagePrices;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private getValuesByIndex(
     elements: QueryList<ElementRef<HTMLInputElement>>,
     index: number,
@@ -291,6 +296,7 @@ export class RideCardComponent implements OnInit{
       .map((ref) => ref.nativeElement.value);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private getTextContentByIndex(
     elements: QueryList<ElementRef<HTMLElement>>,
     index: number,
@@ -300,5 +306,4 @@ export class RideCardComponent implements OnInit{
       .filter((ref) => parseInt(ref.nativeElement.getAttribute(attribute) || '', 10) === index)
       .map((ref) => ref.nativeElement.textContent);
   }
-    
 }

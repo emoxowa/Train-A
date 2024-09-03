@@ -70,7 +70,7 @@ export class RideComponent implements OnInit {
         {
           time: ['2024-08-08T22:19:57.708Z', '2024-08-12T03:29:57.708Z'],
           price: {
-            carriage1:1500
+            carriage1: 1500,
           },
         },
         // {
