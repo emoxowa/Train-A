@@ -14,16 +14,30 @@ export class FilterRoutesPipe implements PipeTransform {
     }
 
     const startOfDay = selectedDate.toUtcNativeDate();
-
     const endOfDay = new Date(startOfDay);
     endOfDay.setHours(23, 59, 59, 999);
 
     const filteredRoutes: IRoute[] = response.routes
       .map((route) => {
         const filteredSchedule = route.schedule.filter((schedule) => {
-          const scheduleTime = new Date(schedule.segments[0].time[0]);
+          const startStationIndex = route.path.findIndex((stationId) => stationId === response.from.stationId);
+
+          if (startStationIndex === -1) {
+            return false;
+          }
+
+          const startSegment = schedule.segments.find((segment, index) => {
+            return route.path[index] === response.from.stationId;
+          });
+
+          if (!startSegment) {
+            return false;
+          }
+
+          const scheduleTime = new Date(startSegment.time[0]);
           return scheduleTime >= startOfDay && scheduleTime <= endOfDay;
         });
+
         return { ...route, schedule: filteredSchedule };
       })
       .filter((route) => route.schedule.length > 0);
