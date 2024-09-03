@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+
+  margin: 2rem 1rem;
+}
+
+.title {
+  text-align: center;
+}
+
+.orders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.orders-card {
+  max-width: 100%;
+
+  &__subtitle {
+    font-weight: bold;
+  }
+
+  &__button {
+    align-self: flex-start;
+  }
+}
+
+.confirm-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+}

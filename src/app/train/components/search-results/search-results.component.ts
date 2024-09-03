@@ -1,21 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, INJECTOR } from '@angular/core';
-import { IStationResponse, ISearchRoutesResponse } from '@app/train/models/search-response.model';
+import { ISearchRoutesResponse } from '@app/train/models/search-response.model';
 import { TuiButton, TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';
-import { IRoute } from '@app/train/models/route.model';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { RouteModalComponent } from '@app/train/components/route-modal/route-modal.component';
+import { RouteModalComponent, RouteModalData } from '@app/train/components/route-modal/route-modal.component';
 import { Router } from '@angular/router';
 import { TrainService } from '@app/train/services/train.service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
+import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
+import { ISchedule } from '@app/train/models/schedule.model';
+import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
+import { IRoute } from '@app/train/models/route.model';
+import { FilterRoutesPipe } from '@app/train/pipes/filter-routes.pipe';
+import { TuiDay } from '@taiga-ui/cdk';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
+import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
+import { Store } from '@ngrx/store';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
-
-export interface RouteModalData {
-  route: IRoute;
-  from: IStationResponse;
-  to: IStationResponse;
-}
 
 @Component({
   selector: 'app-search-results',
@@ -28,6 +30,9 @@ export interface RouteModalData {
     FormatDurationPipe,
     RouteModalComponent,
     TuiLoader,
+    UniqueCarriagesPipe,
+    SumCarriagePricePipe,
+    FilterRoutesPipe,
   ],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
@@ -37,16 +42,21 @@ export class SearchResultsComponent {
 
   private readonly injector = inject(INJECTOR);
 
+  private router = inject(Router);
+
+  private dialogs = inject(TuiDialogService);
+
+  private store = inject(Store);
+
   protected searchResponse$: Observable<ISearchRoutesResponse | null> = this.trainService.searchResponse$;
+
+  public carriagesList$: Observable<ICarriage[]> = this.store.select(selectCarriagesArr);
 
   protected loading$: Observable<boolean> = this.trainService.loading$;
 
-  constructor(
-    private router: Router,
-    private dialogs: TuiDialogService
-  ) {}
+  protected selectedDate$: Observable<TuiDay | null> = this.trainService.selectedDate$;
 
-  protected showDialog(route: IRoute, event: Event): void {
+  protected showDialog(schedule: ISchedule, event: Event, route: IRoute): void {
     event.stopPropagation();
 
     this.searchResponse$
@@ -62,9 +72,10 @@ export class SearchResultsComponent {
               closeable: true,
               dismissible: true,
               data: {
-                route,
-                from: searchResponse.from,
-                to: searchResponse.to,
+                schedule,
+                from: searchResponse.from.stationId,
+                to: searchResponse.to.stationId,
+                path: route.path,
               } as RouteModalData,
             })
             .subscribe();
@@ -73,9 +84,10 @@ export class SearchResultsComponent {
       .subscribe();
   }
 
-  protected onCardClick(route: IRoute): void {
+  protected onCardClick(rideId: number): void {
     this.searchResponse$
       .pipe(
+        take(1),
         map((searchResponse) => {
           if (!searchResponse) {
             return;
@@ -84,7 +96,7 @@ export class SearchResultsComponent {
           const fromStationId = searchResponse.from.stationId;
           const toStationId = searchResponse.to.stationId;
 
-          this.router.navigate(['/trip', route.schedule[0].rideId], {
+          this.router.navigate(['/trip', rideId], {
             queryParams: {
               from: fromStationId,
               to: toStationId,
@@ -93,5 +105,35 @@ export class SearchResultsComponent {
         })
       )
       .subscribe();
+  }
+
+  getAvailableSeatsCountForCarriage(carriageType: string, route: IRoute): number {
+    let totalAvailableSeats = 0;
+
+    const occupiedSeats = new Set<number>();
+    route.schedule.forEach((schedule) => {
+      schedule.segments.forEach((segment) => {
+        segment.occupiedSeats.forEach((seat) => occupiedSeats.add(seat));
+      });
+    });
+
+    let seatOffset = 0;
+    this.carriagesList$.pipe(take(1)).subscribe((carriages) => {
+      route.carriages.forEach((carriageCode) => {
+        const carriage = carriages.find((c) => c.code === carriageCode);
+        if (carriage && carriage.code === carriageType) {
+          const carriageSeatsCount = carriage.rows * (carriage.leftSeats + carriage.rightSeats);
+
+          const occupiedSeatsForThisCarriage = Array.from(occupiedSeats).filter(
+            (seat) => seat >= seatOffset && seat < seatOffset + carriageSeatsCount
+          ).length;
+
+          totalAvailableSeats += carriageSeatsCount - occupiedSeatsForThisCarriage;
+        }
+        seatOffset += carriage!.rows * (carriage!.leftSeats + carriage!.rightSeats);
+      });
+    });
+
+    return totalAvailableSeats;
   }
 }

@@ -39,7 +39,16 @@
 }
 
 @include small-mobile {
-  :host {
-    display: none;
+  .button-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .date {
+    font-size: 8px;
+  }
+
+  .day {
+    font-size: 6px;
   }
 }

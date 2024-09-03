@@ -4,9 +4,8 @@
   display: flex;
 
   box-sizing: border-box;
-  width: 100%;
-  max-width: 1200px;
-  margin: 20px 0;
+  width: 1160px;
+  margin: 0 0 20px;
   padding: 20px 16px;
 
   background-color: var(--tui-text-primary);
@@ -45,15 +44,21 @@
   }
 }
 
+@include desktop {
+  :host {
+    max-width: 986px;
+  }
+}
+
 @include tablet {
   :host {
-    max-width: 740px;
+    max-width: calc(100vw - 40px);
   }
 }
 
 @include mobile {
   :host {
-    max-width: 500px;
+    max-width: calc(100vw - 40px);
   }
 
   .center {
@@ -73,7 +78,8 @@
 
 @include small-mobile {
   :host {
-    max-width: 300px;
+    max-width: calc(100vw - 40px);
+    padding: 20px 8px;
   }
 
   .tui-icon-button {

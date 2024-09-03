@@ -8,7 +8,6 @@ import { TUI_DEFAULT_MATCHER, TuiDay, TuiLet } from '@taiga-ui/cdk';
 import { map, Observable, startWith, switchMap, take } from 'rxjs';
 import { selectStationArr } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { Store } from '@ngrx/store';
-import { StationsActions } from '@app/core/store/admin-store/actions/stations.actions';
 import { IStation } from '@app/admin/models/station-list.model';
 import { ISearchRoutesRequest } from '@app/train/models/search-request.model';
 import { TrainService } from '@app/train/services/train.service';
@@ -48,9 +47,9 @@ export class SearchFormComponent implements OnInit {
   public selectedDate: TuiDay | null = null;
 
   ngOnInit(): void {
-    this.store.dispatch(StationsActions.loadStationList());
     const initialDate = this.form.get('date')?.value || null;
     this.selectedDate = initialDate;
+    this.trainService.setSelectedDate(this.selectedDate);
   }
 
   protected form = new FormGroup({
@@ -69,9 +68,6 @@ export class SearchFormComponent implements OnInit {
       this.prepareSearchRequest().subscribe((searchRequest) => {
         if (searchRequest) {
           this.trainService.searchTrips(searchRequest).subscribe({
-            next: (response) => {
-              console.log('Search Response:', response);
-            },
             error: (error) => {
               if (error.error?.reason === 'stationNotFound') {
                 this.showNotification(error.error.message, 'Error');
@@ -158,7 +154,7 @@ export class SearchFormComponent implements OnInit {
   protected onDateSelected(date: TuiDay): void {
     this.selectedDate = date;
     this.form.get('date')?.setValue(date);
-
+    this.trainService.setSelectedDate(date);
     this.onSearch();
   }
 

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { AdminService } from '@app/admin/service/admin.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, EMPTY, forkJoin, map, mergeMap, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, forkJoin, map, mergeMap, switchMap } from 'rxjs';
 import { RiderAction } from '../actions/riders.actions';
 import { StationsActions } from '../actions/stations.actions';
 import { CarriageActions } from '../actions/carriage.actions';

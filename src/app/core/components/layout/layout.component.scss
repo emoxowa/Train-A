@@ -1,0 +1,29 @@
+@import 'styles';
+
+:host {
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+  max-width: 100vw;
+  min-height: 100vh;
+}
+
+.main {
+  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+@include mobile {
+  .main {
+    padding: 10px;
+  }
+}
+
+@include small-mobile {
+  .main {
+    padding: 10px;
+  }
+}

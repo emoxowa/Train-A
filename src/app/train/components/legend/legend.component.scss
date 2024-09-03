@@ -1,0 +1,92 @@
+@import 'styles';
+
+.legend {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.legend-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.seat {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 4px;
+}
+
+.seat-number {
+  position: relative;
+  z-index: 2;
+  font-weight: bold;
+  color: white;
+}
+
+.seat::before {
+  content: '';
+
+  position: absolute;
+  z-index: 1;
+  inset: 3px 0 0 3px;
+
+  height: 23px;
+
+  border-radius: 4px;
+}
+
+.seat.reserved {
+  background-color: #d3d3d3;
+
+  .seat-number {
+    color: gray;
+  }
+}
+
+.seat.reserved::before {
+  top: 5px;
+  left: 5px;
+  background-color: #f0f0f0;
+}
+
+.seat.available {
+  background-color: #039;
+}
+
+.seat.available::before {
+  top: 5px;
+  left: 5px;
+  background-color: #04c;
+}
+
+.seat.selected {
+  background-color: #f90;
+}
+
+.seat.selected::before {
+  top: 5px;
+  left: 5px;
+  background-color: #ffb84d;
+}
+
+.text {
+  font-weight: bold;
+}
+
+@include small-mobile {
+  .legend {
+    gap: 10px;
+    font-size: 10px;
+    line-height: 1;
+  }
+}

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '@app/train/guards/auth.guard';
+import { authGuard } from '@app/auth/guards/access.guard';
 
 export const TrainRoutes: Routes = [
   {
@@ -14,6 +14,11 @@ export const TrainRoutes: Routes = [
   {
     path: 'profile',
     loadComponent: () => import('@app/train/pages/profile/profile.component').then((m) => m.ProfileComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'orders',
+    loadComponent: () => import('@app/train/pages/orders/orders.component').then((m) => m.OrdersComponent),
     canActivate: [authGuard],
   },
 ];

@@ -3,7 +3,9 @@ import { IStationResponse, ISearchRoutesResponse } from '@app/train/models/searc
 import { ISearchRoutesRequest } from '@app/train/models/search-request.model';
 import { IRoute } from '@app/train/models/route.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, shareReplay, tap, throwError } from 'rxjs';
+import { TuiDay } from '@taiga-ui/cdk';
+import { IRideInformation } from '../models/ride-information.model';
 
 export interface TripDetails {
   route: IRoute;
@@ -27,6 +29,14 @@ export class TrainService {
 
   public loading$ = this.loadingSubject.asObservable();
 
+  private selectedDateSubject = new BehaviorSubject<TuiDay | null>(null);
+
+  public selectedDate$ = this.selectedDateSubject.asObservable();
+
+  public setSelectedDate(date: TuiDay | null): void {
+    this.selectedDateSubject.next(date);
+  }
+
   public searchTrips(searchRequest: ISearchRoutesRequest): Observable<ISearchRoutesResponse> {
     this.loadingSubject.next(true);
 
@@ -47,6 +57,16 @@ export class TrainService {
       }),
       catchError((error) => {
         this.loadingSubject.next(false);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getRideInformation(rideId: number): Observable<IRideInformation> {
+    const url = `${this.apiUrl}/${rideId}`;
+    return this.http.get<IRideInformation>(url).pipe(
+      shareReplay(1),
+      catchError((error) => {
         return throwError(() => error);
       })
     );

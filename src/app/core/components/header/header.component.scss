@@ -1,0 +1,92 @@
+:host {
+  display: flex;
+  justify-content: center;
+
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 20px;
+
+  background-color: var(--tui-background-accent-1-pressed);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  max-width: 1200px;
+
+  color: var(--tui-text-primary-on-accent-1);
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.logo {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  color: white;
+  text-decoration: none;
+
+  transition: color 0.3s ease;
+
+  tui-icon {
+    color: var(--tui-text-primary-on-accent-1);
+  }
+
+  &:hover {
+    color: var(--tui-chart-categorical-13);
+
+    tui-icon {
+      transform: scale(1.1);
+      color: var(--tui-chart-categorical-13);
+      transition: color 0.3s ease;
+      transition: transform 0.3s ease;
+    }
+  }
+}
+
+.logo-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    border-bottom 0.3s ease;
+}
+
+.link:hover {
+  color: var(--tui-chart-categorical-13);
+}
+
+.navigation-list {
+  display: flex;
+  gap: 15px;
+  margin: 0;
+}
+
+.active-link .link {
+  padding-bottom: 2px;
+  font-size: var(--tui-font-heading-4);
+  font-weight: bold;
+  border-bottom: 2px solid white;
+
+  &:hover {
+    border-bottom: 2px solid var(--tui-chart-categorical-13);
+  }
+}
+
+@media (width >= 320px) and (width <= 424px) {
+  .logo-wrapper {
+    display: none;
+  }
+}
