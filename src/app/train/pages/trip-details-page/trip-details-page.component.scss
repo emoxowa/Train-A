@@ -127,18 +127,10 @@ tui-segmented {
 
 .booking-success {
   border: 2px solid var(--tui-text-positive);
-
-  button {
-    background-color: var(--tui-text-positive);
-  }
 }
 
 .booking-error {
   border: 2px solid var(--tui-text-negative-hover);
-
-  button {
-    background-color: var(--tui-text-negative-hover);
-  }
 }
 
 @include desktop {

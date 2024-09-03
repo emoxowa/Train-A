@@ -21,13 +21,11 @@
 
     <div *ngIf="bookingSuccess" class="booking-success">
       <p>Booking successful!</p>
-      <button tuiButton routerLink="/orders">My Orders</button>
     </div>
 
     <div *ngIf="bookingError" class="booking-error">
       <p>{{ errorMessage }}</p>
       <p>You must cancel the previous reservation and create a new one</p>
-      <button tuiButton routerLink="/orders">My Orders</button>
     </div>
 
     <div class="content">

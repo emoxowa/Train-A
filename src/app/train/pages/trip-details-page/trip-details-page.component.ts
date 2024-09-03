@@ -6,7 +6,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { catchError, first, Observable, of, shareReplay, take } from 'rxjs';
 import { TuiSegmented } from '@taiga-ui/kit';
 import { TrainService } from '@app/train/services/train.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IRideInformation } from '@app/train/models/ride-information.model';
 import { Store } from '@ngrx/store';
 import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
@@ -52,7 +52,9 @@ export class TripDetailsPageComponent implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
 
-  private store = inject(Store);
+  private readonly store = inject(Store);
+
+  private readonly router = inject(Router);
 
   protected rideInformation$!: Observable<IRideInformation | null>;
 
@@ -227,6 +229,8 @@ export class TripDetailsPageComponent implements OnInit {
               this.bookingError = true;
               this.errorMessage = errorResponse.error.message;
               this.selectedSeat = null;
+            } else if (errorResponse.status === 401 && errorResponse.error?.reason === 'invalidAccessToken') {
+              this.router.navigate(['/signin']);
             } else {
               console.error('Unexpected booking error:', errorResponse);
             }

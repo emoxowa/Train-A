@@ -26,7 +26,13 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     NG_EVENT_PLUGINS,
     provideStore(appReducer, { initialState: initialAppState }),
-    provideEffects([StationEffectService, UserEffectService, OrderEffectService, CarriageEffectService, RoutesEffectService]),
+    provideEffects([
+      StationEffectService,
+      UserEffectService,
+      OrderEffectService,
+      CarriageEffectService,
+      RoutesEffectService,
+    ]),
     provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),
     importProvidersFrom(
       StoreDevtoolsModule.instrument({
