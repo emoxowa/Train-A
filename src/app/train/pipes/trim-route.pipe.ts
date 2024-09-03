@@ -14,10 +14,10 @@ export class TrimRoutePipe implements PipeTransform {
     const startIndex = route.path.indexOf(fromStationId);
     const endIndex = route.path.indexOf(toStationId);
 
-    const trimmedPath = route.path.slice(startIndex, endIndex + 1);
+    const trimmedPath = route.path.slice(startIndex, endIndex);
     const trimmedSchedule = route.schedule.map((schedule) => ({
       ...schedule,
-      segments: schedule.segments.slice(startIndex, endIndex + 1),
+      segments: schedule.segments.slice(startIndex, endIndex),
     }));
 
     return {
