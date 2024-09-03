@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectUser, selectUserLoading, selectUserRole } from '@app/core/store/user-store/selectors/user.selectors';
-import { filter, map, of, switchMap } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export const canActiveAuth = () => {
@@ -22,14 +22,18 @@ export const canActiveAdmin = () => {
   const router = inject(Router);
   const store = inject(Store);
 
-  return store.select(selectUserRole).pipe(
-    switchMap((role) => {
-      if (role === 'manager') {
-        return of(true);
-      }
-
-      return of(router.createUrlTree(['not-found']));
-    })
+  return store.select(selectUserLoading).pipe(
+    filter((isUserLoading) => !isUserLoading),
+    switchMap(() =>
+      store.select(selectUserRole).pipe(
+        map((role) => {
+          if (role === 'manager') {
+            return true;
+          }
+          return router.createUrlTree(['not-found']);
+        })
+      )
+    )
   );
 };
 
