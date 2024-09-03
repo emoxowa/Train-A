@@ -57,8 +57,8 @@ export class AdminService {
     return this.http.get<IRideInfo>(`/api/route/${idRoute}`);
   }
 
-  createNewRide(idRoute: number, newRideInfo: IScheduleInfo): Observable<number> {
-    return this.http.post<number>(`/api/route/${idRoute}/ride`, newRideInfo);
+  createNewRide(idRoute: number, newRideInfo: IScheduleInfo): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(`/api/route/${idRoute}/ride`, newRideInfo);
   }
 
   updateRide(idRoute: number, rideId: number, updRideInfo: IScheduleInfo): Observable<void> {

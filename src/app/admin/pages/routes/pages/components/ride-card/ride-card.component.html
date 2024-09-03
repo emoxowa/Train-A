@@ -1,7 +1,7 @@
 @if (rideSchedule) {
   <div>Ride {{ idRide }}</div>
 }
-@for (ride of rideSchedule; track ride; let i = $index) {
+@for (ride of rideSchedule; track ride.time[0]; let i = $index) {
   @let segmentData = findSegmentByRiderId(idRide);
   <div class="ride-card__container">
     <div class="ride-card__city">
