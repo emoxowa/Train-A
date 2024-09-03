@@ -70,9 +70,6 @@ export class SearchFormComponent implements OnInit {
       this.prepareSearchRequest().subscribe((searchRequest) => {
         if (searchRequest) {
           this.trainService.searchTrips(searchRequest).subscribe({
-            next: (response) => {
-              console.log('Search Response:', response);
-            },
             error: (error) => {
               if (error.error?.reason === 'stationNotFound') {
                 this.showNotification(error.error.message, 'Error');

@@ -33,14 +33,6 @@ export class TrainService {
 
   public selectedDate$ = this.selectedDateSubject.asObservable();
 
-  // private routeDetailsSubject = new BehaviorSubject<IRoute | null>(null);
-
-  // public routeDetails$ = this.routeDetailsSubject.asObservable();
-
-  // private rideInformationSubject = new BehaviorSubject<IRideInformation | null>(null);
-
-  // rideInformation$ = this.rideInformationSubject.asObservable();
-
   public setSelectedDate(date: TuiDay | null): void {
     this.selectedDateSubject.next(date);
   }
@@ -75,7 +67,6 @@ export class TrainService {
     return this.http.get<IRideInformation>(url).pipe(
       shareReplay(1),
       catchError((error) => {
-        console.error('Error fetching ride information:', error);
         return throwError(() => error);
       })
     );

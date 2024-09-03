@@ -112,10 +112,6 @@ export class CarriageComponent implements OnChanges {
   }
 
   onSeatClick(seatIndex: number): void {
-    if (this.isOccupiedSeat(seatIndex)) {
-      console.log(`Seat ${seatIndex} is occupied`);
-      return;
-    }
     this.selectedSeatIndex = seatIndex;
     this.seatSelected.emit(seatIndex);
   }

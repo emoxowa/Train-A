@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, INJECTOR, OnInit } from '@angular/core';
 import { TuiButton, TuiDialogService } from '@taiga-ui/core';
 import { TuiAppBar } from '@taiga-ui/layout';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { first, map, Observable, shareReplay, take } from 'rxjs';
+import { catchError, first, map, Observable, of, shareReplay, take } from 'rxjs';
 import { TuiSegmented } from '@taiga-ui/kit';
 import { TrainService } from '@app/train/services/train.service';
 import { ActivatedRoute } from '@angular/router';
@@ -20,6 +19,7 @@ import { OrderService } from '@app/train/services/order.service';
 import { IOrderCreateRequest } from '@app/train/models/order.model';
 import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
 import { CityNamePipe } from '@app/train/pipes/city-name.pipe';
+import { NoRidesAvailableComponent } from '@app/train/components/no-rides-available/no-rides-available.component';
 import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
 import { RouteModalData } from '../../components/search-results/search-results.component';
 
@@ -36,6 +36,7 @@ import { RouteModalData } from '../../components/search-results/search-results.c
     CarriageComponent,
     SumCarriagePricePipe,
     CityNamePipe,
+    NoRidesAvailableComponent,
   ],
   templateUrl: './trip-details-page.component.html',
   styleUrls: ['./trip-details-page.component.scss'],
@@ -55,7 +56,7 @@ export class TripDetailsPageComponent implements OnInit {
 
   private store = inject(Store);
 
-  protected rideInformation$!: Observable<IRideInformation>;
+  protected rideInformation$!: Observable<IRideInformation | null>;
 
   public stationArr$ = this.store.select(selectStationIdAndCity);
 
@@ -73,29 +74,30 @@ export class TripDetailsPageComponent implements OnInit {
 
   public stationEnd: number = 0;
 
+  public showNoRidesAvailable: boolean = false;
+
   ngOnInit(): void {
     const rideId = Number(this.route.snapshot.paramMap.get('id'));
     this.stationStart = Number(this.route.snapshot.queryParamMap.get('from'));
     this.stationEnd = Number(this.route.snapshot.queryParamMap.get('to'));
 
     if (rideId) {
-      console.log('Fetching ride information for ID:', rideId);
-      this.rideInformation$ = this.trainService.getRideInformation(rideId).pipe(shareReplay(1));
+      this.rideInformation$ = this.trainService.getRideInformation(rideId).pipe(
+        shareReplay(1),
+        catchError(() => {
+          this.showNoRidesAvailable = true;
+          return of(null);
+        })
+      );
 
-      this.rideInformation$.pipe(first()).subscribe({
-        next: (ride) => {
-          console.log('Ride information received:', ride);
-          if (ride && ride.carriages.length > 0) {
-            const [firstCarriage] = ride.carriages;
-            this.selectedCarriage = firstCarriage;
-          }
+      this.rideInformation$.pipe(first()).subscribe((ride) => {
+        if (ride && ride.carriages.length > 0) {
+          const [firstCarriage] = ride.carriages;
+          this.selectedCarriage = firstCarriage;
           this.calculateOccupiedSeats();
           this.calculateAvailableSeatsCount();
-        },
-        error: (error) => console.error('Error occurred while fetching ride information:', error),
+        }
       });
-    } else {
-      console.error('Ride ID is not available in route parameters.');
     }
   }
 
@@ -168,7 +170,6 @@ export class TripDetailsPageComponent implements OnInit {
       }
 
       const absoluteSeatIndex = seatOffset + seatIndex;
-      console.log(`Absolute Seat Index: ${absoluteSeatIndex}`);
       this.selectedSeat = absoluteSeatIndex;
     });
 
@@ -222,17 +223,13 @@ export class TripDetailsPageComponent implements OnInit {
     if (this.selectedSeat !== null && this.selectedCarriage && this.rideInformation$) {
       this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
         const orderRequest: IOrderCreateRequest = {
-          rideId: rideInfo.rideId,
+          rideId: rideInfo!.rideId,
           seat: this.selectedSeat!,
           stationStart: this.stationStart,
           stationEnd: this.stationEnd,
         };
-        this.orderService.createOrder(orderRequest).subscribe((response) => {
-          console.log('Order created with ID:', response.id);
-        });
+        this.orderService.createOrder(orderRequest).subscribe();
       });
-    } else {
-      console.log('Please select a seat to book.');
     }
   }
 

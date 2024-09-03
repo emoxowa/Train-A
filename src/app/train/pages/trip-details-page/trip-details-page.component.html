@@ -1,68 +1,74 @@
-<ng-container *ngIf="rideInformation$ | async as rideInfo">
-  <div class="header">
-    <button tuiAppBarBack tuiSlot="left" (click)="goBack()" class="button-back">Back</button>
+<ng-container *ngIf="!showNoRidesAvailable">
+  <ng-container *ngIf="rideInformation$ | async as rideInfo">
+    <div class="header">
+      <button tuiAppBarBack tuiSlot="left" (click)="goBack()" class="button-back">Back</button>
 
-    <div>
-      <div class="tui-text_body-l-1">
-        {{ stationStart | cityName | async }} → {{ stationEnd | cityName | async }},
-        {{ rideInfo.schedule.segments[0].time[0] | date: 'MMM d, h:mm a' }}
-      </div>
-
-      <div class="ride">
-        Ride {{ rideInfo.rideId }}
-        <button tuiButton (click)="showDialog($event)" size="s" appearance="outline">Route</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="content">
-    <div>
-      <tui-segmented size="l">
-        <button *ngFor="let carriage of rideInfo.carriages | uniqueCarriages" (click)="onCarriageSelected(carriage)">
-          <p>{{ carriage }}: {{ getAvailableSeatsCountForCarriage(carriage) }}</p>
-          <p class="price">{{ rideInfo.schedule | sumCarriagePrice: carriage | currency: 'USD' : 'symbol' }}</p>
-        </button>
-      </tui-segmented>
-    </div>
-
-    <div class="carriage-info">
-      <div class="carriages">
-        <ng-container *ngFor="let carriage of rideInfo.carriages; let carriageIndex = index">
-          <div
-            *ngIf="!selectedCarriage || carriage === selectedCarriage"
-            class="carriage-item"
-            [attr.data-carriage-index]="carriageIndex"
-          >
-            <app-carriage
-              [carriagesData]="getCarriageData(carriage)"
-              (seatSelected)="onSeatSelected($event, carriageIndex)"
-              [occupiedSeats]="getOccupiedSeatsForCarriage(carriageIndex)"
-            ></app-carriage>
-          </div>
-        </ng-container>
-      </div>
-
-      <div class="booking">
-        <div class="booking-info">
-          <span *ngIf="selectedSeat">{{ selectedCarriage }}, Seat {{ selectedSeat }}</span
-          ><span *ngIf="selectedSeat">{{
-            rideInfo.schedule | sumCarriagePrice: selectedCarriage | currency: 'USD' : 'symbol'
-          }}</span>
+      <div>
+        <div class="tui-text_body-l-1">
+          {{ stationStart | cityName | async }} → {{ stationEnd | cityName | async }},
+          {{ rideInfo.schedule.segments[0].time[0] | date: 'MMM d, h:mm a' }}
         </div>
-        <button tuiButton (click)="bookSeat()" [disabled]="selectedSeat === null">Book seat</button>
+
+        <div class="ride">
+          Ride {{ rideInfo.rideId }}
+          <button tuiButton (click)="showDialog($event)" size="s" appearance="outline">Route</button>
+        </div>
       </div>
     </div>
 
-    <div class="legend-container">
-      <app-legend
-        [reservedSeats]="occupiedSeats.length"
-        [availableSeats]="availableSeatsCount"
-        [selectedSeats]="selectedSeat ? 1 : 0"
-      ></app-legend>
+    <div class="content">
+      <div>
+        <tui-segmented size="l">
+          <button *ngFor="let carriage of rideInfo.carriages | uniqueCarriages" (click)="onCarriageSelected(carriage)">
+            <p>{{ carriage }}: {{ getAvailableSeatsCountForCarriage(carriage) }}</p>
+            <p class="price">{{ rideInfo.schedule | sumCarriagePrice: carriage | currency: 'USD' : 'symbol' }}</p>
+          </button>
+        </tui-segmented>
+      </div>
+
+      <div class="carriage-info">
+        <div class="carriages">
+          <ng-container *ngFor="let carriage of rideInfo.carriages; let carriageIndex = index">
+            <div
+              *ngIf="!selectedCarriage || carriage === selectedCarriage"
+              class="carriage-item"
+              [attr.data-carriage-index]="carriageIndex"
+            >
+              <app-carriage
+                [carriagesData]="getCarriageData(carriage)"
+                (seatSelected)="onSeatSelected($event, carriageIndex)"
+                [occupiedSeats]="getOccupiedSeatsForCarriage(carriageIndex)"
+              ></app-carriage>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="booking">
+          <div class="booking-info">
+            <span *ngIf="selectedSeat">{{ selectedCarriage }}, Seat {{ selectedSeat }}</span
+            ><span *ngIf="selectedSeat">{{
+              rideInfo.schedule | sumCarriagePrice: selectedCarriage | currency: 'USD' : 'symbol'
+            }}</span>
+          </div>
+          <button tuiButton (click)="bookSeat()" [disabled]="selectedSeat === null">Book seat</button>
+        </div>
+      </div>
+
+      <div class="legend-container">
+        <app-legend
+          [reservedSeats]="occupiedSeats.length"
+          [availableSeats]="availableSeatsCount"
+          [selectedSeats]="selectedSeat ? 1 : 0"
+        ></app-legend>
+      </div>
     </div>
-  </div>
+  </ng-container>
 </ng-container>
 
 <ng-template #notFound>
   <p>Ride not found.</p>
 </ng-template>
+
+<ng-container *ngIf="showNoRidesAvailable">
+  <app-no-rides-available></app-no-rides-available>
+</ng-container>
