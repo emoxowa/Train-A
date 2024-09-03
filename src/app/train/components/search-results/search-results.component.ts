@@ -4,7 +4,7 @@ import { ISearchRoutesResponse } from '@app/train/models/search-response.model';
 import { TuiButton, TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { RouteModalComponent } from '@app/train/components/route-modal/route-modal.component';
+import { RouteModalComponent, RouteModalData } from '@app/train/components/route-modal/route-modal.component';
 import { Router } from '@angular/router';
 import { TrainService } from '@app/train/services/train.service';
 import { map, Observable, take } from 'rxjs';
@@ -18,13 +18,6 @@ import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { Store } from '@ngrx/store';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
-
-export interface RouteModalData {
-  schedule: ISchedule;
-  from: number;
-  to: number;
-  path: IRoute['path'];
-}
 
 @Component({
   selector: 'app-search-results',

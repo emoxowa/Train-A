@@ -5,7 +5,16 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { CityNamePipe } from '@app/train/pipes/city-name.pipe';
 import { StopDurationPipe } from '@app/train/pipes/stop-duration.pipe';
 import { SegmentArrivalTimePipe } from '@app/train/pipes/segment-arrival-time.pipe';
-import { RouteModalData } from '../search-results/search-results.component';
+import { ISchedule } from '@app/train/models/schedule.model';
+import { IRoute } from '@app/train/models/route.model';
+
+export interface RouteModalData {
+  schedule: ISchedule;
+  from: number;
+  to: number;
+  path: IRoute['path'];
+  rideId?: number;
+}
 
 @Component({
   selector: 'app-route-modal',

@@ -19,8 +19,7 @@ import { IOrderCreateRequest } from '@app/train/models/order.model';
 import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
 import { CityNamePipe } from '@app/train/pipes/city-name.pipe';
 import { NoRidesAvailableComponent } from '@app/train/components/no-rides-available/no-rides-available.component';
-import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
-import { RouteModalData } from '../../components/search-results/search-results.component';
+import { RouteModalComponent, RouteModalData } from '../../components/route-modal/route-modal.component';
 
 @Component({
   selector: 'app-trip-details-page',
@@ -117,6 +116,7 @@ export class TripDetailsPageComponent implements OnInit {
             from: this.stationStart,
             to: this.stationEnd,
             path: rideInfo.path,
+            rideId: rideInfo.rideId,
           } as RouteModalData,
         })
         .subscribe();
