@@ -17,6 +17,7 @@ import { TuiDay } from '@taiga-ui/cdk';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { Store } from '@ngrx/store';
+import { TrimRoutePipe } from '@app/train/pipes/trim-route.pipe';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
 @Component({
@@ -33,6 +34,7 @@ import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-availa
     UniqueCarriagesPipe,
     SumCarriagePricePipe,
     FilterRoutesPipe,
+    TrimRoutePipe,
   ],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',

@@ -11,7 +11,7 @@
         <div class="route" *ngFor="let route of filteredResponse.routes; let routeIndex = index">
           <div
             class="schedule"
-            *ngFor="let schedule of route.schedule; let scheduleIndex = index"
+            *ngFor="let schedule of (route | trimRoute: searchResponse).schedule; let scheduleIndex = index"
             (click)="onCardClick(schedule.rideId)"
             (keyup.enter)="onCardClick(schedule.rideId)"
             (keydown.space)="onCardClick(schedule.rideId)"
