@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-around;
+}
+
+.admin__nav {
+  display: flex;
+  gap: 20vw;
+  justify-content: center;
+
+  a {
+    font-size: 20px;
+    text-decoration: none;
+  }
+}
