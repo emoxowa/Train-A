@@ -82,6 +82,10 @@ export class TripDetailsPageComponent implements OnInit {
 
   public errorMessage: string | null = null;
 
+  public selectedCarriageIndex: number | null = null;
+
+  public selectedSeatIndex: number | null = null;
+
   ngOnInit(): void {
     this.initializeRideData();
   }
@@ -140,6 +144,9 @@ export class TripDetailsPageComponent implements OnInit {
   }
 
   onSeatSelected(seatIndex: number, carriageIndex: number): void {
+    this.selectedSeatIndex = seatIndex;
+    this.selectedCarriageIndex = carriageIndex;
+
     this.selectedSeat = this.calculateAbsoluteSeatIndex(carriageIndex, seatIndex);
     this.withRideInfo((rideInfo) => {
       this.selectedOrderCarriage = rideInfo.carriages[carriageIndex] || null;

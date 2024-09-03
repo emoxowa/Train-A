@@ -73,6 +73,8 @@ export class CarriageComponent implements OnChanges {
 
   @Input() occupiedSeats: number[] = [];
 
+  @Input() selectedSeatIndex: number | null = null;
+
   @Output() seatSelected = new EventEmitter<number>();
 
   rows: number[] = [];
@@ -80,8 +82,6 @@ export class CarriageComponent implements OnChanges {
   leftSeats: number[] = [];
 
   rightSeats: number[] = [];
-
-  selectedSeatIndex: number | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['carriagesData'] && this.carriagesData) {

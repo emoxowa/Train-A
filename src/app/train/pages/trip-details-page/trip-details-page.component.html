@@ -49,6 +49,7 @@
               <app-carriage
                 [carriagesData]="getCarriageData(carriage)"
                 (seatSelected)="onSeatSelected($event, carriageIndex)"
+                [selectedSeatIndex]="selectedCarriageIndex === carriageIndex ? selectedSeatIndex : null"
                 [occupiedSeats]="getOccupiedSeatsForCarriage(carriageIndex)"
               ></app-carriage>
             </div>
