@@ -1,3 +1,5 @@
+@import 'styles';
+
 .carriages__edit-form {
   display: flex;
   flex-direction: column;
@@ -8,5 +10,21 @@
 }
 
 button {
-  width: 30vw;
+  width: 200px;
+}
+
+@include mobile {
+  .carriages__edit-form {
+    width: 100%;
+  }
+}
+
+@include small-mobile {
+  .carriages__edit-form {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
 }

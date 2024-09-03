@@ -1,3 +1,5 @@
+@import 'styles';
+
 .legend {
   display: flex;
   align-items: center;
@@ -76,4 +78,12 @@
 
 .text {
   font-weight: bold;
+}
+
+@include small-mobile {
+  .legend {
+    font-size: 10px;
+    line-height: 1;
+    gap: 10px;
+  }
 }

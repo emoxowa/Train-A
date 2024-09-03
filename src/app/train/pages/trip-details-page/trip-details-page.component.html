@@ -43,7 +43,7 @@
           </ng-container>
         </div>
 
-        <div class="booking">
+        <div class="booking" *ngIf="selectedSeat">
           <div class="booking-info">
             <span *ngIf="selectedSeat">{{ selectedCarriage }}, Seat {{ selectedSeat }}</span
             ><span *ngIf="selectedSeat">{{

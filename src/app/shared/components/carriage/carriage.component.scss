@@ -1,3 +1,5 @@
+@import 'styles';
+
 .carriage {
   display: flex;
   flex-direction: column;
@@ -57,7 +59,7 @@
   &__row {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 40px;
     align-items: center;
 
     &:last-child {
@@ -71,7 +73,7 @@
     flex-direction: column;
     gap: 5px;
     border-left: 1px solid gray;
-    padding-left: 10px;
+    padding-left: 5px;
   }
 
   &__left-seats {
@@ -79,7 +81,7 @@
     flex-direction: column;
     gap: 5px;
     border-left: 1px solid gray;
-    padding-left: 10px;
+    padding-left: 5px;
   }
 
   &__seat {
@@ -119,32 +121,104 @@
     margin: 0 auto;
     padding: 10px;
   }
-
-  @media (width <= 1300px) {
-    &__body {
-      gap: 5px;
-    }
-  }
-
-  @media (width <= 1300px) {
-    &__row {
-      gap: 25px;
-    }
-  }
-
-  @media (width <= 1300px) {
-    &__seat {
-      flex: 1 1 5px;
-
-      min-width: 5px;
-      min-height: 5px;
-      padding: 2.5px 5px;
-
-      font-size: 10px;
-    }
-  }
 }
 
 tui-icon {
   color: gray;
+}
+
+@include desktop {
+  .carriage {
+    margin: 0;
+    padding: 10px;
+
+    &__body {
+      gap: 10px;
+    }
+  }
+}
+
+@include tablet {
+  .carriage {
+    margin: 0;
+    padding: 10px;
+
+    &__body {
+      gap: 10px;
+    }
+  }
+}
+
+@include mobile {
+  .carriage {
+    margin: 0;
+    padding: 10px;
+
+    &__body {
+      gap: 10px;
+    }
+
+    &__seat {
+      height: 15px;
+      width: 15px;
+    }
+
+    &__container {
+      grid-template-columns: 40px 1fr 25px;
+      padding: 5px;
+    }
+
+    &__restroom {
+      padding: 5px;
+    }
+
+    &__right-seats {
+      padding-left: 5px;
+    }
+
+    &__left-seats {
+      padding-left: 5px;
+    }
+  }
+
+  tui-icon {
+    font-size: 15px;
+  }
+}
+
+@include small-mobile {
+  .carriage {
+    margin: 0;
+    padding: 10px;
+
+    &__body {
+      gap: 10px;
+    }
+
+    &__seat {
+      height: 15px;
+      width: 15px;
+    }
+
+    &__container {
+      grid-template-columns: 40px 1fr 25px;
+      padding: 5px;
+    }
+
+    &__restroom {
+      padding: 5px;
+    }
+
+    &__right-seats {
+      padding-left: 5px;
+    }
+
+    &__left-seats {
+      padding-left: 5px;
+    }
+  }
+
+  tui-icon {
+    font-size: 15px;
+  }
 }

@@ -8,7 +8,6 @@ import { TUI_DEFAULT_MATCHER, TuiDay, TuiLet } from '@taiga-ui/cdk';
 import { map, Observable, startWith, switchMap, take } from 'rxjs';
 import { selectStationArr } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { Store } from '@ngrx/store';
-import { StationsActions } from '@app/core/store/admin-store/actions/stations.actions';
 import { IStation } from '@app/admin/models/station-list.model';
 import { ISearchRoutesRequest } from '@app/train/models/search-request.model';
 import { TrainService } from '@app/train/services/train.service';
@@ -48,7 +47,6 @@ export class SearchFormComponent implements OnInit {
   public selectedDate: TuiDay | null = null;
 
   ngOnInit(): void {
-    this.store.dispatch(StationsActions.loadStationList());
     const initialDate = this.form.get('date')?.value || null;
     this.selectedDate = initialDate;
     this.trainService.setSelectedDate(this.selectedDate);
