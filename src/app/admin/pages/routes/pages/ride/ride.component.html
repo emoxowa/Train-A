@@ -4,7 +4,7 @@
 
 <!-- <button (click)="getRideInfo()" size="s" tuiButton>Get ride</button> -->
 
-<button (click)="postRouteInfo()" size="s" tuiButton>Add ride</button>
+<button #addRideButton size="s" tuiButton>Add ride</button>
 
 @let riderInfo = riderInfo$ | async;
 @let stationArr = stationArr$ | async;

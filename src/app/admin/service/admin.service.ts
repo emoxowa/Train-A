@@ -92,8 +92,8 @@ export class AdminService {
     });
   }
 
-  createNewRide(idRoute: number, newRideInfo: IScheduleInfo): Observable<number> {
-    return this.http.post<number>(`/api/route/${idRoute}/ride`, newRideInfo, {
+  createNewRide(idRoute: number, newRideInfo: IScheduleInfo): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(`/api/route/${idRoute}/ride`, newRideInfo, {
       headers: {
         Authorization: `Bearer ${this.token$.value}`,
       },

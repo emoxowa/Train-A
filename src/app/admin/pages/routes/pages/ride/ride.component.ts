@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
-import { IScheduleInfo } from '@app/admin/models/route-info.module';
+import { IPriceInfo, IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
 import { IStation } from '@app/admin/models/station-list.model';
 import { AdminService } from '@app/admin/service/admin.service';
 import { RiderAction } from '@app/core/store/admin-store/actions/riders.actions';
-import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
+import { selectCarriagesArr, selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { selectRiderInfo } from '@app/core/store/admin-store/selectors/rider.selector';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
-import { map, Observable, tap } from 'rxjs';
+import { fromEvent, map, Observable, Subscription, switchMap, take, tap } from 'rxjs';
+import { RoutesActions } from '@core/store/admin-store/actions/routes.action';
 import { RideCardComponent } from '../components/ride-card/ride-card.component';
 
 @Component({
@@ -22,12 +23,18 @@ import { RideCardComponent } from '../components/ride-card/ride-card.component';
   templateUrl: './ride.component.html',
   styleUrls: ['./ride.component.scss'],
 })
-export class RideComponent implements OnInit {
+export class RideComponent implements OnInit, AfterViewInit, OnDestroy {
+  private readonly defaultCarriagePrice = 1000;
+
+  @ViewChild('addRideButton', { static: true }) addRideButton: ElementRef | undefined;
+
   private adminService = inject(AdminService);
 
   private route: ActivatedRoute = inject(ActivatedRoute);
 
   private store = inject(Store);
+
+  private addRideButtonSubscription: Subscription | undefined;
 
   public routeId: number = Number(this.route.snapshot.params['id']);
 
@@ -36,6 +43,29 @@ export class RideComponent implements OnInit {
   public carriagesArr$ = this.store.select(selectCarriagesIdAndName);
 
   public riderInfo$ = this.store.select(selectRiderInfo);
+
+  private readonly defaultRideSchedule$: Observable<IScheduleInfo> = this.riderInfo$.pipe(
+    map((rideInfo) => {
+      let currentDate = new Date().getTime();
+      const pathLength = rideInfo.path.length;
+      const uniqueCarriages = Array.from(new Set(rideInfo.carriages));
+      const price: IPriceInfo = {};
+      const oneHour = 1000 * 60 * 60 * 2;
+
+      uniqueCarriages.forEach((carriage) => {
+        price[carriage] = this.defaultCarriagePrice;
+      });
+
+      return {
+        segments: new Array(pathLength - 1).fill(null).map(() => {
+          currentDate += 2 * oneHour;
+          const time1 = new Date(currentDate).toISOString();
+          const time2 = new Date(currentDate + oneHour).toISOString();
+          return { time: [time1, time2], price };
+        }),
+      };
+    })
+  );
 
   // for developing
   readonly newAdmin: ICreateAdmin = {
@@ -56,6 +86,14 @@ export class RideComponent implements OnInit {
     this.store.dispatch(RiderAction.loadRiderList({ idRoute: this.routeId }));
   }
 
+  ngAfterViewInit() {
+    this.createAddRideSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.addRideButtonSubscription?.unsubscribe();
+  }
+
   // getRideInfo() {
   //   this.adminService
   //     .getRouteInformation(2)
@@ -63,37 +101,19 @@ export class RideComponent implements OnInit {
   //     .subscribe();
   // }
 
-  postRouteInfo() {
-    // post
-    const mockScheduleInfo: IScheduleInfo = {
-      segments: [
-        {
-          time: ['2024-08-08T22:19:57.708Z', '2024-08-12T03:29:57.708Z'],
-          price: {
-            carriage1: 1500,
-          },
-        },
-        // {
-        //   time: ['2024-08-12T03:29:57.708Z', '2024-08-15T08:39:57.708Z'],
-        //   price: {
-        //     вагон:2000
-        //   },
-        // },
-        // {
-        //   time: ['2024-08-15T08:39:57.708Z', '2024-08-18T13:49:57.708Z'],
-        //   price: {
-        //     вагон:3000
-        //   },
-        // },
-      ],
-    };
+  createAddRideSubscription() {
+    if (!this.addRideButton) return;
 
-    this.adminService.createNewRide(533, mockScheduleInfo).subscribe({
-      next(value) {
-        // eslint-disable-next-line no-console
-        console.log('create new ride', value);
-      },
-    });
+    this.addRideButtonSubscription = fromEvent(this.addRideButton.nativeElement, 'click')
+      .pipe(
+        switchMap(() =>
+          this.defaultRideSchedule$.pipe(
+            take(1),
+            map((scheduleItem) => this.store.dispatch(RiderAction.createRide({ routeId: this.routeId, scheduleItem })))
+          )
+        )
+      )
+      .subscribe();
   }
 
   getCitiesByIds(cityIds: number[]): Observable<Pick<IStation, 'id' | 'city'>[]> {

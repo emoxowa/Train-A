@@ -9,5 +9,14 @@ export const rideReducer = createReducer(
       ...state,
       riderList,
     };
+  }),
+  on(RiderAction.createRideSuccess, (state, { scheduleItem }): IRiderState => {
+    return {
+      ...state,
+      riderList: {
+        ...state.riderList,
+        schedule: [...state.riderList.schedule, scheduleItem],
+      },
+    };
   })
 );
