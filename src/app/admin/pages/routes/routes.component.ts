@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { ICreateAdmin } from '@app/admin/models/create-admin';
 import { AdminService } from '@app/admin/service/admin.service';
 import { RoutesActions } from '@app/core/store/admin-store/actions/routes.action';
 import { selectRoutesArr } from '@app/core/store/admin-store/selectors/routes.selector';
 import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
-import { distinctUntilChanged, map, Observable, tap } from 'rxjs';
+import { distinctUntilChanged, map, Observable } from 'rxjs';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { IStation } from '@app/admin/models/station-list.model';
 import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/carriage.selectors';
@@ -60,23 +59,6 @@ export class RoutesComponent implements OnInit {
   public carriagesArr$ = this.store.select(selectCarriagesIdAndName);
 
   isRoutesCreateFormOpen: boolean = false;
-
-  // for developing
-  readonly newAdmin: ICreateAdmin = {
-    email: 'admin@admin.com',
-    password: 'my-password',
-  };
-
-  constructor() {
-    this.adminService
-      .loginAdmin(this.newAdmin)
-      .pipe(
-        tap((response) => {
-          this.adminService.token$.next(response.token);
-        })
-      )
-      .subscribe();
-  }
 
   ngOnInit(): void {
     this.store.dispatch(RoutesActions.loadRoutesAndStations());

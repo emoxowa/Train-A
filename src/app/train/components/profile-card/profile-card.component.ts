@@ -18,6 +18,8 @@ import { UserActions } from '@core/store/user-store/actions/user.actions';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
+import { map } from 'rxjs';
+import { EUserRole } from '@app/train/models/user.model';
 
 @Component({
   selector: 'app-profile-card',
@@ -52,7 +54,9 @@ export class ProfileCardComponent {
 
   protected readonly userEmail$ = this.store.select(selectUserEmail);
 
-  protected readonly userRole$ = this.store.select(selectUserRole);
+  protected readonly isManager$ = this.store
+    .select(selectUserRole)
+    .pipe(map((userRole) => userRole === EUserRole.manager));
 
   protected readonly changePasswordForm = this.formBuilder.group({
     password: ['', [Validators.required, Validators.minLength(8)]],
