@@ -19,6 +19,7 @@ import { CarriageComponent } from '@app/shared/components/carriage/carriage.comp
 import { OrderService } from '@app/train/services/order.service';
 import { IOrderCreateRequest } from '@app/train/models/order.model';
 import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
+import { CityNamePipe } from '@app/train/pipes/city-name.pipe';
 import { RouteModalComponent } from '../../components/route-modal/route-modal.component';
 import { RouteModalData } from '../../components/search-results/search-results.component';
 
@@ -34,6 +35,7 @@ import { RouteModalData } from '../../components/search-results/search-results.c
     LegendComponent,
     CarriageComponent,
     SumCarriagePricePipe,
+    CityNamePipe,
   ],
   templateUrl: './trip-details-page.component.html',
   styleUrls: ['./trip-details-page.component.scss'],

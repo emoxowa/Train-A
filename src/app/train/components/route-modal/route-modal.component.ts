@@ -6,12 +6,13 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { map, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { CityNamePipe } from '@app/train/pipes/city-name.pipe';
 import { RouteModalData } from '../search-results/search-results.component';
 
 @Component({
   selector: 'app-route-modal',
   standalone: true,
-  imports: [CommonModule, TuiDialog, TuiButton, TuiScrollbar],
+  imports: [CommonModule, TuiDialog, TuiButton, TuiScrollbar, CityNamePipe],
   templateUrl: './route-modal.component.html',
   styleUrl: './route-modal.component.scss',
 })

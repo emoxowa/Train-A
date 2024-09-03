@@ -4,7 +4,7 @@
 
     <div>
       <div class="tui-text_body-l-1">
-        {{ rideInfo.path[0] }} → {{ rideInfo.path.at(-1) }},
+        {{ stationStart | cityName | async }} → {{ stationEnd | cityName | async }},
         {{ rideInfo.schedule.segments[0].time[0] | date: 'MMM d, h:mm a' }}
       </div>
 
