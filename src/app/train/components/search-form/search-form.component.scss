@@ -1,13 +1,15 @@
 @import 'styles';
 
 :host {
-  padding: 20px 16px;
-  width: 1160px;
   display: flex;
+
+  box-sizing: border-box;
+  width: 1160px;
+  margin: 0 0 20px;
+  padding: 20px 16px;
+
   background-color: var(--tui-text-primary);
   border-radius: 10px;
-  margin: 0 0 20px;
-  box-sizing: border-box;
 }
 
 .wrapper {

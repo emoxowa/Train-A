@@ -5,6 +5,7 @@ import { ICreateStationResponse, IStation } from '../models/station-list.model';
 import { ICreateStation } from '../models/create-station.model';
 import { ICarriage } from '../models/create-new-carriage-type.model';
 import { IRoutes } from '../models/routes.model';
+import { IRideInfo, IScheduleInfo } from '../models/route-info.module';
 
 @Injectable({
   providedIn: 'root',
@@ -50,5 +51,21 @@ export class AdminService {
 
   deleteRoute(IdRoute: number): Observable<void> {
     return this.http.delete<void>(`/api/route/${IdRoute}`);
+  }
+
+  getRouteInformation(idRoute: number): Observable<IRideInfo> {
+    return this.http.get<IRideInfo>(`/api/route/${idRoute}`);
+  }
+
+  createNewRide(idRoute: number, newRideInfo: IScheduleInfo): Observable<number> {
+    return this.http.post<number>(`/api/route/${idRoute}/ride`, newRideInfo);
+  }
+
+  updateRide(idRoute: number, rideId: number, updRideInfo: IScheduleInfo): Observable<void> {
+    return this.http.put<void>(`/api/route/${idRoute}/ride/${rideId}`, updRideInfo);
+  }
+
+  deleteRide(idRoute: number, rideId: number): Observable<void> {
+    return this.http.delete<void>(`/api/route/${idRoute}/ride/${rideId}`);
   }
 }

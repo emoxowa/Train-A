@@ -7,12 +7,13 @@ import { Store } from '@ngrx/store';
 import { TuiButton } from '@taiga-ui/core';
 import { Observable } from 'rxjs';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
+import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.component';
 
 @Component({
   selector: 'app-route-card',
   standalone: true,
-  imports: [CommonModule, TuiButton, UpdRouteFormComponent],
+  imports: [CommonModule, TuiButton, UpdRouteFormComponent, RouterLink, RouterLinkActive, RouterModule],
   template: `
     <div class="route-card">
       <h2>Route {{ routeData.id }}</h2>
@@ -43,7 +44,17 @@ import { UpdRouteFormComponent } from '../upd-route-form/upd-route-form.componen
       } @else {
         <button size="s" (click)="openRoutesUpdForm()" tuiButton>Update</button>
       }
-      <button size="s" tuiButton>Asign ride</button>
+      @if (routeData.id) {
+        <button
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          [routerLink]="['/admin/routes', routeData.id]"
+          size="s"
+          tuiButton
+        >
+          Asign ride
+        </button>
+      }
       <button size="s" tuiButton (click)="deleteRoute()">Delete</button>
     </div>
   `,

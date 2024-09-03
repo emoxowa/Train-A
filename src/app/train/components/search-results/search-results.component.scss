@@ -17,8 +17,9 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 100%;
   justify-content: center;
+
+  width: 100%;
 }
 
 .route {
@@ -28,15 +29,18 @@
 }
 
 .schedule {
+  cursor: pointer;
+
   display: grid;
   grid-template-columns: 1fr 250px;
   gap: 20px;
-  cursor: pointer;
+
+  padding: 10px;
+
   background-color: var(--tui-background-base);
   border: 1px solid var(--tui-background-neutral-1-pressed);
   border-radius: 10px;
   box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
-  padding: 10px;
 }
 
 .info-section {
@@ -121,7 +125,9 @@
   flex-direction: column;
   gap: 5px;
   justify-content: flex-end;
+
   padding-left: 20px;
+
   border-left: 1px solid var(--tui-background-neutral-1-pressed);
 
   .carriage {
@@ -136,9 +142,9 @@
     .tui-text_body-m,
     div {
       overflow: hidden;
+      max-width: 80px;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 80px;
     }
   }
 }

@@ -1,4 +1,4 @@
-export interface IRouteInfo {
+export interface IRideInfo {
   id: number;
   path: number[];
   carriages: string[];

@@ -1,6 +1,7 @@
 @import 'styles';
 
 .carriage {
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -11,7 +12,6 @@
 
   border: 1px solid rgb(0 0 0 / 10%);
   border-radius: 5px;
-  overflow-y: auto;
 
   &__header {
     display: flex;
@@ -28,7 +28,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     padding: 5px 10px;
+
     border: 1px solid rgb(0 0 0 / 10%);
     border-radius: 10px;
   }
@@ -36,11 +38,13 @@
   &__container {
     display: grid;
     grid-template-columns: 70px 1fr 40px;
-    border: 1px solid gray;
-    padding: 10px;
-    border-radius: 10px;
     gap: 10px;
+
     width: fit-content;
+    padding: 10px;
+
+    border: 1px solid gray;
+    border-radius: 10px;
   }
 
   &__enter {
@@ -63,8 +67,8 @@
     align-items: center;
 
     &:last-child {
-      border-right: 1px solid gray;
       padding-right: 20px;
+      border-right: 1px solid gray;
     }
   }
 
@@ -72,44 +76,52 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
-    border-left: 1px solid gray;
+
     padding-left: 5px;
+
+    border-left: 1px solid gray;
   }
 
   &__left-seats {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    border-left: 1px solid gray;
+
     padding-left: 5px;
+
+    border-left: 1px solid gray;
   }
 
   &__seat {
+    cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 20px;
+
     width: 20px;
+    height: 20px;
     padding: 3px;
+
     font-size: 10px;
     text-align: center;
+
     background-color: #e0e0e0;
     border-radius: 3px;
-    cursor: pointer;
 
     &.selected-seat {
-      background-color: #ffb84d;
       color: #fff;
+      background-color: #ffb84d;
     }
 
     &.occupied-seat {
-      background-color: #e0e0e0;
       cursor: not-allowed;
+      background-color: #e0e0e0;
     }
 
     &.available-seat {
-      background-color: #007bff;
       color: #fff;
+      background-color: #007bff;
     }
 
     &:hover:not(.occupied-seat) {
@@ -159,8 +171,8 @@ tui-icon {
     }
 
     &__seat {
-      height: 15px;
       width: 15px;
+      height: 15px;
     }
 
     &__container {
@@ -196,8 +208,8 @@ tui-icon {
     }
 
     &__seat {
-      height: 15px;
       width: 15px;
+      height: 15px;
     }
 
     &__container {
