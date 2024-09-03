@@ -48,7 +48,7 @@
             <div class="price-section">
               <div *ngFor="let carriageType of route.carriages | uniqueCarriages" class="carriage">
                 <div class="tui-text_body-m">{{ carriageType }}</div>
-                <div>n seats</div>
+                <div>{{ getAvailableSeatsCountForCarriage(carriageType, route) }} seats</div>
                 <div class="price">
                   {{ schedule | sumCarriagePrice: carriageType | currency: 'USD' : 'symbol' }}
                 </div>

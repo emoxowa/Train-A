@@ -7,13 +7,15 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { RouteModalComponent } from '@app/train/components/route-modal/route-modal.component';
 import { Router } from '@angular/router';
 import { TrainService } from '@app/train/services/train.service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 import { UniqueCarriagesPipe } from '@app/train/pipes/unique-carriages.pipe';
 import { ISchedule } from '@app/train/models/schedule.model';
 import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
 import { IRoute } from '@app/train/models/route.model';
 import { FilterRoutesPipe } from '@app/train/pipes/filter-routes.pipe';
 import { TuiDay } from '@taiga-ui/cdk';
+import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
+import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { Store } from '@ngrx/store';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
@@ -49,11 +51,13 @@ export class SearchResultsComponent {
 
   private router = inject(Router);
 
-  private store = inject(Store);
-
   private dialogs = inject(TuiDialogService);
 
+  private store = inject(Store);
+
   protected searchResponse$: Observable<ISearchRoutesResponse | null> = this.trainService.searchResponse$;
+
+  public carriagesList$: Observable<ICarriage[]> = this.store.select(selectCarriagesArr);
 
   protected loading$: Observable<boolean> = this.trainService.loading$;
 
@@ -107,5 +111,35 @@ export class SearchResultsComponent {
         })
       )
       .subscribe();
+  }
+
+  getAvailableSeatsCountForCarriage(carriageType: string, route: IRoute): number {
+    let totalAvailableSeats = 0;
+
+    const occupiedSeats = new Set<number>();
+    route.schedule.forEach((schedule) => {
+      schedule.segments.forEach((segment) => {
+        segment.occupiedSeats.forEach((seat) => occupiedSeats.add(seat));
+      });
+    });
+
+    let seatOffset = 0;
+    this.carriagesList$.pipe(take(1)).subscribe((carriages) => {
+      route.carriages.forEach((carriageCode) => {
+        const carriage = carriages.find((c) => c.code === carriageCode);
+        if (carriage && carriage.code === carriageType) {
+          const carriageSeatsCount = carriage.rows * (carriage.leftSeats + carriage.rightSeats);
+
+          const occupiedSeatsForThisCarriage = Array.from(occupiedSeats).filter(
+            (seat) => seat >= seatOffset && seat < seatOffset + carriageSeatsCount
+          ).length;
+
+          totalAvailableSeats += carriageSeatsCount - occupiedSeatsForThisCarriage;
+        }
+        seatOffset += carriage!.rows * (carriage!.leftSeats + carriage!.rightSeats);
+      });
+    });
+
+    return totalAvailableSeats;
   }
 }
