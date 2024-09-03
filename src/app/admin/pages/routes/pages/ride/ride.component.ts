@@ -70,18 +70,25 @@ export class RideComponent implements OnInit {
         {
           time: ['2024-08-08T22:19:57.708Z', '2024-08-12T03:29:57.708Z'],
           price: {
-            carriage1: 210,
-            carriage2: 300,
-            carriage3: 250,
-            carriage4: 250,
-            carriage5: 250,
-            carriage6: 250,
+            carriage1:1500
           },
         },
+        // {
+        //   time: ['2024-08-12T03:29:57.708Z', '2024-08-15T08:39:57.708Z'],
+        //   price: {
+        //     вагон:2000
+        //   },
+        // },
+        // {
+        //   time: ['2024-08-15T08:39:57.708Z', '2024-08-18T13:49:57.708Z'],
+        //   price: {
+        //     вагон:3000
+        //   },
+        // },
       ],
     };
 
-    this.adminService.createNewRide(2, mockScheduleInfo).subscribe({
+    this.adminService.createNewRide(533, mockScheduleInfo).subscribe({
       next(value) {
         // eslint-disable-next-line no-console
         console.log('create new ride', value);
