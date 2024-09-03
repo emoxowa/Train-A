@@ -7,9 +7,8 @@
 
   box-sizing: border-box;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1160px;
   margin: 20px 0;
-  padding: 20px 16px;
 
   border-radius: 10px;
 }
@@ -19,26 +18,25 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  justify-content: center;
 }
 
 .route {
-  cursor: pointer;
-
+  display: flex;
+  flex-direction: column;
   gap: 20px;
-
-  padding: 16px;
-
-  background-color: var(--tui-background-base);
-  border: 1px solid var(--tui-background-neutral-1-pressed);
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
 }
 
 .schedule {
   display: grid;
   grid-template-columns: 1fr 250px;
   gap: 20px;
-  width: 100%;
+  cursor: pointer;
+  background-color: var(--tui-background-base);
+  border: 1px solid var(--tui-background-neutral-1-pressed);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
+  padding: 10px;
 }
 
 .info-section {
@@ -121,16 +119,27 @@
 .price-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
   justify-content: flex-end;
-
   padding-left: 20px;
-
   border-left: 1px solid var(--tui-background-neutral-1-pressed);
 
   .carriage {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+
+    .price {
+      text-align: right;
+    }
+
+    .tui-text_body-m,
+    div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 80px;
+    }
   }
 }
 
@@ -154,10 +163,30 @@ tui-loader {
   :host {
     max-width: calc(100vw - 40px);
   }
+
+  .schedule {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .price-section {
+    padding-left: 0;
+    border-left: none;
+  }
 }
 
 @include small-mobile {
   :host {
     max-width: calc(100vw - 40px);
+  }
+
+  .schedule {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .price-section {
+    padding-left: 0;
+    border-left: none;
   }
 }

@@ -1,14 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { ISegment } from '@app/train/models/segment.model';
 import { TuiButton, TuiDialog, TuiDialogContext, TuiScrollbar } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-import { RouteModalData } from '../search-results/search-results.component';
+import { CityNamePipe } from '@app/train/pipes/city-name.pipe';
+import { StopDurationPipe } from '@app/train/pipes/stop-duration.pipe';
+import { SegmentArrivalTimePipe } from '@app/train/pipes/segment-arrival-time.pipe';
+import { ISchedule } from '@app/train/models/schedule.model';
+import { IRoute } from '@app/train/models/route.model';
+
+export interface RouteModalData {
+  schedule: ISchedule;
+  from: number;
+  to: number;
+  path: IRoute['path'];
+  rideId?: number;
+}
 
 @Component({
   selector: 'app-route-modal',
   standalone: true,
-  imports: [CommonModule, TuiDialog, TuiButton, TuiScrollbar],
+  imports: [CommonModule, TuiDialog, TuiButton, TuiScrollbar, CityNamePipe, StopDurationPipe, SegmentArrivalTimePipe],
   templateUrl: './route-modal.component.html',
   styleUrl: './route-modal.component.scss',
 })
@@ -21,18 +32,8 @@ export class RouteModalComponent {
 
   protected getSegmentArrivalTime(index: number): string {
     if (index > 0) {
-      return this.data.route.schedule[0].segments[index - 1].time[1];
+      return this.data.schedule.segments[index - 1].time[1];
     }
     return '';
-  }
-
-  protected calculateStopDuration(segment: ISegment, index: number): string {
-    const arrivalTime = new Date(segment.time[0]).getTime();
-    const departureTime =
-      index > 0 ? new Date(this.data.route.schedule[0].segments[index - 1].time[1]).getTime() : arrivalTime;
-
-    const dwellTime = (arrivalTime - departureTime) / (1000 * 60);
-
-    return `${dwellTime} min`;
   }
 }

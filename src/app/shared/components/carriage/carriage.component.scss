@@ -1,24 +1,53 @@
+@import 'styles';
+
 .carriage {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: center;
 
   width: auto;
   margin: 10px;
-  padding: 10px;
+  padding: 20px;
 
-  border: 1px solid gray;
+  border: 1px solid rgb(0 0 0 / 10%);
   border-radius: 5px;
+  overflow-y: auto;
 
   &__header {
     display: flex;
-    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
     width: 100%;
 
     span {
       font-weight: bold;
     }
+  }
+
+  &__seats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border: 1px solid rgb(0 0 0 / 10%);
+    border-radius: 10px;
+  }
+
+  &__container {
+    display: grid;
+    grid-template-columns: 70px 1fr 40px;
+    border: 1px solid gray;
+    padding: 10px;
+    border-radius: 10px;
+    gap: 10px;
+    width: fit-content;
+  }
+
+  &__enter {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
   }
 
   &__body {
@@ -30,60 +59,166 @@
   &__row {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 40px;
     align-items: center;
+
+    &:last-child {
+      border-right: 1px solid gray;
+      padding-right: 20px;
+    }
   }
 
   &__right-seats {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    border-left: 1px solid gray;
+    padding-left: 5px;
   }
 
   &__left-seats {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    border-left: 1px solid gray;
+    padding-left: 5px;
   }
 
   &__seat {
     display: flex;
-    flex: 1 1 10px;
     align-items: center;
     justify-content: center;
-
-    min-width: 10px;
-    min-height: 10px;
-    padding: 5px 10px;
-
+    height: 20px;
+    width: 20px;
+    padding: 3px;
     font-size: 10px;
     text-align: center;
-
     background-color: #e0e0e0;
     border-radius: 3px;
+    cursor: pointer;
+
+    &.selected-seat {
+      background-color: #ffb84d;
+      color: #fff;
+    }
+
+    &.occupied-seat {
+      background-color: #e0e0e0;
+      cursor: not-allowed;
+    }
+
+    &.available-seat {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    &:hover:not(.occupied-seat) {
+      filter: brightness(0.9);
+    }
   }
 
-  @media (width <= 1300px) {
+  &__restroom {
+    margin: 0 auto;
+    padding: 10px;
+  }
+}
+
+tui-icon {
+  color: gray;
+}
+
+@include desktop {
+  .carriage {
+    margin: 0;
+    padding: 10px;
+
     &__body {
-      gap: 5px;
+      gap: 10px;
     }
   }
+}
 
-  @media (width <= 1300px) {
-    &__row {
-      gap: 25px;
+@include tablet {
+  .carriage {
+    margin: 0;
+    padding: 10px;
+
+    &__body {
+      gap: 10px;
     }
   }
+}
 
-  @media (width <= 1300px) {
+@include mobile {
+  .carriage {
+    margin: 0;
+    padding: 10px;
+
+    &__body {
+      gap: 10px;
+    }
+
     &__seat {
-      flex: 1 1 5px;
-
-      min-width: 5px;
-      min-height: 5px;
-      padding: 2.5px 5px;
-
-      font-size: 10px;
+      height: 15px;
+      width: 15px;
     }
+
+    &__container {
+      grid-template-columns: 40px 1fr 25px;
+      padding: 5px;
+    }
+
+    &__restroom {
+      padding: 5px;
+    }
+
+    &__right-seats {
+      padding-left: 5px;
+    }
+
+    &__left-seats {
+      padding-left: 5px;
+    }
+  }
+
+  tui-icon {
+    font-size: 15px;
+  }
+}
+
+@include small-mobile {
+  .carriage {
+    margin: 0;
+    padding: 10px;
+
+    &__body {
+      gap: 10px;
+    }
+
+    &__seat {
+      height: 15px;
+      width: 15px;
+    }
+
+    &__container {
+      grid-template-columns: 40px 1fr 25px;
+      padding: 5px;
+    }
+
+    &__restroom {
+      padding: 5px;
+    }
+
+    &__right-seats {
+      padding-left: 5px;
+    }
+
+    &__left-seats {
+      padding-left: 5px;
+    }
+  }
+
+  tui-icon {
+    font-size: 15px;
   }
 }

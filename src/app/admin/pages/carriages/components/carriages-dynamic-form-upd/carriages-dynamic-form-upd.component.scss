@@ -1,3 +1,5 @@
+@import 'styles';
+
 .carriages__upd-form {
   display: flex;
   flex-direction: column;
@@ -8,6 +10,22 @@
 }
 
 button {
-  width: 30vw;
+  width:200px;
   margin-top: 5px;
+}
+
+@include mobile {
+  .carriages__upd-form {
+    width: 100%;
+  }
+}
+
+@include small-mobile {
+  .carriages__upd-form {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
 }

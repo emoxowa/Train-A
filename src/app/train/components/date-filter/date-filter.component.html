@@ -1,5 +1,7 @@
 <div tuiCarouselButtons class="wrapper">
-  <button iconStart="@tui.chevron-left" tuiIconButton type="button" (click)="prev()">Previous</button>
+  <button iconStart="@tui.chevron-left" tuiIconButton type="button" class="button-icon" (click)="prev()">
+    Previous
+  </button>
 
   <tui-carousel #carousel [itemsCount]="visibleDates.length" [style.--tui-carousel-padding]="0">
     <ng-container *ngFor="let date of visibleDates" class="carousel">
@@ -16,5 +18,5 @@
     </ng-container>
   </tui-carousel>
 
-  <button iconStart="@tui.chevron-right" tuiIconButton type="button" (click)="next()">Next</button>
+  <button iconStart="@tui.chevron-right" tuiIconButton type="button" class="button-icon" (click)="next()">Next</button>
 </div>

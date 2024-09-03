@@ -1,35 +1,68 @@
-import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
+/* eslint-disable no-console */
+import { CommonModule } from '@angular/common';
+import { Component, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
+import { TuiIcon } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-carriage',
   standalone: true,
-  imports: [],
+  imports: [TuiIcon, CommonModule],
   template: `
     <div class="carriage">
       <div class="carriage__header">
-        <span>Name: {{ carriagesData.name }}</span>
-        <span>Sits: {{ (leftSeats.length + rightSeats.length) * rows.length }}</span>
+        <span>{{ carriagesData.name }}</span>
+        <div class="carriage__seats">
+          {{ (leftSeats.length + rightSeats.length) * rows.length - occupiedSeats.length }} seats
+        </div>
       </div>
-      <div class="carriage__body">
-        @for (row of rows; track row; let rowIndex = $index) {
-          <div class="carriage__row">
+      <div class="carriage__container">
+        <div class="carriage__enter">
+          <tui-icon icon="@tui.fa.solid.mug-saucer"></tui-icon>
+          <tui-icon icon="@tui.fa.solid.person-walking-dashed-line-arrow-right"></tui-icon>
+          <tui-icon icon="@tui.fa.solid.trash" style="align-self: flex-end;"></tui-icon>
+          <tui-icon icon="@tui.fa.solid.restroom" style="align-self: flex-end;"></tui-icon>
+        </div>
+
+        <div class="carriage__body">
+          <div class="carriage__row" *ngFor="let row of rows; let rowIndex = index">
             <div class="carriage__left-seats">
-              @for (seat of leftSeats; track seat; let seatIndexLeft = $index) {
-                <div class="carriage__seat">L-{{ seat + (leftSeats.length + rightSeats.length) * rowIndex }}</div>
-              }
+              <div
+                class="carriage__seat"
+                [ngClass]="{
+                  'selected-seat': calculateSeatIndex(rowIndex, seatIndexLeft, 'L') === selectedSeatIndex,
+                  'occupied-seat': isOccupiedSeat(calculateSeatIndex(rowIndex, seatIndexLeft, 'L')),
+                  'available-seat':
+                    !isOccupiedSeat(calculateSeatIndex(rowIndex, seatIndexLeft, 'L')) &&
+                    calculateSeatIndex(rowIndex, seatIndexLeft, 'L') !== selectedSeatIndex,
+                }"
+                *ngFor="let seat of leftSeats; let seatIndexLeft = index"
+                (click)="onSeatClick(calculateSeatIndex(rowIndex, seatIndexLeft, 'L'))"
+              >
+                {{ calculateSeatIndex(rowIndex, seatIndexLeft, 'L') }}
+              </div>
             </div>
+
             <div class="carriage__right-seats">
-              @for (seat of rightSeats; track seat; let seatIndexRight = $index) {
-                <div class="carriage__seat">
-                  R-{{
-                    getSeats(carriagesData.leftSeats).length + seat + (leftSeats.length + rightSeats.length) * rowIndex
-                  }}
-                </div>
-              }
+              <div
+                class="carriage__seat"
+                [ngClass]="{
+                  'selected-seat': calculateSeatIndex(rowIndex, seatIndexRight, 'R') === selectedSeatIndex,
+                  'occupied-seat': isOccupiedSeat(calculateSeatIndex(rowIndex, seatIndexRight, 'R')),
+                  'available-seat':
+                    !isOccupiedSeat(calculateSeatIndex(rowIndex, seatIndexRight, 'R')) &&
+                    calculateSeatIndex(rowIndex, seatIndexRight, 'R') !== selectedSeatIndex,
+                }"
+                *ngFor="let seat of rightSeats; let seatIndexRight = index"
+                (click)="onSeatClick(calculateSeatIndex(rowIndex, seatIndexRight, 'R'))"
+              >
+                {{ calculateSeatIndex(rowIndex, seatIndexRight, 'R') }}
+              </div>
             </div>
           </div>
-        }
+        </div>
+
+        <div class="carriage__restroom"><tui-icon icon="@tui.fa.solid.restroom"></tui-icon></div>
       </div>
     </div>
   `,
@@ -37,6 +70,12 @@ import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 })
 export class CarriageComponent implements OnChanges {
   @Input({ required: true }) carriagesData!: ICarriage;
+
+  @Input() occupiedSeats: number[] = [];
+
+  @Input() selectedSeatIndex: number | null = null;
+
+  @Output() seatSelected = new EventEmitter<number>();
 
   rows: number[] = [];
 
@@ -62,5 +101,22 @@ export class CarriageComponent implements OnChanges {
   getSeats(count: number): number[] {
     const seats = Array.from({ length: count }, (_, index) => index + 1);
     return seats;
+  }
+
+  calculateSeatIndex(rowIndex: number, seatIndex: number, side: string): number {
+    const seatsPerRow = this.leftSeats.length + this.rightSeats.length;
+    if (side === 'L') {
+      return rowIndex * seatsPerRow + seatIndex + 1;
+    }
+    return rowIndex * seatsPerRow + this.leftSeats.length + seatIndex + 1;
+  }
+
+  onSeatClick(seatIndex: number): void {
+    this.selectedSeatIndex = seatIndex;
+    this.seatSelected.emit(seatIndex);
+  }
+
+  isOccupiedSeat(seatIndex: number): boolean {
+    return this.occupiedSeats.includes(seatIndex);
   }
 }

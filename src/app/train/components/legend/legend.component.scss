@@ -1,0 +1,89 @@
+@import 'styles';
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.seat {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.seat-number {
+  position: relative;
+  z-index: 2;
+  font-weight: bold;
+  color: white;
+}
+
+.seat::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 0;
+  bottom: 0;
+  border-radius: 4px;
+  z-index: 1;
+  height: 23px;
+}
+
+.seat.reserved {
+  background-color: #d3d3d3;
+
+  .seat-number {
+    color: gray;
+  }
+}
+
+.seat.reserved::before {
+  background-color: #f0f0f0;
+  top: 5px;
+  left: 5px;
+}
+
+.seat.available {
+  background-color: #003399;
+}
+
+.seat.available::before {
+  background-color: #0044cc;
+  top: 5px;
+  left: 5px;
+}
+
+.seat.selected {
+  background-color: #ff9900;
+}
+
+.seat.selected::before {
+  background-color: #ffb84d;
+  top: 5px;
+  left: 5px;
+}
+
+.text {
+  font-weight: bold;
+}
+
+@include small-mobile {
+  .legend {
+    font-size: 10px;
+    line-height: 1;
+    gap: 10px;
+  }
+}
