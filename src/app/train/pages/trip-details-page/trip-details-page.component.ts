@@ -19,6 +19,7 @@ import { IOrderCreateRequest } from '@app/train/models/order.model';
 import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
 import { CityNamePipe } from '@app/train/pipes/city-name.pipe';
 import { NoRidesAvailableComponent } from '@app/train/components/no-rides-available/no-rides-available.component';
+import { TrimRideInformationPipe } from '@app/train/pipes/trim-rideinformation.pipe';
 import { RouteModalComponent, RouteModalData } from '../../components/route-modal/route-modal.component';
 
 @Component({
@@ -35,6 +36,7 @@ import { RouteModalComponent, RouteModalData } from '../../components/route-moda
     SumCarriagePricePipe,
     CityNamePipe,
     NoRidesAvailableComponent,
+    TrimRideInformationPipe,
   ],
   templateUrl: './trip-details-page.component.html',
   styleUrls: ['./trip-details-page.component.scss'],
@@ -118,21 +120,40 @@ export class TripDetailsPageComponent implements OnInit {
   protected showDialog(event: Event): void {
     event.stopPropagation();
     this.withRideInfo((rideInfo) => {
+      const trimmedRideInfo = this.trimRideInformation(rideInfo, this.stationStart, this.stationEnd);
+
       this.dialogs
         .open(new PolymorpheusComponent(RouteModalComponent, this.injector), {
           size: 'm',
           closeable: true,
           dismissible: true,
           data: {
-            schedule: rideInfo.schedule,
+            schedule: trimmedRideInfo.schedule,
             from: this.stationStart,
             to: this.stationEnd,
-            path: rideInfo.path,
-            rideId: rideInfo.rideId,
+            path: trimmedRideInfo.path,
+            rideId: trimmedRideInfo.rideId,
           } as RouteModalData,
         })
         .subscribe();
     });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private trimRideInformation(rideInfo: IRideInformation, stationStart: number, stationEnd: number): IRideInformation {
+    const startIndex = rideInfo.path.indexOf(stationStart);
+    const endIndex = rideInfo.path.indexOf(stationEnd);
+    const trimmedPath = rideInfo.path.slice(startIndex, endIndex);
+    const trimmedSegments = rideInfo.schedule.segments.slice(startIndex, endIndex);
+
+    return {
+      ...rideInfo,
+      path: trimmedPath,
+      schedule: {
+        ...rideInfo.schedule,
+        segments: trimmedSegments,
+      },
+    };
   }
 
   protected goBack(): void {
@@ -232,10 +253,20 @@ export class TripDetailsPageComponent implements OnInit {
             this.selectedSeat = null;
           },
           error: (errorResponse) => {
-            if (errorResponse.status === 400 && errorResponse.error?.reason === 'alreadyBooked') {
-              this.bookingError = true;
-              this.errorMessage = errorResponse.error.message;
-              this.selectedSeat = null;
+            if (errorResponse.status === 400) {
+              if (errorResponse.error?.reason === 'alreadyBooked') {
+                this.bookingError = true;
+                this.errorMessage = errorResponse.error.message;
+                this.selectedSeat = null;
+              } else if (errorResponse.error?.reason === 'invalidRide') {
+                this.bookingError = true;
+                this.errorMessage = 'This trip is expired. Please select another trip.';
+                this.selectedSeat = null;
+              } else {
+                this.bookingError = true;
+                this.errorMessage = 'An unknown error occurred while booking.';
+                this.selectedSeat = null;
+              }
             } else if (errorResponse.status === 401 && errorResponse.error?.reason === 'invalidAccessToken') {
               this.router.navigate(['/signin']);
             } else {

@@ -69,7 +69,12 @@ export class StationEffectService {
             return StationsActions.loadStationsSuccess({ stations });
           }),
           catchError((error) => {
-            // error from https://github.com/rolling-scopes-school/tasks/blob/master/tasks/train-a/admin/stations.md#acceptance-criteria-4-deleting-stations-5
+            if (error.status === 400) {
+              // eslint-disable-next-line no-alert
+              alert('Station is already used');
+              this.store.dispatch(StationsActions.deletStationIndicateSuccsess());
+              return EMPTY;
+            }
             console.error('Error deleting station:', error);
             return EMPTY;
           })
