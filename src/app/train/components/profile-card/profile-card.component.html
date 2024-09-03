@@ -1,6 +1,6 @@
 <div tuiCardLarge tuiSurface="elevated" class="profile">
   <h1 class="profile__title" tuiTitle="l">Profile</h1>
-  <div class="profile__role" *ngIf="(userRole$ | async) === 'manager'">manager</div>
+  <div class="profile__role" *ngIf="isManager$ | async">manager</div>
   <button class="profile__button" tuiButton appearance="primary" size="m" (click)="showChangePasswordForm()">
     Change Password
   </button>

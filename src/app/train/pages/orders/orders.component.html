@@ -1,0 +1,42 @@
+<h1 class="title" tuiTitle="l">{{ (isManager$ | async) ? 'Orders' : 'My orders' }}</h1>
+<div class="orders">
+  <div
+    *ngFor="let order of (orders$ | async) || [] | sortByStartTime; index as index"
+    tuiCardLarge="compact"
+    tuiSurface="elevated"
+    class="orders-card"
+  >
+    <div><span class="orders-card__subtitle">Start trip station:</span> {{ order.stationStart }}</div>
+    <div><span class="orders-card__subtitle">Start trip time:</span> {{ order.timeStart | date: 'MMMM dd hh:mm' }}</div>
+    <div><span class="orders-card__subtitle">End trip station:</span> {{ order.stationEnd }}</div>
+    <div><span class="orders-card__subtitle">End trip time:</span> {{ order.timeEnd | date: 'MMMM dd hh:mm' }}</div>
+    <div>
+      <span class="orders-card__subtitle">Trip duration:</span> {{ order.timeStart | formatDuration: order.timeEnd }}
+    </div>
+    <div><span class="orders-card__subtitle">Carriage type:</span> {{ order.carriageType }}</div>
+    <div><span class="orders-card__subtitle">Car number:</span> {{ order.carriageNumber }}</div>
+    <div><span class="orders-card__subtitle">Seat number:</span> {{ order.seatNumber }}</div>
+    <div><span class="orders-card__subtitle">Price:</span> {{ order.price | currency }}</div>
+    <button
+      class="orders-card__button"
+      tuiButton
+      size="m"
+      appearance="destructive"
+      *ngIf="order.status === 'active'"
+      (click)="showCancelDialog(order.id, order.userId)"
+    >
+      Cancel
+    </button>
+  </div>
+</div>
+
+<ng-template [(tuiDialog)]="isCancelDialogOpen">
+  <div class="confirm-dialog">
+    <h2 tuiTitle="m">Are you sure you want to cancel the order?</h2>
+    <div *ngIf="isManager$ | async">
+      <div>Order ID: {{ this.currentOrderId }}</div>
+      <div>Customer name: {{ this.currentUserName$ | async }}</div>
+    </div>
+    <button tuiButton appearance="destructive" (click)="onCancelConfirm()">Confirm</button>
+  </div>
+</ng-template>

@@ -12,6 +12,7 @@ import { appReducer } from '@core/store/app.reducer';
 import { initialAppState } from '@core/store/app-state';
 import { StationEffectService } from '@core/store/admin-store/effects/station-effect.service';
 import { authInterceptor } from '@app/auth/services/auth.interceptor';
+import { OrderEffectService } from '@core/store/order-store/effects/order-effect.service';
 import { routes } from './app.routes';
 import { CarriageEffectService } from './core/store/admin-store/effects/carriage-effect.service';
 import { environment } from '../environments/environment';
@@ -25,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     NG_EVENT_PLUGINS,
     provideStore(appReducer, { initialState: initialAppState }),
-    provideEffects([StationEffectService, UserEffectService, CarriageEffectService, RoutesEffectService]),
+    provideEffects([StationEffectService, UserEffectService, OrderEffectService, CarriageEffectService, RoutesEffectService]),
     provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),
     importProvidersFrom(
       StoreDevtoolsModule.instrument({
