@@ -74,6 +74,12 @@ export class TripDetailsPageComponent implements OnInit {
 
   public showNoRidesAvailable: boolean = false;
 
+  public bookingSuccess: boolean = false;
+
+  public bookingError: boolean = false;
+
+  public errorMessage: string | null = null;
+
   ngOnInit(): void {
     this.initializeRideData();
   }
@@ -210,7 +216,22 @@ export class TripDetailsPageComponent implements OnInit {
           stationStart: this.stationStart,
           stationEnd: this.stationEnd,
         };
-        this.orderService.createOrder(orderRequest).subscribe();
+
+        this.orderService.createOrder(orderRequest).subscribe({
+          next: () => {
+            this.bookingSuccess = true;
+            this.selectedSeat = null;
+          },
+          error: (errorResponse) => {
+            if (errorResponse.status === 400 && errorResponse.error?.reason === 'alreadyBooked') {
+              this.bookingError = true;
+              this.errorMessage = errorResponse.error.message;
+              this.selectedSeat = null;
+            } else {
+              console.error('Unexpected booking error:', errorResponse);
+            }
+          },
+        });
       });
     }
   }

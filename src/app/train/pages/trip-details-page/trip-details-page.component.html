@@ -5,8 +5,11 @@
 
       <div>
         <div class="tui-text_body-l-1">
-          {{ stationStart | cityName | async }} → {{ stationEnd | cityName | async }},
-          {{ rideInfo.schedule.segments[0].time[0] | date: 'MMM d, h:mm a' }}
+          <p>{{ stationStart | cityName | async }} → {{ stationEnd | cityName | async }}</p>
+          <p>
+            {{ rideInfo.schedule.segments[0].time[0] | date: 'MMM d, h:mm a' }} →
+            {{ rideInfo.schedule.segments.at(-1)!.time[1] | date: 'MMM d, h:mm a' }}
+          </p>
         </div>
 
         <div class="ride">
@@ -14,6 +17,17 @@
           <button tuiButton (click)="showDialog($event)" size="s" appearance="outline">Route</button>
         </div>
       </div>
+    </div>
+
+    <div *ngIf="bookingSuccess" class="booking-success">
+      <p>Booking successful!</p>
+      <button tuiButton routerLink="/orders">My Orders</button>
+    </div>
+
+    <div *ngIf="bookingError" class="booking-error">
+      <p>{{ errorMessage }}</p>
+      <p>You must cancel the previous reservation and create a new one</p>
+      <button tuiButton routerLink="/orders">My Orders</button>
     </div>
 
     <div class="content">
@@ -43,7 +57,7 @@
           </ng-container>
         </div>
 
-        <div class="booking" *ngIf="selectedSeat">
+        <div class="booking">
           <div class="booking-info">
             <span *ngIf="selectedSeat">{{ selectedOrderCarriage }}, Seat {{ selectedSeat }}</span
             ><span *ngIf="selectedSeat">{{
