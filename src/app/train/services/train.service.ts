@@ -3,7 +3,7 @@ import { IStationResponse, ISearchRoutesResponse } from '@app/train/models/searc
 import { ISearchRoutesRequest } from '@app/train/models/search-request.model';
 import { IRoute } from '@app/train/models/route.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, shareReplay, tap, throwError } from 'rxjs';
 import { TuiDay } from '@taiga-ui/cdk';
 import { IRideInformation } from '../models/ride-information.model';
 
@@ -33,16 +33,16 @@ export class TrainService {
 
   public selectedDate$ = this.selectedDateSubject.asObservable();
 
-  private routeDetailsSubject = new BehaviorSubject<IRoute | null>(null);
+  // private routeDetailsSubject = new BehaviorSubject<IRoute | null>(null);
 
-  public routeDetails$ = this.routeDetailsSubject.asObservable();
+  // public routeDetails$ = this.routeDetailsSubject.asObservable();
+
+  // private rideInformationSubject = new BehaviorSubject<IRideInformation | null>(null);
+
+  // rideInformation$ = this.rideInformationSubject.asObservable();
 
   public setSelectedDate(date: TuiDay | null): void {
     this.selectedDateSubject.next(date);
-  }
-
-  public setRouteDetails(route: IRoute): void {
-    this.routeDetailsSubject.next(route);
   }
 
   public searchTrips(searchRequest: ISearchRoutesRequest): Observable<ISearchRoutesResponse> {
@@ -73,9 +73,7 @@ export class TrainService {
   public getRideInformation(rideId: number): Observable<IRideInformation> {
     const url = `${this.apiUrl}/${rideId}`;
     return this.http.get<IRideInformation>(url).pipe(
-      tap((response) => {
-        console.log('Ride Information:', response);
-      }),
+      shareReplay(1),
       catchError((error) => {
         console.error('Error fetching ride information:', error);
         return throwError(() => error);

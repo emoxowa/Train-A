@@ -12,9 +12,9 @@
           <div
             class="schedule"
             *ngFor="let schedule of route.schedule; let scheduleIndex = index"
-            (click)="onCardClick(schedule.rideId, route)"
-            (keyup.enter)="onCardClick(schedule.rideId, route)"
-            (keydown.space)="onCardClick(schedule.rideId, route)"
+            (click)="onCardClick(schedule.rideId)"
+            (keyup.enter)="onCardClick(schedule.rideId)"
+            (keydown.space)="onCardClick(schedule.rideId)"
             tabindex="0"
           >
             <div class="info-section">

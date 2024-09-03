@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, INJECTOR, OnInit } from '@angular/core';
-import { IRoute } from '@app/train/models/route.model';
 import { TuiButton, TuiDialogService } from '@taiga-ui/core';
 import { TuiAppBar } from '@taiga-ui/layout';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { combineLatest, map, Observable, take } from 'rxjs';
+import { first, map, Observable, shareReplay, take } from 'rxjs';
 import { TuiSegmented } from '@taiga-ui/kit';
 import { TrainService } from '@app/train/services/train.service';
 import { ActivatedRoute } from '@angular/router';
@@ -56,8 +55,6 @@ export class TripDetailsPageComponent implements OnInit {
 
   protected rideInformation$!: Observable<IRideInformation>;
 
-  protected routeDetails$!: Observable<IRoute | null>;
-
   public stationArr$ = this.store.select(selectStationIdAndCity);
 
   public selectedCarriage: string | null = null;
@@ -70,30 +67,41 @@ export class TripDetailsPageComponent implements OnInit {
 
   public availableSeatsCount: number = 0;
 
+  public stationStart: number = 0;
+
+  public stationEnd: number = 0;
+
   ngOnInit(): void {
     const rideId = Number(this.route.snapshot.paramMap.get('id'));
+    this.stationStart = Number(this.route.snapshot.queryParamMap.get('from'));
+    this.stationEnd = Number(this.route.snapshot.queryParamMap.get('to'));
 
     if (rideId) {
-      this.rideInformation$ = this.trainService.getRideInformation(rideId);
-      this.routeDetails$ = this.trainService.routeDetails$;
+      console.log('Fetching ride information for ID:', rideId);
+      this.rideInformation$ = this.trainService.getRideInformation(rideId).pipe(shareReplay(1));
 
-      this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
-        if (routeDetails && routeDetails.carriages.length > 0) {
-          const [firstCarriage] = routeDetails.carriages;
-          this.selectedCarriage = firstCarriage;
-        }
+      this.rideInformation$.pipe(first()).subscribe({
+        next: (ride) => {
+          console.log('Ride information received:', ride);
+          if (ride && ride.carriages.length > 0) {
+            const [firstCarriage] = ride.carriages;
+            this.selectedCarriage = firstCarriage;
+          }
+          this.calculateOccupiedSeats();
+          this.calculateAvailableSeatsCount();
+        },
+        error: (error) => console.error('Error occurred while fetching ride information:', error),
       });
-
-      this.calculateOccupiedSeats();
-      this.calculateAvailableSeatsCount();
+    } else {
+      console.error('Ride ID is not available in route parameters.');
     }
   }
 
   protected showDialog(event: Event): void {
     event.stopPropagation();
 
-    combineLatest([this.rideInformation$, this.routeDetails$]).subscribe(([rideInfo, routeDetails]) => {
-      if (rideInfo && routeDetails) {
+    this.rideInformation$.pipe(take(1)).subscribe((rideInfo) => {
+      if (rideInfo) {
         this.dialogs
           .open(new PolymorpheusComponent(RouteModalComponent, this.injector), {
             size: 'm',
@@ -101,8 +109,8 @@ export class TripDetailsPageComponent implements OnInit {
             dismissible: true,
             data: {
               schedule: rideInfo.schedule,
-              from: routeDetails.path[0],
-              to: routeDetails.path.at(-1),
+              from: this.stationStart,
+              to: this.stationEnd,
               path: rideInfo.path,
             } as RouteModalData,
           })
@@ -147,13 +155,13 @@ export class TripDetailsPageComponent implements OnInit {
   calculateAbsoluteSeatIndex(carriageIndex: number, seatIndex: number): number {
     let seatOffset = 0;
 
-    this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
-      if (!routeDetails) {
+    this.rideInformation$.pipe(take(1)).subscribe((ride) => {
+      if (!ride) {
         return;
       }
 
       for (let i = 0; i < carriageIndex; i += 1) {
-        const carriageData = this.getCarriageData(routeDetails.carriages[i]);
+        const carriageData = this.getCarriageData(ride.carriages[i]);
         seatOffset += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
       }
 
@@ -166,12 +174,12 @@ export class TripDetailsPageComponent implements OnInit {
   }
 
   calculateAvailableSeatsCount(): void {
-    this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
-      if (!routeDetails) return;
+    this.rideInformation$.pipe(take(1)).subscribe((ride) => {
+      if (!ride) return;
 
       let totalSeats = 0;
 
-      routeDetails.carriages.forEach((carriageCode) => {
+      ride.carriages.forEach((carriageCode) => {
         const carriageData = this.getCarriageData(carriageCode);
         totalSeats += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
       });
@@ -183,12 +191,12 @@ export class TripDetailsPageComponent implements OnInit {
   getAvailableSeatsCountForCarriage(carriageCode: string): number {
     let totalAvailableSeats = 0;
 
-    this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
-      if (!routeDetails) return;
+    this.rideInformation$.pipe(take(1)).subscribe((ride) => {
+      if (!ride) return;
 
       let seatOffset = 0;
 
-      routeDetails.carriages.forEach((code) => {
+      ride.carriages.forEach((code) => {
         const carriageData = this.getCarriageData(code);
         const carriageSeatsCount = carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
 
@@ -214,8 +222,8 @@ export class TripDetailsPageComponent implements OnInit {
         const orderRequest: IOrderCreateRequest = {
           rideId: rideInfo.rideId,
           seat: this.selectedSeat!,
-          stationStart: 1,
-          stationEnd: 3,
+          stationStart: this.stationStart,
+          stationEnd: this.stationEnd,
         };
         this.orderService.createOrder(orderRequest).subscribe((response) => {
           console.log('Order created with ID:', response.id);
@@ -243,15 +251,15 @@ export class TripDetailsPageComponent implements OnInit {
     let carriageSeatsCount = 0;
     let occupiedSeatsForCarriage: number[] = [];
 
-    this.routeDetails$.pipe(take(1)).subscribe((routeDetails) => {
-      if (!routeDetails) return;
+    this.rideInformation$.pipe(take(1)).subscribe((ride) => {
+      if (!ride) return;
 
       for (let i = 0; i < carriageIndex; i += 1) {
-        const carriageData = this.getCarriageData(routeDetails.carriages[i]);
+        const carriageData = this.getCarriageData(ride.carriages[i]);
         seatOffset += carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
       }
 
-      const carriageData = this.getCarriageData(routeDetails.carriages[carriageIndex]);
+      const carriageData = this.getCarriageData(ride.carriages[carriageIndex]);
       carriageSeatsCount = carriageData.rows * (carriageData.leftSeats + carriageData.rightSeats);
 
       occupiedSeatsForCarriage = this.occupiedSeats

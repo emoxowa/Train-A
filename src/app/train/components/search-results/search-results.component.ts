@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, INJECTOR, OnInit } from '@angular/core';
+import { Component, inject, INJECTOR } from '@angular/core';
 import { ISearchRoutesResponse } from '@app/train/models/search-response.model';
 import { TuiButton, TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';
@@ -14,10 +14,7 @@ import { SumCarriagePricePipe } from '@app/train/pipes/sumCarriagePrice.pipe';
 import { IRoute } from '@app/train/models/route.model';
 import { FilterRoutesPipe } from '@app/train/pipes/filter-routes.pipe';
 import { TuiDay } from '@taiga-ui/cdk';
-import { selectCarriagesArr } from '@app/core/store/admin-store/selectors/carriage.selectors';
 import { Store } from '@ngrx/store';
-import { CarriageActions } from '@app/core/store/admin-store/actions/carriage.actions';
-import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { NoRidesAvailableComponent } from '../no-rides-available/no-rides-available.component';
 
 export interface RouteModalData {
@@ -45,7 +42,7 @@ export interface RouteModalData {
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
 })
-export class SearchResultsComponent implements OnInit {
+export class SearchResultsComponent {
   private readonly trainService = inject(TrainService);
 
   private readonly injector = inject(INJECTOR);
@@ -61,12 +58,6 @@ export class SearchResultsComponent implements OnInit {
   protected loading$: Observable<boolean> = this.trainService.loading$;
 
   protected selectedDate$: Observable<TuiDay | null> = this.trainService.selectedDate$;
-
-  public carriagesList$: Observable<ICarriage[]> = this.store.select(selectCarriagesArr);
-
-  ngOnInit(): void {
-    this.store.dispatch(CarriageActions.loadCarriagesList());
-  }
 
   protected showDialog(schedule: ISchedule, event: Event, route: IRoute): void {
     event.stopPropagation();
@@ -96,8 +87,7 @@ export class SearchResultsComponent implements OnInit {
       .subscribe();
   }
 
-  protected onCardClick(rideId: number, route: IRoute): void {
-    this.trainService.setRouteDetails(route);
+  protected onCardClick(rideId: number): void {
     this.searchResponse$
       .pipe(
         map((searchResponse) => {
