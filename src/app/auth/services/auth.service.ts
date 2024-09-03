@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { SignInResponse } from '../models/sign-in.interface';
 
@@ -14,15 +13,14 @@ export class AuthService {
 
   private readonly logoutUrl = '/api/logout';
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  constructor(private http: HttpClient) {}
 
   signIn(email: string, password: string): Observable<SignInResponse> {
-    return this.http
-      .post<SignInResponse>(this.signInUrl, { email, password })
-      .pipe(tap((response) => this.setToken(response.token)));
+    return this.http.post<SignInResponse>(this.signInUrl, { email, password }).pipe(
+      tap((response) => {
+        this.setToken(response.token);
+      })
+    );
   }
 
   signUp(email: string, password: string) {
@@ -56,3 +54,4 @@ export class AuthService {
     return !!this.getToken();
   }
 }
+

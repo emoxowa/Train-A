@@ -18,9 +18,6 @@ import { TuiDataListWrapper } from '@taiga-ui/kit/components/data-list-wrapper';
 import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
 import { IStation } from '@app/admin/models/station-list.model';
 import { TuiButtonLoading } from '@taiga-ui/kit';
-import { ICreateAdmin } from '@app/admin/models/create-admin';
-import { tap } from 'rxjs';
-import { AdminService } from '@app/admin/service/admin.service';
 
 @Component({
   selector: 'app-stations',
@@ -53,8 +50,6 @@ export class StationComponent implements AfterViewInit, OnInit {
 
   private store = inject(Store);
 
-  private adminService = inject(AdminService);
-
   public stations$ = this.store.select(selectStationArr);
 
   public stationsAndId$ = this.store.select(selectStationIdAndCity);
@@ -74,11 +69,6 @@ export class StationComponent implements AfterViewInit, OnInit {
     connections: this.formBuilder.array([new FormControl<string | null>(null)]),
   });
 
-  readonly newAdmin: ICreateAdmin = {
-    email: 'admin@admin.com',
-    password: 'my-password',
-  };
-
   get connections(): FormArray {
     return this.stationForm.get('connections') as FormArray;
   }
@@ -97,15 +87,6 @@ export class StationComponent implements AfterViewInit, OnInit {
     this.stationsAndId$.subscribe((cities) => {
       this.stationsAndId = cities;
     });
-
-    this.adminService
-      .loginAdmin(this.newAdmin)
-      .pipe(
-        tap((response) => {
-          this.adminService.token$.next(response.token);
-        })
-      )
-      .subscribe();
   }
 
   ngAfterViewInit(): void {
