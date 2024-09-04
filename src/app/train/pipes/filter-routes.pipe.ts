@@ -13,7 +13,7 @@ export class FilterRoutesPipe implements PipeTransform {
       return response;
     }
 
-    const startOfDay = selectedDate.toUtcNativeDate();
+    const startOfDay = selectedDate.toLocalNativeDate();
     const endOfDay = new Date(startOfDay);
     endOfDay.setHours(23, 59, 59, 999);
 
