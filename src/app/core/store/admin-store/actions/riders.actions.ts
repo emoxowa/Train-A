@@ -17,7 +17,7 @@ export const RiderAction = {
   createRideSuccess: createAction(ERiderActions.CreateRideSuccess, props<{ scheduleItem: IScheduleInfo }>()),
   updateRide: createAction(
     ERiderActions.UpdateRide,
-    props<{ scheduleItem: IScheduleInfo; routeId: number; rideId: number }>()
+    props<{ scheduleItem: Required<IScheduleInfo>; routeId: number }>()
   ),
-  updateRideSuccess: createAction(ERiderActions.UpdateRideSuccess, props<{ scheduleItem: IScheduleInfo }>()),
+  updateRideSuccess: createAction(ERiderActions.UpdateRideSuccess, props<{ scheduleItem: Required<IScheduleInfo> }>()),
 };

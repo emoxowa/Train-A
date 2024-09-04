@@ -131,7 +131,7 @@ export class RideCardComponent implements OnInit {
     });
 
     this.store.dispatch(
-      RiderAction.updateRide({ scheduleItem: { segments: newSchedule }, routeId: this.routeId, rideId: this.idRide })
+      RiderAction.updateRide({ scheduleItem: { rideId: this.idRide, segments: newSchedule }, routeId: this.routeId })
     );
   }
 
