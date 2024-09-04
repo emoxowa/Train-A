@@ -98,26 +98,35 @@ export class RideCardComponent implements OnInit {
     const departInputs = this.getValuesByIndex(this.timeInputsDepart, index, 'data-index');
     const arriveInputs = this.getValuesByIndex(this.timeInputsArrive, index, 'data-index');
     const prevDepartInputs = this.getValuesByIndex(this.timeInputsDepart, index - 1, 'data-index');
-    const nextDepartInputs = this.getValuesByIndex(this.timeInputsDepart, index + 1, 'data-index');
+    const nextArriveInputs = this.getValuesByIndex(this.timeInputsArrive, index + 1, 'data-index');
 
     const carriagesInputs = this.getValuesByIndex(this.carriageInputs, index, 'data-index');
-    const prevCarriagesInputs = this.getValuesByIndex(this.carriageInputs, index - 1, 'data-index');
     const carriageNameTextContent = this.getTextContentByIndex(this.carriageName, index, 'data-index');
 
-    const prevTime = [...arriveInputs, ...prevDepartInputs];
-    const time = [...departInputs, ...nextDepartInputs];
+    const prevTime = [...prevDepartInputs, ...arriveInputs];
+    const time = [...departInputs, ...nextArriveInputs];
 
-    const prevCarriagesPrice = this.mapCarriagePrices(carriageNameTextContent, prevCarriagesInputs);
     const carriagesPrice = this.mapCarriagePrices(carriageNameTextContent, carriagesInputs);
 
-    // eslint-disable-next-line no-console
-    console.log('prev time', prevTime);
-    // eslint-disable-next-line no-console
-    console.log('time', time);
-    // eslint-disable-next-line no-console
-    console.log('prev price', prevCarriagesPrice);
-    // eslint-disable-next-line no-console
-    console.log('carriage price', carriagesPrice);
+    const newSchedule = this.rideSchedule.map((segment, segmentIndex, schedule) => {
+      if (segmentIndex === index) {
+        return {
+          price: carriagesPrice,
+          time: time.map((timeItem) => new Date(timeItem).toISOString()),
+        };
+      }
+
+      if (segmentIndex + 1 === index) {
+        return {
+          ...schedule[index - 1],
+          time: prevTime.map((timeItem) => new Date(timeItem).toISOString()),
+        };
+      }
+
+      return segment;
+    });
+
+    console.log(newSchedule);
   }
 
   // eslint-disable-next-line class-methods-use-this
