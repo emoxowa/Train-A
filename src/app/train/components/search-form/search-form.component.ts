@@ -106,7 +106,9 @@ export class SearchFormComponent implements OnInit {
         const date = this.form.get('date')!.value as TuiDay;
         const time = this.form.get('time')!.value;
 
-        const timeInMillis = time ? date.append(time).toUtcNativeDate().getTime() : date.toUtcNativeDate().getTime();
+        const timeInMillis = time
+          ? date.append(time).toLocalNativeDate().getTime()
+          : date.toLocalNativeDate().getTime();
 
         return {
           fromLatitude: fromFullStation.latitude,
