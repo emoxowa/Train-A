@@ -18,5 +18,19 @@ export const rideReducer = createReducer(
         schedule: [...state.riderList.schedule, scheduleItem],
       },
     };
+  }),
+  on(RiderAction.updateRideSuccess, (state, { scheduleItem }): IRiderState => {
+    return {
+      ...state,
+      riderList: {
+        ...state.riderList,
+        schedule: state.riderList.schedule.map((oldScheduleItem) => {
+          if (oldScheduleItem.rideId === scheduleItem.rideId) {
+            return scheduleItem;
+          }
+          return oldScheduleItem;
+        }),
+      },
+    };
   })
 );

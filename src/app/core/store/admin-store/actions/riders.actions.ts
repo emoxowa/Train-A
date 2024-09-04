@@ -6,6 +6,8 @@ export enum ERiderActions {
   LoadRiderListSuccsess = '[Rider] Load Rider List Succsess',
   CreateRide = '[Rider] Create Ride',
   CreateRideSuccess = '[Rider] Create Ride Success',
+  UpdateRide = '[Rider] Update Ride',
+  UpdateRideSuccess = '[Rider] Update Ride Success',
 }
 
 export const RiderAction = {
@@ -13,4 +15,9 @@ export const RiderAction = {
   loadRiderListSuccsess: createAction(ERiderActions.LoadRiderListSuccsess, props<{ riderList: IRideInfo }>()),
   createRide: createAction(ERiderActions.CreateRide, props<{ routeId: number; scheduleItem: IScheduleInfo }>()),
   createRideSuccess: createAction(ERiderActions.CreateRideSuccess, props<{ scheduleItem: IScheduleInfo }>()),
+  updateRide: createAction(
+    ERiderActions.UpdateRide,
+    props<{ scheduleItem: IScheduleInfo; routeId: number; rideId: number }>()
+  ),
+  updateRideSuccess: createAction(ERiderActions.UpdateRideSuccess, props<{ scheduleItem: IScheduleInfo }>()),
 };

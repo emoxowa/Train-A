@@ -66,4 +66,19 @@ export class RiderEffectService {
       })
     )
   );
+
+  updateRide$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RiderAction.updateRide),
+      switchMap(({ scheduleItem, routeId, rideId }) =>
+        this.adminService.updateRide(routeId, rideId, scheduleItem).pipe(
+          map(() => RiderAction.updateRideSuccess({ scheduleItem })),
+          catchError((error) => {
+            console.error('Error loading data:', error);
+            return EMPTY;
+          })
+        )
+      )
+    )
+  );
 }

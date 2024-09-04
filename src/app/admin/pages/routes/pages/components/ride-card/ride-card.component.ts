@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { IPriceInfo, IRideInfo, IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
 import { IStation } from '@app/admin/models/station-list.model';
+import { Store } from '@ngrx/store';
+import { RiderAction } from '@core/store/admin-store/actions/riders.actions';
 
 @Component({
   selector: 'app-ride-card',
@@ -40,6 +42,8 @@ export class RideCardComponent implements OnInit {
   @ViewChildren('carriageInput') carriageInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   @ViewChildren('carriageName') carriageName!: QueryList<ElementRef<HTMLInputElement>>;
+
+  private readonly store = inject(Store);
 
   ngOnInit(): void {
     this.isEditingPrice = new Array(this.rideSchedule.length).fill(false);
@@ -108,25 +112,27 @@ export class RideCardComponent implements OnInit {
 
     const carriagesPrice = this.mapCarriagePrices(carriageNameTextContent, carriagesInputs);
 
-    const newSchedule = this.rideSchedule.map((segment, segmentIndex, schedule) => {
+    const newSchedule = this.rideSchedule.map((segment, segmentIndex, schedule): ISegmentInfo => {
       if (segmentIndex === index) {
         return {
           price: carriagesPrice,
-          time: time.map((timeItem) => new Date(timeItem).toISOString()),
+          time: time.map((timeItem) => new Date(timeItem).toISOString()) as [string, string],
         };
       }
 
       if (segmentIndex + 1 === index) {
         return {
           ...schedule[index - 1],
-          time: prevTime.map((timeItem) => new Date(timeItem).toISOString()),
+          time: prevTime.map((timeItem) => new Date(timeItem).toISOString()) as [string, string],
         };
       }
 
       return segment;
     });
 
-    console.log(newSchedule);
+    this.store.dispatch(
+      RiderAction.updateRide({ scheduleItem: { segments: newSchedule }, routeId: this.routeId, rideId: this.idRide })
+    );
   }
 
   // eslint-disable-next-line class-methods-use-this
