@@ -1,14 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ICarriage } from '@app/admin/models/create-new-carriage-type.model';
 import { IPriceInfo, IRideInfo, IScheduleInfo, ISegmentInfo } from '@app/admin/models/route-info.module';
 import { IStation } from '@app/admin/models/station-list.model';
+import { Store } from '@ngrx/store';
+import { RiderAction } from '@core/store/admin-store/actions/riders.actions';
+import {
+  TuiButton,
+  TuiDialog,
+  TuiIcon,
+  TuiSurface,
+  TuiTextfield,
+  TuiTextfieldComponent,
+  TuiTitle,
+} from '@taiga-ui/core';
+import { TuiCardLarge } from '@taiga-ui/layout';
 
 @Component({
   selector: 'app-ride-card',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TuiTitle,
+    TuiCardLarge,
+    TuiSurface,
+    TuiButton,
+    TuiIcon,
+    TuiTextfieldComponent,
+    TuiTextfield,
+    TuiDialog,
+  ],
   templateUrl: './ride-card.component.html',
   styleUrl: './ride-card.component.scss',
 })
@@ -33,6 +56,8 @@ export class RideCardComponent implements OnInit {
 
   isEditingTime: boolean[] = [];
 
+  protected citiesNumbers: number[] = [];
+
   @ViewChildren('timeInputDepart') timeInputsDepart!: QueryList<ElementRef<HTMLInputElement>>;
 
   @ViewChildren('timeInputArrive') timeInputsArrive!: QueryList<ElementRef<HTMLInputElement>>;
@@ -41,9 +66,19 @@ export class RideCardComponent implements OnInit {
 
   @ViewChildren('carriageName') carriageName!: QueryList<ElementRef<HTMLInputElement>>;
 
+  private readonly store = inject(Store);
+
+  protected isDeleteDialogOpen: boolean = false;
+
+  protected departInFuture: boolean = false;
+
   ngOnInit(): void {
     this.isEditingPrice = new Array(this.rideSchedule.length).fill(false);
     this.isEditingTime = new Array(this.rideSchedule.length).fill(false);
+    this.citiesNumbers = Array(this.rideSchedule.length + 1)
+      .fill(null)
+      .map((_, index) => index);
+    this.departInFuture = new Date(this.rideSchedule[0].time[0]).getTime() - new Date().getTime() > 0;
   }
 
   toggleEditPrice(index: number): void {
@@ -98,26 +133,45 @@ export class RideCardComponent implements OnInit {
     const departInputs = this.getValuesByIndex(this.timeInputsDepart, index, 'data-index');
     const arriveInputs = this.getValuesByIndex(this.timeInputsArrive, index, 'data-index');
     const prevDepartInputs = this.getValuesByIndex(this.timeInputsDepart, index - 1, 'data-index');
-    const nextDepartInputs = this.getValuesByIndex(this.timeInputsDepart, index + 1, 'data-index');
+    const nextArriveInputs = this.getValuesByIndex(this.timeInputsArrive, index + 1, 'data-index');
 
     const carriagesInputs = this.getValuesByIndex(this.carriageInputs, index, 'data-index');
-    const prevCarriagesInputs = this.getValuesByIndex(this.carriageInputs, index - 1, 'data-index');
     const carriageNameTextContent = this.getTextContentByIndex(this.carriageName, index, 'data-index');
 
-    const prevTime = [...arriveInputs, ...prevDepartInputs];
-    const time = [...departInputs, ...nextDepartInputs];
+    const prevTime = [...prevDepartInputs, ...arriveInputs];
+    const time = [...departInputs, ...nextArriveInputs];
 
-    const prevCarriagesPrice = this.mapCarriagePrices(carriageNameTextContent, prevCarriagesInputs);
     const carriagesPrice = this.mapCarriagePrices(carriageNameTextContent, carriagesInputs);
 
-    // eslint-disable-next-line no-console
-    console.log('prev time', prevTime);
-    // eslint-disable-next-line no-console
-    console.log('time', time);
-    // eslint-disable-next-line no-console
-    console.log('prev price', prevCarriagesPrice);
-    // eslint-disable-next-line no-console
-    console.log('carriage price', carriagesPrice);
+    const newSchedule = this.rideSchedule.map((segment, segmentIndex, schedule): ISegmentInfo => {
+      if (segmentIndex === index) {
+        return {
+          price: carriagesPrice,
+          time: time.map((timeItem) => new Date(timeItem).toISOString()) as [string, string],
+        };
+      }
+
+      if (segmentIndex + 1 === index) {
+        return {
+          ...schedule[index - 1],
+          time: prevTime.map((timeItem) => new Date(timeItem).toISOString()) as [string, string],
+        };
+      }
+
+      return segment;
+    });
+
+    this.store.dispatch(
+      RiderAction.updateRide({ scheduleItem: { rideId: this.idRide, segments: newSchedule }, routeId: this.routeId })
+    );
+  }
+
+  onDeleteRide() {
+    this.isDeleteDialogOpen = true;
+  }
+
+  onDeleteConfirm() {
+    this.store.dispatch(RiderAction.deleteRide({ routeId: this.routeId, rideId: this.idRide }));
   }
 
   // eslint-disable-next-line class-methods-use-this

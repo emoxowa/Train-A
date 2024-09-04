@@ -4,7 +4,7 @@ import { OrderActions } from '@core/store/order-store/actions/order.actions';
 import { selectOrders } from '@core/store/order-store/selectors/order.selectors';
 import { AsyncPipe, CurrencyPipe, DatePipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
 import { OrderService } from '@app/train/services/order.service';
-import { EMPTY, map, Observable, switchMap, filter, skip, tap } from 'rxjs';
+import { EMPTY, map, Observable, switchMap, filter, skip } from 'rxjs';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { TuiAlertService, TuiButton, TuiDialog, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { FormatDurationPipe } from '@app/train/pipes/format-duration.pipe';

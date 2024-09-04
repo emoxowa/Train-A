@@ -1,150 +1,184 @@
 @if (rideSchedule) {
-  <div>Ride {{ idRide }}</div>
+  <h3 tuiTitle="m">Ride {{ idRide }}</h3>
 }
-@for (ride of rideSchedule; track ride.time[0]; let i = $index) {
-  @let segmentData = findSegmentByRiderId(idRide);
-  <div class="ride-card__container">
-    <div class="ride-card__city">
-      <div class="ride-card__city-element">
-        {{ getCityById(cityRide[i]) }}
-      </div>
-      @if (i === rideSchedule.length - 1) {
+<div tuiCardLarge="compact" tuiSurface="elevated">
+  @for (index of citiesNumbers; track index) {
+    @let segmentData = findSegmentByRiderId(idRide);
+    <div class="ride-card">
+      <div class="ride-card__city">
         <div class="ride-card__city-element">
-          {{ getCityById(cityRide[rideSchedule.length]) }}
+          {{ getCityById(cityRide[index]) }}
         </div>
-      }
+      </div>
+      <div class="ride-card__time">
+        <div class="ride-card__time-inputs">
+          @if (isEditingTime[index]) {
+            @if (segmentData) {
+              @if (index === 0) {
+                <div class="ride-card__time-input_depart">
+                  <span>depart</span>
+                  <input
+                    #timeInputDepart
+                    class="ride-card__time-input"
+                    type="datetime-local"
+                    [attr.data-index]="index"
+                    [value]="formatToDateTimeLocal(segmentData.segments[index].time[0])"
+                  />
+                </div>
+              } @else if (index === rideSchedule.length) {
+                <div class="ride-card__time-input_arrive">
+                  <span>arrive</span>
+                  <input
+                    #timeInputArrive
+                    class="ride-card__time-input"
+                    type="datetime-local"
+                    [attr.data-index]="index"
+                    [value]="formatToDateTimeLocal(segmentData.segments[index - 1].time[1])"
+                  />
+                </div>
+              } @else {
+                <div class="ride-card__time-input_arrive">
+                  <span>arrive</span>
+                  <input
+                    #timeInputArrive
+                    class="ride-card__time-input"
+                    type="datetime-local"
+                    [attr.data-index]="index"
+                    [value]="formatToDateTimeLocal(segmentData.segments[index - 1].time[1])"
+                  />
+                </div>
+                <div class="ride-card__time-input_depart">
+                  <span>depart </span>
+                  <input
+                    #timeInputDepart
+                    class="ride-card__time-input"
+                    type="datetime-local"
+                    [attr.data-index]="index"
+                    [value]="formatToDateTimeLocal(segmentData.segments[index].time[0])"
+                  />
+                </div>
+              }
+            }
+          } @else if (!isEditingTime[index]) {
+            @if (segmentData) {
+              @if (index === 0) {
+                <div class="ride-card__time-input_depart">
+                  <span>depart</span>
+                  <input
+                    #timeInputDepart
+                    class="ride-card__time-input"
+                    type="datetime-local"
+                    [attr.data-index]="index"
+                    [value]="formatToDateTimeLocal(segmentData.segments[index].time[0])"
+                    [disabled]="true"
+                  />
+                </div>
+              } @else if (index === rideSchedule.length) {
+                <div class="ride-card__time-input_arrive">
+                  <span>arrive</span>
+                  <input
+                    #timeInputArrive
+                    class="ride-card__time-input"
+                    type="datetime-local"
+                    [attr.data-index]="index"
+                    [value]="formatToDateTimeLocal(segmentData.segments[index - 1].time[1])"
+                    [disabled]="true"
+                  />
+                </div>
+              } @else {
+                <div class="ride-card__time-input_arrive">
+                  <span>arrive</span>
+                  <input
+                    #timeInputArrive
+                    class="ride-card__time-input"
+                    type="datetime-local"
+                    [attr.data-index]="index"
+                    [value]="formatToDateTimeLocal(segmentData.segments[index - 1].time[1])"
+                    [disabled]="true"
+                  />
+                </div>
+                <div class="ride-card__time-input_depart">
+                  <span>depart </span>
+                  <input
+                    #timeInputDepart
+                    class="ride-card__time-input"
+                    type="datetime-local"
+                    [attr.data-index]="index"
+                    [value]="formatToDateTimeLocal(segmentData.segments[index].time[0])"
+                    [disabled]="true"
+                  />
+                </div>
+              }
+            }
+          }
+        </div>
+        @if (!isEditingTime[index]) {
+          <button size="s" tuiButton (click)="toggleEditTime(index)" class="ride-card__edit-carriage">
+            <tui-icon icon="@tui.pencil" />
+          </button>
+        } @else if (isEditingTime[index]) {
+          <button size="s" tuiButton (click)="toggleEditTime(index)" (click)="saveRide(index)">
+            <tui-icon icon="@tui.save" />
+          </button>
+        }
+      </div>
     </div>
-    <div class="ride-card__time">
-      @if (isEditingTime[i]) {
-        @if (segmentData) {
-          @if (i === 0) {
-            <input
-              #timeInputDepart
-              class="ride-card__time-input"
-              type="datetime-local"
-              [attr.data-index]="i"
-              [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
-            />
-          } @else if (i === rideSchedule.length - 1) {
-            <input
-              #timeInputArrive
-              class="ride-card__time-input"
-              type="datetime-local"
-              [attr.data-index]="i"
-              [value]="formatToDateTimeLocal(segmentData.segments[i].time[1])"
-            />
-          } @else {
-            <div class="ride-card__time-input_arrive">
-              <span>arrive</span>
-              <input
-                #timeInputArrive
-                class="ride-card__time-input"
-                type="datetime-local"
-                [attr.data-index]="i"
-                [value]="formatToDateTimeLocal(segmentData.segments[i - 1].time[1])"
-              />
-            </div>
-            <div class="ride-card__time-input_depart">
-              <span>depart </span>
-              <input
-                #timeInputDepart
-                class="ride-card__time-input"
-                type="datetime-local"
-                [attr.data-index]="i"
-                [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
-              />
-            </div>
+    <div class="ride-card">
+      <div class="ride-card__carriage">
+        @if (segmentData && index !== rideSchedule.length) {
+          @let priceCarriage = getCarriagePriceArray(segmentData.segments[index].price);
+          <div class="ride-card__prices">
+            @for (carriage of priceCarriage; track carriage[0]; let j = $index) {
+              @if (!isEditingPrice[index]) {
+                <div class="ride-card__cariage-element">
+                  <span #carriageName [attr.data-index]="index">{{ carriage[0] }}</span>
+                  <input
+                    #carriageInput
+                    class="ride-card__carriage-input"
+                    type="number"
+                    [attr.data-index]="index"
+                    [value]="carriage[1]"
+                    [disabled]="true"
+                  />
+                </div>
+              } @else if (isEditingPrice[index]) {
+                <div class="ride-card__cariage-element">
+                  <span #carriageName [attr.data-index]="index">{{ carriage[0] }}</span>
+                  <input
+                    #carriageInput
+                    class="ride-card__carriage-input"
+                    type="number"
+                    [attr.data-index]="index"
+                    [value]="carriage[1]"
+                  />
+                </div>
+              }
+            }
+          </div>
+          @if (!isEditingPrice[index]) {
+            <button size="s" tuiButton (click)="toggleEditPrice(index)" class="ride-card__edit-carriage">
+              <tui-icon icon="@tui.pencil" />
+            </button>
+          } @else if (isEditingPrice[index]) {
+            <button size="s" tuiButton (click)="toggleEditPrice(index)" (click)="saveRide(index)">
+              <tui-icon icon="@tui.save" />
+            </button>
           }
         }
-      } @else if (!isEditingTime[i]) {
-        @if (segmentData) {
-          @if (i === 0) {
-            <input
-              #timeInputDepart
-              class="ride-card__time-input"
-              type="datetime-local"
-              [attr.data-index]="i"
-              [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
-              [disabled]="true"
-            />
-          } @else if (i === rideSchedule.length - 1) {
-            <input
-              #timeInputArrive
-              class="ride-card__time-input"
-              type="datetime-local"
-              [attr.data-index]="i"
-              [value]="formatToDateTimeLocal(segmentData.segments[i].time[1])"
-              [disabled]="true"
-            />
-          } @else {
-            <div class="ride-card__time-input_arrive">
-              <span>arrive</span>
-              <input
-                #timeInputArrive
-                class="ride-card__time-input"
-                type="datetime-local"
-                [attr.data-index]="i"
-                [value]="formatToDateTimeLocal(segmentData.segments[i - 1].time[1])"
-                [disabled]="true"
-              />
-            </div>
-            <div class="ride-card__time-input_depart">
-              <span>depart </span>
-              <input
-                #timeInputDepart
-                class="ride-card__time-input"
-                type="datetime-local"
-                [attr.data-index]="i"
-                [value]="formatToDateTimeLocal(segmentData.segments[i].time[0])"
-                [disabled]="true"
-              />
-            </div>
-          }
-        }
-      }
-      @if (!isEditingTime[i]) {
-        <button (click)="toggleEditTime(i)" class="ride-card__edit-carriage">Edit</button>
-      } @else if (isEditingTime[i]) {
-        <button (click)="toggleEditTime(i)" (click)="saveRide(i)">Save</button>
-      }
+      </div>
     </div>
-    <div class="ride-card__carriage">
-      @if (segmentData) {
-        @let priceCarriage = getCarriagePriceArray(segmentData.segments[i].price);
-        @for (carriage of priceCarriage; track carriage[0]; let j = $index) {
-          @if (!isEditingPrice[i]) {
-            <div class="ride-card__cariage-element">
-              <div class="ride-card__cariage-element">
-                <span #carriageName [attr.data-index]="i">{{ carriage[0] }}</span>
-                <input
-                  #carriageInput
-                  class="ride-card__carriage-input"
-                  type="number"
-                  [attr.data-index]="i"
-                  [value]="carriage[1]"
-                  [disabled]="true"
-                />
-              </div>
-            </div>
-          } @else if (isEditingPrice[i]) {
-            <div class="ride-card__cariage-element">
-              <span #carriageName [attr.data-index]="i">{{ carriage[0] }}</span>
-              <input
-                #carriageInput
-                class="ride-card__carriage-input"
-                type="number"
-                [attr.data-index]="i"
-                [value]="carriage[1]"
-              />
-            </div>
-          }
-        }
-        @if (!isEditingPrice[i]) {
-          <button (click)="toggleEditPrice(i)" class="ride-card__edit-carriage">Edit</button>
-        } @else if (isEditingPrice[i]) {
-          <button (click)="toggleEditPrice(i)" (click)="saveRide(i)">Save</button>
-        }
-      }
-    </div>
-  </div>
+  }
+</div>
+
+@if (departInFuture) {
+  <button size="s" tuiButton appearance="destructive" class="ride-card__edit-carriage" (click)="onDeleteRide()">
+    Delete
+  </button>
 }
+
+<ng-template [(tuiDialog)]="isDeleteDialogOpen">
+  <div class="confirm-dialog">
+    <h2 tuiTitle="m">Are you sure you want to delete the Ride {{ idRide }}?</h2>
+    <button tuiButton appearance="destructive" (click)="onDeleteConfirm()">Confirm</button>
+  </div>
+</ng-template>

@@ -9,14 +9,15 @@ import { selectCarriagesIdAndName } from '@app/core/store/admin-store/selectors/
 import { selectRiderInfo } from '@app/core/store/admin-store/selectors/rider.selector';
 import { selectStationIdAndCity } from '@app/core/store/admin-store/selectors/stations.selectors';
 import { Store } from '@ngrx/store';
-import { TuiButton } from '@taiga-ui/core';
-import { map, Observable, Subscription, fromEvent, switchMap, take } from 'rxjs';
+import { TuiAlertService, TuiButton, TuiTitle } from '@taiga-ui/core';
+import { map, Observable, Subscription, fromEvent, switchMap, take, EMPTY } from 'rxjs';
+import { OrderService } from '@app/train/services/order.service';
 import { RideCardComponent } from '../components/ride-card/ride-card.component';
 
 @Component({
   selector: 'app-ride',
   standalone: true,
-  imports: [TuiButton, RouterLink, RouterLinkActive, CommonModule, RideCardComponent],
+  imports: [TuiButton, RouterLink, RouterLinkActive, CommonModule, RideCardComponent, TuiTitle],
   templateUrl: './ride.component.html',
   styleUrls: ['./ride.component.scss'],
 })
@@ -26,6 +27,14 @@ export class RideComponent implements OnInit, OnInit, AfterViewInit, OnDestroy {
   @ViewChild('addRideButton', { static: true }) addRideButton: ElementRef | undefined;
 
   private route: ActivatedRoute = inject(ActivatedRoute);
+
+  private readonly orderService = inject(OrderService);
+
+  private readonly alerts = inject(TuiAlertService);
+
+  private readonly alertsSubscription = this.orderService.alertMessage$
+    .pipe(switchMap((alert) => (alert ? this.alerts.open(alert.message, { appearance: alert.type }) : EMPTY)))
+    .subscribe();
 
   private store = inject(Store);
 
@@ -72,6 +81,8 @@ export class RideComponent implements OnInit, OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.addRideButtonSubscription?.unsubscribe();
+    this.alertsSubscription.unsubscribe();
+    this.store.dispatch(RiderAction.clearRiderList());
   }
 
   createAddRideSubscription() {

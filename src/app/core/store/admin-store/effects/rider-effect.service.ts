@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { AdminService } from '@app/admin/service/admin.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, EMPTY, forkJoin, map, mergeMap, switchMap } from 'rxjs';
+import { OrderService } from '@app/train/services/order.service';
 import { RiderAction } from '../actions/riders.actions';
 import { StationsActions } from '../actions/stations.actions';
 import { CarriageActions } from '../actions/carriage.actions';
@@ -14,16 +15,7 @@ export class RiderEffectService {
 
   private adminService = inject(AdminService);
 
-  // loadRidersTest$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(RiderAction.loadRiderList),
-  //     switchMap((action) =>
-  //       this.adminService
-  //         .getRouteInformation(action.idRoute)
-  //         .pipe(map((riders: IRideInfo) => RiderAction.loadRiderListSuccsess({ riderList: riders })))
-  //     )
-  //   )
-  // );
+  private orderService = inject(OrderService);
 
   loadRiders$ = createEffect(() =>
     this.actions$.pipe(
@@ -56,14 +48,60 @@ export class RiderEffectService {
       switchMap(({ routeId, scheduleItem }) => {
         return this.adminService.createNewRide(routeId, scheduleItem).pipe(
           map((rideResponse) => {
+            this.orderService.alertMessage$.next({ message: `Ride ${rideResponse.id} created`, type: 'success' });
             return RiderAction.createRideSuccess({ scheduleItem: { rideId: rideResponse.id, ...scheduleItem } });
           }),
           catchError((error) => {
-            console.error('Error loading data:', error);
+            this.orderService.alertMessage$.next({
+              message: `Failed to create the ride ${scheduleItem.rideId}. Error: ${error.error.message}`,
+              type: 'error',
+            });
             return EMPTY;
           })
         );
       })
+    )
+  );
+
+  updateRide$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RiderAction.updateRide),
+      switchMap(({ scheduleItem, routeId }) =>
+        this.adminService.updateRide(routeId, scheduleItem.rideId, scheduleItem).pipe(
+          map(() => {
+            this.orderService.alertMessage$.next({ message: `Ride ${scheduleItem.rideId} updated`, type: 'success' });
+            return RiderAction.updateRideSuccess({ scheduleItem });
+          }),
+          catchError((error) => {
+            this.orderService.alertMessage$.next({
+              message: `Failed to update the ride ${scheduleItem.rideId}. Error: ${error.error.message}`,
+              type: 'error',
+            });
+            return EMPTY;
+          })
+        )
+      )
+    )
+  );
+
+  deleteRide$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RiderAction.deleteRide),
+      switchMap(({ rideId, routeId }) =>
+        this.adminService.deleteRide(routeId, rideId).pipe(
+          map(() => {
+            this.orderService.alertMessage$.next({ message: `Ride ${rideId} deleted`, type: 'success' });
+            return RiderAction.deleteRideSuccess({ rideId });
+          }),
+          catchError((error) => {
+            this.orderService.alertMessage$.next({
+              message: `Failed to delete the ride ${rideId}. Error: ${error.error.message}`,
+              type: 'error',
+            });
+            return EMPTY;
+          })
+        )
+      )
     )
   );
 }
