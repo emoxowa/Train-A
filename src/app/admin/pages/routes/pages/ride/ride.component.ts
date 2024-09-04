@@ -82,6 +82,7 @@ export class RideComponent implements OnInit, OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.addRideButtonSubscription?.unsubscribe();
     this.alertsSubscription.unsubscribe();
+    this.store.dispatch(RiderAction.clearRiderList());
   }
 
   createAddRideSubscription() {

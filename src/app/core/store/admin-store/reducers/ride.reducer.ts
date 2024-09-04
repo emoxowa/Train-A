@@ -32,5 +32,8 @@ export const rideReducer = createReducer(
         }),
       },
     };
+  }),
+  on(RiderAction.clearRiderList, (): IRiderState => {
+    return initionalRiderState;
   })
 );

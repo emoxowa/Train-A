@@ -1,19 +1,101 @@
-.ride-card__container {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-around;
+@import 'styles';
 
-  border: 1px solid red;
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ride-card {
+  display: grid;
+  grid-template-columns: 60px auto 180px;
+  grid-template-areas: 'city time price';
+  gap: 2rem;
 
   &__city,
   &__time,
   &__carriage {
     display: flex;
-    width: 30vw;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  &__city {
+    grid-area: city;
+  }
+
+  &__time {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-area: time;
+  }
+
+  &__carriage {
+    grid-area: price;
+  }
+
+  &__prices {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  &__cariage-element {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  &__time-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  &__carriage-input {
+    width: 50px;
+  }
+
+  &__time-input_depart,
+  &__time-input_arrive {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
   }
 }
 
-.ride-card__carriage-input {
-  width: 50px;
+@include mobile {
+  .ride-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    &__time {
+      justify-content: flex-start;
+    }
+
+    &:not(:first-child) {
+      border-top: 1px solid grey;
+      padding-top: 1.25rem;
+    }
+  }
+}
+
+@include small-mobile {
+  .ride-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    &__time {
+      justify-content: flex-start;
+    }
+
+    &:not(:first-child) {
+      border-top: 1px solid grey;
+      padding-top: 1.25rem;
+    }
+  }
 }

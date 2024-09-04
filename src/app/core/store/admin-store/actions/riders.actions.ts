@@ -8,6 +8,7 @@ export enum ERiderActions {
   CreateRideSuccess = '[Rider] Create Ride Success',
   UpdateRide = '[Rider] Update Ride',
   UpdateRideSuccess = '[Rider] Update Ride Success',
+  ClearRiderList = '[Rider] Clear Rider List',
 }
 
 export const RiderAction = {
@@ -20,4 +21,5 @@ export const RiderAction = {
     props<{ scheduleItem: Required<IScheduleInfo>; routeId: number }>()
   ),
   updateRideSuccess: createAction(ERiderActions.UpdateRideSuccess, props<{ scheduleItem: Required<IScheduleInfo> }>()),
+  clearRiderList: createAction(ERiderActions.ClearRiderList),
 };

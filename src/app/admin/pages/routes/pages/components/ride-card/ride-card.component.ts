@@ -6,11 +6,23 @@ import { IPriceInfo, IRideInfo, IScheduleInfo, ISegmentInfo } from '@app/admin/m
 import { IStation } from '@app/admin/models/station-list.model';
 import { Store } from '@ngrx/store';
 import { RiderAction } from '@core/store/admin-store/actions/riders.actions';
+import { TuiButton, TuiIcon, TuiSurface, TuiTextfield, TuiTextfieldComponent, TuiTitle } from '@taiga-ui/core';
+import { TuiCardLarge } from '@taiga-ui/layout';
 
 @Component({
   selector: 'app-ride-card',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TuiTitle,
+    TuiCardLarge,
+    TuiSurface,
+    TuiButton,
+    TuiIcon,
+    TuiTextfieldComponent,
+    TuiTextfield,
+  ],
   templateUrl: './ride-card.component.html',
   styleUrl: './ride-card.component.scss',
 })
@@ -35,6 +47,8 @@ export class RideCardComponent implements OnInit {
 
   isEditingTime: boolean[] = [];
 
+  protected citiesNumbers: number[] = [];
+
   @ViewChildren('timeInputDepart') timeInputsDepart!: QueryList<ElementRef<HTMLInputElement>>;
 
   @ViewChildren('timeInputArrive') timeInputsArrive!: QueryList<ElementRef<HTMLInputElement>>;
@@ -48,6 +62,9 @@ export class RideCardComponent implements OnInit {
   ngOnInit(): void {
     this.isEditingPrice = new Array(this.rideSchedule.length).fill(false);
     this.isEditingTime = new Array(this.rideSchedule.length).fill(false);
+    this.citiesNumbers = Array(this.rideSchedule.length + 1)
+      .fill(null)
+      .map((_, index) => index);
   }
 
   toggleEditPrice(index: number): void {
