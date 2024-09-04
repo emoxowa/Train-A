@@ -6,7 +6,15 @@ import { IPriceInfo, IRideInfo, IScheduleInfo, ISegmentInfo } from '@app/admin/m
 import { IStation } from '@app/admin/models/station-list.model';
 import { Store } from '@ngrx/store';
 import { RiderAction } from '@core/store/admin-store/actions/riders.actions';
-import { TuiButton, TuiIcon, TuiSurface, TuiTextfield, TuiTextfieldComponent, TuiTitle } from '@taiga-ui/core';
+import {
+  TuiButton,
+  TuiDialog,
+  TuiIcon,
+  TuiSurface,
+  TuiTextfield,
+  TuiTextfieldComponent,
+  TuiTitle,
+} from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
 
 @Component({
@@ -22,6 +30,7 @@ import { TuiCardLarge } from '@taiga-ui/layout';
     TuiIcon,
     TuiTextfieldComponent,
     TuiTextfield,
+    TuiDialog,
   ],
   templateUrl: './ride-card.component.html',
   styleUrl: './ride-card.component.scss',
@@ -59,12 +68,17 @@ export class RideCardComponent implements OnInit {
 
   private readonly store = inject(Store);
 
+  protected isDeleteDialogOpen: boolean = false;
+
+  protected departInFuture: boolean = false;
+
   ngOnInit(): void {
     this.isEditingPrice = new Array(this.rideSchedule.length).fill(false);
     this.isEditingTime = new Array(this.rideSchedule.length).fill(false);
     this.citiesNumbers = Array(this.rideSchedule.length + 1)
       .fill(null)
       .map((_, index) => index);
+    this.departInFuture = new Date(this.rideSchedule[0].time[0]).getTime() - new Date().getTime() > 0;
   }
 
   toggleEditPrice(index: number): void {
@@ -150,6 +164,14 @@ export class RideCardComponent implements OnInit {
     this.store.dispatch(
       RiderAction.updateRide({ scheduleItem: { rideId: this.idRide, segments: newSchedule }, routeId: this.routeId })
     );
+  }
+
+  onDeleteRide() {
+    this.isDeleteDialogOpen = true;
+  }
+
+  onDeleteConfirm() {
+    this.store.dispatch(RiderAction.deleteRide({ routeId: this.routeId, rideId: this.idRide }));
   }
 
   // eslint-disable-next-line class-methods-use-this

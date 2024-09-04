@@ -53,7 +53,7 @@ export class RiderEffectService {
           }),
           catchError((error) => {
             this.orderService.alertMessage$.next({
-              message: `Failed to create the ride. Error: ${error.error.message}`,
+              message: `Failed to create the ride ${scheduleItem.rideId}. Error: ${error.error.message}`,
               type: 'error',
             });
             return EMPTY;
@@ -74,7 +74,28 @@ export class RiderEffectService {
           }),
           catchError((error) => {
             this.orderService.alertMessage$.next({
-              message: `Failed to update the ride. Error: ${error.error.message}`,
+              message: `Failed to update the ride ${scheduleItem.rideId}. Error: ${error.error.message}`,
+              type: 'error',
+            });
+            return EMPTY;
+          })
+        )
+      )
+    )
+  );
+
+  deleteRide$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RiderAction.deleteRide),
+      switchMap(({ rideId, routeId }) =>
+        this.adminService.deleteRide(routeId, rideId).pipe(
+          map(() => {
+            this.orderService.alertMessage$.next({ message: `Ride ${rideId} deleted`, type: 'success' });
+            return RiderAction.deleteRideSuccess({ rideId });
+          }),
+          catchError((error) => {
+            this.orderService.alertMessage$.next({
+              message: `Failed to delete the ride ${rideId}. Error: ${error.error.message}`,
               type: 'error',
             });
             return EMPTY;

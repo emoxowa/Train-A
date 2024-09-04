@@ -66,6 +66,13 @@
   }
 }
 
+.confirm-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
 @include mobile {
   .ride-card {
     display: flex;

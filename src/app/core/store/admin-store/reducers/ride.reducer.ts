@@ -35,5 +35,14 @@ export const rideReducer = createReducer(
   }),
   on(RiderAction.clearRiderList, (): IRiderState => {
     return initionalRiderState;
+  }),
+  on(RiderAction.deleteRideSuccess, (state, { rideId }): IRiderState => {
+    return {
+      ...state,
+      riderList: {
+        ...state.riderList,
+        schedule: state.riderList.schedule.filter((scheduleItem) => scheduleItem.rideId !== rideId),
+      },
+    };
   })
 );

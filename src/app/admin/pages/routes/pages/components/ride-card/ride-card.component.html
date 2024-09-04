@@ -169,3 +169,16 @@
     </div>
   }
 </div>
+
+@if (departInFuture) {
+  <button size="s" tuiButton appearance="destructive" class="ride-card__edit-carriage" (click)="onDeleteRide()">
+    Delete
+  </button>
+}
+
+<ng-template [(tuiDialog)]="isDeleteDialogOpen">
+  <div class="confirm-dialog">
+    <h2 tuiTitle="m">Are you sure you want to delete the Ride {{ idRide }}?</h2>
+    <button tuiButton appearance="destructive" (click)="onDeleteConfirm()">Confirm</button>
+  </div>
+</ng-template>
