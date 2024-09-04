@@ -135,6 +135,7 @@ export class TripDetailsPageComponent implements OnInit {
             rideId: trimmedRideInfo.rideId,
           } as RouteModalData,
         })
+        .pipe(take(1))
         .subscribe();
     });
   }

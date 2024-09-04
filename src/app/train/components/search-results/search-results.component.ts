@@ -80,9 +80,11 @@ export class SearchResultsComponent {
                 path: route.path,
               } as RouteModalData,
             })
+            .pipe(take(1))
             .subscribe();
         })
       )
+      .pipe(take(1))
       .subscribe();
   }
 
