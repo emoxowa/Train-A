@@ -104,6 +104,7 @@ export class SearchFormComponent implements OnInit {
         }
 
         const date = this.form.get('date')!.value as TuiDay;
+        this.trainService.setSelectedDate(date);
         const time = this.form.get('time')!.value;
 
         const timeInMillis = time

@@ -35,6 +35,7 @@ export class FilterRoutesPipe implements PipeTransform {
           }
 
           const scheduleTime = new Date(startSegment.time[0]);
+
           return scheduleTime >= startOfDay && scheduleTime <= endOfDay;
         });
 
