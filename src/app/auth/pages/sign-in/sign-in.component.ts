@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -12,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ReactiveFormsModule, TuiButton, NgIf, RouterLink, CustomErrorComponent],
+  imports: [ReactiveFormsModule, TuiButton, CommonModule, RouterLink, CustomErrorComponent],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,8 +32,8 @@ export class SignInComponent implements OnDestroy {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, EmailValidators()]],
-      password: ['', [Validators.required, PasswordValidators()]],
+      email: ['admin@admin.com', [Validators.required, EmailValidators()]],
+      password: ['my-password', [Validators.required, PasswordValidators()]],
     });
   }
 
