@@ -1,0 +1,1 @@
+import{Fa as i}from"./chunk-2XEAWUUP.js";var o=class e{transform(r,t){let s=new Date(r).getTime(),n=new Date(t).getTime()-s,a=Math.floor(n/(1e3*60*60)),m=Math.floor(n%(1e3*60*60)/(1e3*60));return`${a}h ${m}m`}static \u0275fac=function(t){return new(t||e)};static \u0275pipe=i({name:"formatDuration",type:e,pure:!0,standalone:!0})};export{o as a};

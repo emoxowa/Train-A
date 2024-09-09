@@ -1,0 +1,1 @@
+import{p as e}from"./chunk-RR4QGK55.js";var o=t=>t,n=e(o,t=>t.stationState.stationList),c=e(n,t=>t.map(({id:a,city:i})=>({id:a,city:i}))),r=e(n,t=>t.map(a=>a.city)),s=e(o,t=>t.stationState.deletingIndicate),S=e(o,t=>t.stationState.creatingIndicate);export{n as a,c as b,s as c,S as d};

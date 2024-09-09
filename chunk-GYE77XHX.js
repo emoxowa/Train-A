@@ -1,0 +1,1 @@
+import{p as t}from"./chunk-RR4QGK55.js";var o=e=>e.userState,r=t(o,e=>e.user),n=t(r,e=>e?.information.name||void 0),i=t(r,e=>e?.information.email||void 0),a=t(r,e=>e?.role||void 0),c=t(o,e=>e.isLoading);export{r as a,n as b,i as c,a as d,c as e};
