@@ -1,27 +1,62 @@
-# TrainA
+# Train-A
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.0.
+**Train-A** is a team project developed as part of the [Angular course by The Rolling Scopes School](https://rs.school/courses/angular).
 
-## Development server
+## 🔗 Links
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Deployment: [Train-A Deployed Version](https://emoxowa.github.io/Train-A/)
+- Task Description: [Train-A Task](https://github.com/rolling-scopes-school/tasks/tree/master/tasks/train-a)
 
-## Code scaffolding
+## 🚀 Getting Started
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Local Setup
 
-## Build
+1. Clone the repository:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+   ```bash
+   git clone https://github.com/your-username/train-a.git
+   ```
 
-## Running unit tests
+2. Navigate to the project directory:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+   ```bash
+   cd train-a
+   ```
 
-## Running end-to-end tests
+3. Install the dependencies:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+   ```bash
+   npm install
+   ```
 
-## Further help
+4. Run the development server:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+   ```bash
+   npm start
+   ```
+
+## 🖥️ Deployment
+
+The project is deployed at: [Train-A Deployed Version](https://emoxowa.github.io/Train-A/)
+
+## 🛠 Technologies
+
+The project is built using the following technologies:
+
+- **Angular** (18.2.0)
+- **NgRx** for state management
+- **Taiga UI** for UI components
+- **Leaflet** for map integration
+- **RxJS** for reactive programming
+- **Sass** for styling
+- **Prettier**, **ESLint**, **Stylelint** for code formatting and linting
+
+## 📖 Project Overview
+
+Train-A is a railway ticket booking platform. It allows users to search for train trips, view trip details, and book tickets.
+
+This project was developed in collaboration with a team during the [Angular course by The Rolling Scopes School](https://rs.school/courses/angular).
+
+### My Contribution
+
+I was responsible for implementing the **Search Page**, which includes train trip details and ticket booking functionalities.
